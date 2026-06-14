@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="CSS 圆角生成器 - 可视化拖拽四角圆角，支持预设形状，一键复制CSS代码。在线调整四个角的圆角值，实时预览效果。">
+    <meta name="keywords" content="CSS圆角,圆角生成器,CSS border-radius,在线工具,网页设计">
+    <title>CSS 圆角生成器 - 可视化拖拽四角圆角 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/css-border-radius-generator.html">
+    <meta property="og:title" content="CSS 圆角生成器 - 可视化拖拽四角圆角">
+    <meta property="og:description" content="可视化拖拽四角圆角，支持预设形状，一键复制CSS代码。实时预览效果。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/css-border-radius-generator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "CSS 圆角生成器",
+        "description": "可视化拖拽四角圆角，支持预设形状，一键复制CSS代码",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 6px;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #166534;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        /* Tool specific styles */
+        .preview-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+        .preview-box {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: border-radius 0.15s ease;
+        }
+        .corner-controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .corner-control {
+            text-align: center;
+        }
+        .corner-control label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .corner-control input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            background: var(--bg);
+        }
+        .corner-control input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .presets-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        .presets-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+        }
+        .preset-btn {
+            padding: 12px 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .preset-btn:hover {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+        .preset-shape {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            margin: 0 auto 6px;
+        }
+        .result-code {
+            background: #1F2937;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .code-label {
+            color: #9CA3AF;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .code-content {
+            color: #E5E7EB;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+            .corner-controls { grid-template-columns: repeat(2, 1fr); }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🔘 CSS 圆角生成器</h1>
+            <p>可视化拖拽四角圆角，预设形状，一键复制CSS代码</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="preview-area">
+                <div class="preview-box" id="previewBox"></div>
+                
+                <div class="corner-controls">
+                    <div class="corner-control">
+                        <label>左上角</label>
+                        <input type="number" id="topLeft" value="20" min="0" max="100" oninput="updatePreview()">
+                    </div>
+                    <div class="corner-control">
+                        <label>右上角</label>
+                        <input type="number" id="topRight" value="20" min="0" max="100" oninput="updatePreview()">
+                    </div>
+                    <div class="corner-control">
+                        <label>左下角</label>
+                        <input type="number" id="bottomLeft" value="20" min="0" max="100" oninput="updatePreview()">
+                    </div>
+                    <div class="corner-control">
+                        <label>右下角</label>
+                        <input type="number" id="bottomRight" value="20" min="0" max="100" oninput="updatePreview()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="copyCSS()">
+                    <span>📋</span> 复制CSS代码
+                </button>
+                <button class="btn btn-secondary" onclick="resetToDefault()">
+                    <span>🔄</span> 重置
+                </button>
+            </div>
+
+            <div class="result-code">
+                <div class="code-label">生成的 CSS 代码</div>
+                <div class="code-content" id="cssCode">border-radius: 20px 20px 20px 20px;</div>
+            </div>
+
+            <div class="presets-section">
+                <h3>🎨 预设形状</h3>
+                <div class="preset-grid">
+                    <button class="preset-btn" onclick="applyPreset('none')">
+                        <div class="preset-shape" style="border-radius: 0;"></div>
+                        无圆角
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('small')">
+                        <div class="preset-shape" style="border-radius: 4px;"></div>
+                        小圆角
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('medium')">
+                        <div class="preset-shape" style="border-radius: 8px;"></div>
+                        中圆角
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('large')">
+                        <div class="preset-shape" style="border-radius: 16px;"></div>
+                        大圆角
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('circle')">
+                        <div class="preset-shape" style="border-radius: 50%;"></div>
+                        圆形
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('pill')">
+                        <div class="preset-shape" style="border-radius: 100px;"></div>
+                        胶囊形
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('leaf')">
+                        <div class="preset-shape" style="border-radius: 50% 0;"></div>
+                        树叶形
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('ticket')">
+                        <div class="preset-shape" style="border-radius: 8px 8px 8px 8px / 50% 50% 50% 50%;"></div>
+                        票券形
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('diamond')">
+                        <div class="preset-shape" style="border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;"></div>
+                        钻石形
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('squircle')">
+                        <div class="preset-shape" style="border-radius: 30%;"></div>
+                        圆方形
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>border-radius 的值是怎么计算的？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    border-radius 使用百分比或像素值来定义圆角的大小。数值越大，圆角越明显。当设置为50%时，如果元素是正方形，就会变成一个完美的圆形。CSS代码按照上左、上右、下右、下左的顺时针顺序生成。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>如何使用预设形状？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    点击预设网格中的任意按钮，即可快速应用对应的圆角样式。预设包括：无圆角、小圆角、中圆角、大圆角、圆形、胶囊形、树叶形、票券形、钻石形和圆方形。选择预设后，四个角的数值会自动更新。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>如何复制生成的CSS代码？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    点击「复制CSS代码」按钮，代码会自动复制到剪贴板。如果需要，您也可以直接选中文本框中的代码手动复制。复制的代码可以直接粘贴到您的CSS样式表中使用。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>支持同时设置四个角不同的圆角吗？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    是的，完全支持！四个角的输入框相互独立，您可以分别设置左上、右上、左下、右下四个角的圆角值。生成的CSS代码会包含四个独立的值，按照 border-radius: 上左 上右 下右 下左 的顺序输出。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>圆角值设置为0和设置为100有什么区别？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    设置为0表示完全不做圆角处理，边角保持直角。而设置为100%时，对于正方形元素会变成圆形（如果元素是长方形，则会变成椭圆形）。实际开发中常用的是10-30%的中等圆角值。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="image-compressor.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">图片压缩器</div><div class="r-desc">图片压缩</div></a>
+        <a href="svg-viewer.html" class="related-card"><div class="r-icon">🎨</div><div class="r-title">SVG 查看器</div><div class="r-desc">SVG预览优化</div></a>
+        <a href="image-to-base64.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">图片转 Base64</div><div class="r-desc">图片转编码</div></a>
+        <a href="base64-to-image.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">Base64 转图片</div><div class="r-desc">编码转图片</div></a>
+        <a href="image-resizer.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">图片缩放工具</div><div class="r-desc">图片缩放</div></a>
+        <a href="favicon-generator.html" class="related-card"><div class="r-icon">⭐</div><div class="r-title">Favicon 生成器</div><div class="r-desc">图标生成</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <div class="toast" id="toast">已复制到剪贴板</div>
+
+    <script>
+        function updatePreview() {
+            const topLeft = document.getElementById('topLeft').value || 0;
+            const topRight = document.getElementById('topRight').value || 0;
+            const bottomLeft = document.getElementById('bottomLeft').value || 0;
+            const bottomRight = document.getElementById('bottomRight').value || 0;
+            
+            const previewBox = document.getElementById('previewBox');
+            previewBox.style.borderRadius = `${topLeft}px ${topRight}px ${bottomRight}px ${bottomLeft}px`;
+            
+            const cssCode = document.getElementById('cssCode');
+            if (topLeft === topRight && topRight === bottomLeft && bottomLeft === bottomRight) {
+                cssCode.textContent = `border-radius: ${topLeft}px;`;
+            } else {
+                cssCode.textContent = `border-radius: ${topLeft}px ${topRight}px ${bottomRight}px ${bottomLeft}px;`;
+            }
+        }
+
+        function applyPreset(preset) {
+            const presets = {
+                'none': { tl: 0, tr: 0, bl: 0, br: 0 },
+                'small': { tl: 4, tr: 4, bl: 4, br: 4 },
+                'medium': { tl: 8, tr: 8, bl: 8, br: 8 },
+                'large': { tl: 16, tr: 16, bl: 16, br: 16 },
+                'circle': { tl: 50, tr: 50, bl: 50, br: 50 },
+                'pill': { tl: 50, tr: 50, bl: 50, br: 50 },
+                'leaf': { tl: 50, tr: 0, bl: 0, br: 50 },
+                'ticket': { tl: 8, tr: 8, bl: 8, br: 8 },
+                'diamond': { tl: 30, tr: 70, bl: 70, br: 30 },
+                'squircle': { tl: 30, tr: 30, bl: 30, br: 30 }
+            };
+            
+            const values = presets[preset];
+            if (values) {
+                document.getElementById('topLeft').value = values.tl;
+                document.getElementById('topRight').value = values.tr;
+                document.getElementById('bottomLeft').value = values.bl;
+                document.getElementById('bottomRight').value = values.br;
+                updatePreview();
+            }
+        }
+
+        function resetToDefault() {
+            document.getElementById('topLeft').value = 20;
+            document.getElementById('topRight').value = 20;
+            document.getElementById('bottomLeft').value = 20;
+            document.getElementById('bottomRight').value = 20;
+            updatePreview();
+        }
+
+        function copyCSS() {
+            const cssCode = document.getElementById('cssCode').textContent;
+            navigator.clipboard.writeText(cssCode).then(() => {
+                showToast('CSS代码已复制到剪贴板');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = cssCode;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('CSS代码已复制到剪贴板');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+
+        // 初始化
+        updatePreview();
+    </script>
+</body>
+</html>

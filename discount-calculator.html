@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="折扣计算器，支持多重折扣叠加、满减计算、返利计算，显示节省金额。">
+    <meta name="keywords" content="折扣计算器,打折计算,满减计算,多重折扣,返利计算">
+    <title>折扣计算器 - 多重折扣/满减/返利 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/discount-calculator.html">
+    <meta property="og:title" content="折扣计算器 - 多重折扣/满减/返利 | DevToolBox">
+    <meta property="og:description" content="折扣计算器，支持多重折扣叠加、满减计算、返利计算，显示节省金额。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/discount-calculator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "折扣计算器",
+        "description": "折扣计算器，支持多重折扣叠加、满减计算、返利计算，显示节省金额",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .discount-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+        .discount-item input {
+            width: 100px;
+        }
+        .remove-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .add-btn {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed var(--border);
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .add-btn:hover {
+            background: #EEF2FF;
+            border-color: var(--primary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .result-highlight {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--success);
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .result-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .result-item-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .result-item-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .result-item-value.savings {
+            color: var(--success);
+        }
+        .result-item-value.original {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+        .calculation-steps {
+            margin-top: 16px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .calculation-steps h4 {
+            margin-bottom: 8px;
+        }
+        .step-item {
+            padding: 4px 0;
+            color: var(--text-secondary);
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .result-grid { grid-template-columns: 1fr; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🏷️ 折扣计算器</h1>
+            <p>计算商品折后价，支持多重折扣叠加和满减优惠</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label for="originalPrice">原价 (元)</label>
+                <input type="number" id="originalPrice" placeholder="请输入商品原价" min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label>折扣叠加</label>
+                <div id="discountList">
+                    <div class="discount-item" data-index="1">
+                        <span>第1次折扣：</span>
+                        <input type="number" class="discount-rate" placeholder="8.5" min="0" max="100" step="0.1">
+                        <span>折</span>
+                        <button class="remove-btn" onclick="removeDiscount(this)" style="visibility: hidden;">×</button>
+                    </div>
+                </div>
+                <button class="add-btn" onclick="addDiscount()">+ 添加折扣</button>
+            </div>
+
+            <div class="form-group">
+                <label for="cashBack">满减优惠 (满X减Y，不填则无)</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <input type="number" id="minSpend" placeholder="满" min="0">
+                    <input type="number" id="cashBack" placeholder="减" min="0">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="rebate">返利/积分抵扣 (元)</label>
+                <input type="number" id="rebate" placeholder="0" min="0" value="0">
+            </div>
+
+            <button class="btn btn-primary" onclick="calculateDiscount()">
+                计算折扣
+            </button>
+
+            <div class="result-box" id="result">
+                <div class="result-title">📊 计算结果</div>
+                
+                <div class="result-highlight" id="finalPrice">¥0.00</div>
+
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-item-label">原价</div>
+                        <div class="result-item-value original" id="resOriginal">¥0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">折扣节省</div>
+                        <div class="result-item-value savings" id="resDiscount">-¥0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">满减节省</div>
+                        <div class="result-item-value savings" id="resCashBack">-¥0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">返利抵扣</div>
+                        <div class="result-item-value savings" id="resRebate">-¥0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">合计节省</div>
+                        <div class="result-item-value savings" id="resTotalSavings">¥0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">实际折扣</div>
+                        <div class="result-item-value" id="resActualDiscount">0折</div>
+                    </div>
+                </div>
+
+                <div class="calculation-steps" id="calculationSteps">
+                    <h4>📝 计算过程</h4>
+                    <div id="stepsContent"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    多重折扣是怎么计算的？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    折扣是依次叠加计算的。例如：原价100元，先打8折变成80元，再打9折变成72元，最终折扣率是72%。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    满减和折扣哪个先计算？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    通常满减在折扣后计算。我们默认按：原价 → 折扣 → 满减 → 返利的顺序计算总优惠。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    实际折扣怎么换算？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    实际折扣 = 最终支付金额 ÷ 原价 × 10。例如：原价100元，实际支付72元，则实际折扣为7.2折。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    可以计算双十一等复杂优惠吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    可以！添加所有折扣（店铺券、平台券、品类券等）和满减条件，系统会自动计算最终价格和节省金额。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="percentage-calculator.html" class="related-card"><div class="r-icon">💯</div><div class="r-title">百分比计算器</div><div class="r-desc">百分比计算</div></a>
+        <a href="ratio-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">比例计算器</div><div class="r-desc">比例求解</div></a>
+        <a href="age-calculator.html" class="related-card"><div class="r-icon">🎂</div><div class="r-title">年龄计算器</div><div class="r-desc">精确年龄</div></a>
+        <a href="bmi-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">BMI 计算器</div><div class="r-desc">体重指数</div></a>
+        <a href="loan-calculator.html" class="related-card"><div class="r-icon">🏠</div><div class="r-title">贷款计算器</div><div class="r-desc">月供计算</div></a>
+        <a href="tip-calculator.html" class="related-card"><div class="r-icon">💰</div><div class="r-title">小费计算器</div><div class="r-desc">AA分账</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let discountCount = 1;
+
+        function addDiscount() {
+            discountCount++;
+            const container = document.getElementById('discountList');
+            const item = document.createElement('div');
+            item.className = 'discount-item';
+            item.dataset.index = discountCount;
+            item.innerHTML = `
+                <span>第${discountCount}次折扣：</span>
+                <input type="number" class="discount-rate" placeholder="9.5" min="0" max="100" step="0.1">
+                <span>折</span>
+                <button class="remove-btn" onclick="removeDiscount(this)">×</button>
+            `;
+            container.appendChild(item);
+        }
+
+        function removeDiscount(btn) {
+            const items = document.querySelectorAll('.discount-item');
+            if (items.length > 1) {
+                btn.parentElement.remove();
+            }
+        }
+
+        function calculateDiscount() {
+            const originalPrice = parseFloat(document.getElementById('originalPrice').value);
+            
+            if (!originalPrice || originalPrice <= 0) {
+                alert('请输入有效的原价');
+                return;
+            }
+
+            // 获取所有折扣
+            const discountRates = [];
+            document.querySelectorAll('.discount-rate').forEach(input => {
+                const rate = parseFloat(input.value);
+                if (rate && rate > 0) {
+                    discountRates.push(rate);
+                }
+            });
+
+            // 计算折扣后价格
+            let currentPrice = originalPrice;
+            const steps = [`原价：¥${originalPrice.toFixed(2)}`];
+            
+            discountRates.forEach((rate, index) => {
+                const discount = rate / 10;
+                const afterDiscount = currentPrice * discount;
+                steps.push(`第${index + 1}次 ${rate}折：¥${afterDiscount.toFixed(2)}`);
+                currentPrice = afterDiscount;
+            });
+
+            const afterDiscountPrice = currentPrice;
+            const discountSavings = originalPrice - afterDiscountPrice;
+
+            // 满减
+            const minSpend = parseFloat(document.getElementById('minSpend').value) || 0;
+            const cashBack = parseFloat(document.getElementById('cashBack').value) || 0;
+            let cashBackSavings = 0;
+
+            if (minSpend > 0 && cashBack > 0 && afterDiscountPrice >= minSpend) {
+                cashBackSavings = cashBack;
+                currentPrice = Math.max(0, currentPrice - cashBack);
+                steps.push(`满${minSpend}减${cashBack}：-¥${cashBackSavings.toFixed(2)}`);
+            }
+
+            // 返利抵扣
+            const rebate = parseFloat(document.getElementById('rebate').value) || 0;
+            let rebateSavings = 0;
+            if (rebate > 0 && currentPrice > 0) {
+                rebateSavings = Math.min(rebate, currentPrice);
+                currentPrice = Math.max(0, currentPrice - rebateSavings);
+                if (rebateSavings > 0) {
+                    steps.push(`返利抵扣：-¥${rebateSavings.toFixed(2)}`);
+                }
+            }
+
+            const finalPrice = currentPrice;
+            const totalSavings = discountSavings + cashBackSavings + rebateSavings;
+            const actualDiscount = originalPrice > 0 ? (finalPrice / originalPrice * 10) : 0;
+
+            // 显示结果
+            document.getElementById('finalPrice').textContent = '¥' + finalPrice.toFixed(2);
+            document.getElementById('resOriginal').textContent = '¥' + originalPrice.toFixed(2);
+            document.getElementById('resDiscount').textContent = '-¥' + discountSavings.toFixed(2);
+            document.getElementById('resCashBack').textContent = '-¥' + cashBackSavings.toFixed(2);
+            document.getElementById('resRebate').textContent = '-¥' + rebateSavings.toFixed(2);
+            document.getElementById('resTotalSavings').textContent = '¥' + totalSavings.toFixed(2);
+            document.getElementById('resActualDiscount').textContent = actualDiscount.toFixed(1) + '折';
+
+            // 显示计算过程
+            steps.push(`<strong>实付：¥${finalPrice.toFixed(2)}</strong>`);
+            document.getElementById('stepsContent').innerHTML = steps.map(s => 
+                `<div class="step-item">→ ${s}</div>`
+            ).join('');
+
+            document.getElementById('result').classList.add('show');
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

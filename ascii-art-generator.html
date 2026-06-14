@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="ASCII Art Generator - Convert text to ASCII art with multiple fonts, or images to ASCII art. Free online tool with real-time preview and color support.">
+    <meta name="keywords" content="ASCII art generator, text to ASCII, image to ASCII, ASCII converter, text art">
+    <title>ASCII Art Generator - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #1F2937;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --radius: 12px;
+            --success: #10B981;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .page-title {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .page-desc {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .lang-btn {
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: var(--primary-hover); }
+        .btn-secondary {
+            background: var(--text-secondary);
+        }
+        .btn-secondary:hover { background: #4B5563; }
+        .result-box {
+            background: #1F2937;
+            color: #10B981;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.2;
+            overflow-x: auto;
+            white-space: pre;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .color-result {
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            margin-top: 16px;
+            overflow-x: auto;
+        }
+        .color-result pre {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        .row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: #F3F4F6;
+            padding: 4px;
+            border-radius: 8px;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+        .upload-area input {
+            display: none;
+        }
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .preview-container {
+            margin-top: 16px;
+            text-align: center;
+        }
+        #imagePreview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            display: none;
+        }
+        .font-preview {
+            background: #F3F4F6;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+        }
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .footer a:hover { text-decoration: underline; }
+        .copy-btn {
+            padding: 8px 16px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        .copy-btn:hover { opacity: 0.9; }
+        .tip {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+        .font-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .font-item {
+            padding: 12px;
+            background: #F3F4F6;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .font-item:hover {
+            background: #EEF2FF;
+            border-color: var(--primary);
+        }
+        .font-item.selected {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+        .font-item span {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        @media (max-width: 768px) {
+            .container { padding: 20px 16px; }
+            .page-title { font-size: 22px; }
+            .row { grid-template-columns: 1fr; }
+            .font-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        [data-lang] { display: none; }
+        body.zh [data-lang="zh"] { display: block; }
+        body.zh [data-lang="en"] { display: none; }
+        body.en [data-lang="en"] { display: block; }
+        body.en [data-lang="zh"] { display: none; }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body class="zh">
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title" data-lang="zh">ASCII艺术生成器</h1>
+        <h1 class="page-title" data-lang="en">ASCII Art Generator</h1>
+
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+            <button class="lang-btn" onclick="setLang('en')">English</button>
+        </div>
+
+        <p class="page-desc" data-lang="zh">将文本或图片转换为ASCII艺术，支持多种字体风格</p>
+        <p class="page-desc" data-lang="en">Convert text or images to ASCII art with multiple font styles</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('text')">
+                <span data-lang="zh">📝 文本转ASCII</span>
+                <span data-lang="en">📝 Text to ASCII</span>
+            </button>
+            <button class="tab" onclick="switchTab('image')">
+                <span data-lang="zh">🖼️ 图片转ASCII</span>
+                <span data-lang="en">🖼️ Image to ASCII</span>
+            </button>
+        </div>
+
+        <!-- 文本转ASCII -->
+        <div class="tab-content active" id="textTab">
+            <div class="card">
+                <h2 class="card-title" data-lang="zh">✍️ 输入文本</h2>
+                <h2 class="card-title" data-lang="en">✍️ Enter Text</h2>
+
+                <div class="form-group">
+                    <label data-lang="zh">要转换的文本</label>
+                    <label data-lang="en">Text to Convert</label>
+                    <input type="text" id="asciiText" placeholder="Hello World" maxlength="20">
+                </div>
+
+                <div class="form-group">
+                    <label data-lang="zh">字体风格</label>
+                    <label data-lang="en">Font Style</label>
+                    <select id="fontStyle">
+                        <option value="standard">Standard</option>
+                        <option value="bold">Bold</option>
+                        <option value="italic">Italic</option>
+                        <option value="small">Small</option>
+                        <option value="block">Block</option>
+                        <option value="banner">Banner</option>
+                        <option value="shadow">Shadow</option>
+                        <option value="slant">Slant</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label data-lang="zh">输出宽度</label>
+                        <label data-lang="en">Output Width</label>
+                        <input type="number" id="outputWidth" value="40" min="20" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label data-lang="zh">字符密度</label>
+                        <label data-lang="en">Character Density</label>
+                        <select id="charDensity">
+                            <option value="full">@#8&%$o*+=~-:. </option>
+                            <option value="medium">@#*+=-:. </option>
+                            <option value="simple">@#. </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="colorMode">
+                        <label for="colorMode" data-lang="zh">彩色输出</label>
+                        <label for="colorMode" data-lang="en">Colorful Output</label>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="generateTextAscii()">
+                    <span data-lang="zh">✨ 生成ASCII艺术</span>
+                    <span data-lang="en">✨ Generate ASCII Art</span>
+                </button>
+
+                <div id="textAsciiResult" class="result-box"></div>
+                
+                <button class="copy-btn" onclick="copyTextAscii()" data-lang="zh">📋 复制结果</button>
+                <button class="copy-btn" onclick="copyTextAscii()" data-lang="en">📋 Copy Result</button>
+            </div>
+        </div>
+
+        <!-- 图片转ASCII -->
+        <div class="tab-content" id="imageTab">
+            <div class="card">
+                <h2 class="card-title" data-lang="zh">🖼️ 上传图片</h2>
+                <h2 class="card-title" data-lang="en">🖼️ Upload Image</h2>
+
+                <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                    <input type="file" id="imageInput" accept="image/*" onchange="handleImageUpload(event)">
+                    <div class="upload-icon">📁</div>
+                    <p data-lang="zh">点击或拖拽图片到这里</p>
+                    <p data-lang="en">Click or drag image here</p>
+                    <p style="color: var(--text-secondary); font-size: 12px; margin-top: 8px;">PNG, JPG, GIF, WebP</p>
+                </div>
+
+                <div class="preview-container">
+                    <img id="imagePreview" alt="Preview">
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label data-lang="zh">宽度（字符数）</label>
+                        <label data-lang="en">Width (chars)</label>
+                        <input type="number" id="imgWidth" value="80" min="20" max="200">
+                    </div>
+                    <div class="form-group">
+                        <label data-lang="zh">背景</label>
+                        <label data-lang="en">Background</label>
+                        <select id="imgBg">
+                            <option value="dark">深色</option>
+                            <option value="light">浅色</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="generateImageAscii()" id="generateImgBtn" disabled>
+                    <span data-lang="zh">✨ 转换为ASCII</span>
+                    <span data-lang="en">✨ Convert to ASCII</span>
+                </button>
+
+                <div id="imageAsciiResult" class="result-box" style="margin-top: 16px;"></div>
+                
+                <button class="copy-btn" onclick="copyImageAscii()" data-lang="zh">📋 复制结果</button>
+                <button class="copy-btn" onclick="copyImageAscii()" data-lang="en">📋 Copy Result</button>
+            </div>
+        </div>
+
+        <!-- 预设字体预览 -->
+        <div class="card">
+            <h2 class="card-title" data-lang="zh">🎨 字体预览</h2>
+            <h2 class="card-title" data-lang="en">🎨 Font Preview</h2>
+            
+            <div class="font-grid">
+                <div class="font-item selected" onclick="selectFont('standard', this)">
+                    <pre style="font-family: monospace;">Standard
+ ____  _  _  ____  _  _ 
+(  _ \( \/ )( ___)( \/ )
+ )   /  \   / )(    )  ( 
+(_)\_)(_/\/\_)(___)(_)\_)
+                    </pre>
+                    <span>Standard</span>
+                </div>
+                <div class="font-item" onclick="selectFont('block', this)">
+                    <pre style="font-family: monospace;">Block
+ ██████╗  █████╗ ███╗   ███╗
+██╔════╝ ██╔══██╗████╗ ████║
+██║  ███╗███████║██╔████╔██║
+██║   ██║██╔══██║██║╚██╔╝██║
+╚██████╔╝██║  ██║██║ ╚═╝ ██║
+ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝</pre>
+                    <span>Block</span>
+                </div>
+                <div class="font-item" onclick="selectFont('banner', this)">
+                    <pre style="font-family: monospace;">Banner
+#     # ####### #     # 
+#     # #       ##    # 
+#     # #       # #   # 
+####### #####   #  #  # 
+#     # #       #   # # 
+#     # #       #    ## 
+#     # ####### #     # </pre>
+                    <span>Banner</span>
+                </div>
+                <div class="font-item" onclick="selectFont('slant', this)">
+                    <pre style="font-family: monospace;">Slant
+   __    ____  ____  _  _ 
+  /__\  (  _ \( ___)( \/ )
+ /(__)\  )   / )(    )  ( 
+(__)(__)(_)\_)(___)(_)\_)
+                    </pre>
+                    <span>Slant</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip" data-lang="zh">
+            💡 提示：建议使用简短文本（3-10字符）以获得最佳效果。彩色模式会在终端中显示渐变色彩。
+        </div>
+        <div class="tip" data-lang="en">
+            💡 Tip: Short text (3-10 chars) works best. Color mode shows gradient colors in terminal.
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentTextResult = '';
+        let currentImageResult = '';
+        let uploadedImage = null;
+
+        // ASCII font definitions (simplified)
+        const fonts = {
+            standard: {
+                'A': ['  /\  ', ' /  \ ', '/ /\ \','/ ____|','/_/    \_\\'],
+                'B': ['| |__  ','|  _ \ ','| |_) |','|  _ < ','|_| \_\\\'],
+                'C': [' _____','/  __ \\','| /  \/','| |    ','| \__/\\_\\'],
+                'D': ['| |  / / ','| | / /  ','| |/ /   ','| | \ \  ','|_|__\\_\\'],
+                'E': ['|____ |','|  __| |','| |___ |','|____|_|'],
+                'F': ['|____ |','| |__   ','|  __|  ','| |     '],
+                'G': [' _____ ','/  ___|','| |     ','| |     ','\ \_/  /'],
+                'H': ['|  |  |','|  |  |','|____|','|  |  |','|__|  |'],
+                'I': ['| |','| |','| |','| |','|_|'],
+                'J': ['   | |','   | |','   | |',' / | |','|_/  |'],
+                'K': ['|  /','| / ','|/   ','| \ \ ','|  \\_\\'],
+                'L': ['|    ','|    ','|    ','|    ','|____|'],
+                'M': ['| \ | |','|  \| |','|   \ |','|   \ |','|    \|'],
+                'N': ['| \ | |','|  \| |','|   \ |','|   | |','|__|\__|'],
+                'O': ['  /\  ',' /  \ ','| |  |',' \  / ','  \/  '],
+                'P': ['|__   |','   | |','|___| |','| |    ','|_|    '],
+                'Q': ['  /\  ',' /  \ ','| |  |',' \_\/  ','  \_   '],
+                'R': ['|__   |','   | |','|___| |','| \ \  ','|  \\_\\'],
+                'S': [' ____ ','(  __ \',' \  / /','  / / ',' (_/  '],
+                'T': [' ____ ','(  __ \\',' | |  ',' | |  ',' (_) '],
+                'U': ['|  |  |','|  |  |','|  |  |',' \  \/  ','  \_/\\_\\'],
+                'V': ['|  |  |','|  |  |','|  |  |',' \  |  /','  \__/ '],
+                'W': ['|  |  |','|  |  |','|  |  |','|  |  |',' \ \/ / '],
+                'X': ['\ \ / /',' \ | / ','  | |  ',' / | \ ','/_/ \_\\'],
+                'Y': ['\ | / ',' \ | / ','  | |  ','  | |  ','  |_|  '],
+                'Z': [' ____  ','(  __ \\',' \  \/ /','  \  / ','  (_) '],
+                '0': ['  /\  ',' /  \ ','| |  |',' \  /  ','  \/   '],
+                '1': ['  |   ',' /|   ','| |   ','| |   ','|_|   '],
+                '2': [' ____  ','(     )',' \___/ /','    / / ',' ___/  '],
+                '3': [' ____  ','(     )','  ___/  ','(   )  ',' \___/ '],
+                '4': ['|  |  |','|  |  |','|____/ ','   | | ','   |_| '],
+                '5': [' ______','|  ___|','| |     ','| |___ ','|____|'],
+                '6': ['   __ ','  / / ',' / /__','| |  |',' \___/ '],
+                '7': [' ____  ','(  __ \\',' )    (','(  \  / ',' \  \/  '],
+                '8': ['  /\  ',' /  \ ','| |  |',' \  /  ','  \/   '],
+                '9': ['  /\  ',' /  \ ','|  \ |',' \  \  ','  \__/ '],
+                ' ': ['   ', '   ', '   ', '   ', '   '],
+                '!': [' | ',' | ',' | ','   ',' | '],
+                '.': ['   ','   ','   ','   ',' . '],
+                '-': ['     ','     ',' ____ ','     ','     '],
+                '_': ['     ','     ','     ','     ',' ____'],
+            }
+        };
+
+        // Simple block font
+        const blockChars = {
+            'A': '█▀▀▀█ █▀▀▀█ █▀▀▀█ █▀▀█ █▀▀▀',
+            'B': '█▀▀▀█ █▀▀▀█ █▀▀▀█ █▀▀█ █▀▀▀',
+            'C': '█▀▀▀▀ █     █     █     █▀▀▀',
+            'D': '█▀▀▀█ █▀▀▀█ █▀▀▀█ █▀▀▄ █▀▀▀',
+            'E': '█▀▀▀▀ █▀▀▀█ █▀▀▀  █     █▀▀▀',
+            'F': '█▀▀▀▀ █▀▀▀█ █▀▀▀  █     █▀▀▀',
+            'G': '█▀▀▀▀ █     █   █ █   ▄█ █▀▀▀',
+            'H': '█   █ █▀▀▀█ █▀▀▀█ █▀▀█ █▀▀▀',
+            'I': '█████ █     █     █     █▀▀▀',
+            'J': '█████ █     █     █▄▄  █▀▀▀',
+            'K': '█   █ █▀▀▄  █▀▀▄  █  █  █▀▀▀',
+            'L': '█     █     █     █     █▀▀▀',
+            'M': '█▄▄▄█ █▄▄▄█ █▀▀▀█ █   █ █▀▀▀',
+            'N': '█   █ █▀▀▄  █▀▀█  █▀▀▄  █▀▀▀',
+            'O': '█▀▀▀█ █     █     █     █▀▀▀',
+            'P': '█▀▀▀█ █▀▀▀█ █▀▀▀  █     █▀▀▀',
+            'Q': '█▀▀▀█ █     █     █   █ █▀▀▀',
+            'R': '█▀▀▀█ █▀▀▄  █▀▀█  █  █  █▀▀▀',
+            'S': '█▀▀▀▀ █▀▀▀  █▀▀▀  █▄▄█ █▄▄▄',
+            'T': '█▀▀▀▀ █     █     █     █▀▀▀',
+            'U': '█   █ █     █     █     █▀▀▀',
+            'V': '█   █ █     █     █  ▄  █▄▄▀',
+            'W': '█   █ █▀▀▀█ █▀▀▀█ █   █ █▀▀▀',
+            'X': '█   █ █  ▄█ █▄▄▄█  ██  █▀▀▀',
+            'Y': '█   █ █▀▀▄  █  █  █     █▀▀▀',
+            'Z': '█████ █   █  ██   ██   █▀▀▀',
+            '0': '█▀▀▀█ █   █ █   █ █   █ █▀▀▀',
+            '1': ' ██  ▄█   █ █   █  █    █▀▀▀',
+            '2': '█▀▀▀█ █   █ █▀▀▀█ █▀▀▀█ █▀▀▀',
+            '3': '█▀▀▀█ █   █ █▀▀▀█ █▀▀▀█ █▀▀▀',
+            '4': '█   █ █   █ █▀▀▀█ █▀▀▄  █▀▀▀',
+            '5': '█▀▀▀▀ █▀▀▀█ █▀▀▀  █▀▀▀█ █▀▀▀',
+            '6': '█▀▀▀▀ █▀▀▀█ █▀▀▀  █▀▀▄  █▀▀▀',
+            '7': '█████     █    █   █   █▀▀▀',
+            '8': '█▀▀▀█ █▀▀▀█ █▀▀▀█ █▀▀▄  █▀▀▀',
+            '9': '█▀▀▀█ █▀▀▀█ █▀▀▀█  █▀▀▄ █▀▀▀',
+            ' ': '     ',
+        };
+
+        function setLang(lang) {
+            document.body.className = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'English'));
+            });
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'text') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('textTab').classList.add('active');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('imageTab').classList.add('active');
+            }
+        }
+
+        function selectFont(font, el) {
+            document.getElementById('fontStyle').value = font;
+            document.querySelectorAll('.font-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function generateTextAscii() {
+            const text = document.getElementById('asciiText').value.toUpperCase() || 'HELLO';
+            const fontStyle = document.getElementById('fontStyle').value;
+            const colorMode = document.getElementById('colorMode').checked;
+            
+            let result = '';
+            
+            if (fontStyle === 'block') {
+                const lines = ['', '', '', '', '', ''];
+                for (const char of text) {
+                    const charArt = blockChars[char] || blockChars[' '];
+                    const parts = charArt.split(' ');
+                    for (let i = 0; i < 6 && i < parts.length; i++) {
+                        lines[i] += parts[i] + ' ';
+                    }
+                }
+                result = lines.join('\n');
+            } else {
+                // Use standard font
+                const charLines = [];
+                for (const char of text) {
+                    const charArt = fonts.standard[char] || fonts.standard[' '];
+                    charLines.push(charArt);
+                }
+                
+                // Combine rows
+                const rows = 5;
+                for (let i = 0; i < rows; i++) {
+                    let row = '';
+                    for (const charArt of charLines) {
+                        row += (charArt[i] || '   ') + ' ';
+                    }
+                    result += row + '\n';
+                }
+            }
+
+            currentTextResult = result;
+            const resultEl = document.getElementById('textAsciiResult');
+            
+            if (colorMode) {
+                const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'];
+                const lines = result.split('\n');
+                let html = '';
+                for (let i = 0; i < lines.length; i++) {
+                    const color = colors[i % colors.length];
+                    html += `<span style="color: ${color}">${escapeHtml(lines[i])}</span>\n`;
+                }
+                resultEl.innerHTML = `<div class="color-result"><pre>${html}</pre></div>`;
+            } else {
+                resultEl.textContent = result;
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function copyTextAscii() {
+            if (currentTextResult) {
+                navigator.clipboard.writeText(currentTextResult).then(() => {
+                    showToast(document.body.classList.contains('zh') ? '已复制！' : 'Copied!');
+                });
+            }
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('imagePreview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                document.getElementById('generateImgBtn').disabled = false;
+                
+                // Load image for processing
+                uploadedImage = new Image();
+                uploadedImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function generateImageAscii() {
+            if (!uploadedImage) return;
+            
+            const width = parseInt(document.getElementById('imgWidth').value) || 80;
+            const isDark = document.getElementById('imgBg').value === 'dark';
+            
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            const aspectRatio = uploadedImage.height / uploadedImage.width;
+            const height = Math.floor(width * aspectRatio * 0.5);
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            ctx.drawImage(uploadedImage, 0, 0, width, height);
+            
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const pixels = imageData.data;
+            
+            const chars = isDark ? '@#S%?*+;:,. ' : ' .:,;+*?%S#@';
+            let result = '';
+            
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const idx = (y * width + x) * 4;
+                    const r = pixels[idx];
+                    const g = pixels[idx + 1];
+                    const b = pixels[idx + 2];
+                    const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+                    const charIdx = Math.floor((gray / 255) * (chars.length - 1));
+                    result += chars[charIdx];
+                }
+                result += '\n';
+            }
+            
+            currentImageResult = result;
+            document.getElementById('imageAsciiResult').textContent = result;
+        }
+
+        function copyImageAscii() {
+            if (currentImageResult) {
+                navigator.clipboard.writeText(currentImageResult).then(() => {
+                    showToast(document.body.classList.contains('zh') ? '已复制！' : 'Copied!');
+                });
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #10B981; color: white; padding: 12px 24px; border-radius: 8px; z-index: 1000;';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="password-generator.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">安全密码生成器</div><div class="r-desc">高强度密码</div></a>
+        <a href="uuid-generator.html" class="related-card"><div class="r-icon">🔑</div><div class="r-title">UUID 生成器</div><div class="r-desc">批量UUID</div></a>
+        <a href="qrcode-generator.html" class="related-card"><div class="r-icon">📱</div><div class="r-title">二维码生成器</div><div class="r-desc">生成二维码</div></a>
+        <a href="fake-data-generator.html" class="related-card"><div class="r-icon">🎭</div><div class="r-title">假数据生成器</div><div class="r-desc">批量假数据</div></a>
+        <a href="barcode-generator.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">条形码生成器</div><div class="r-desc">Code128/EAN</div></a>
+        <a href="random-number-generator.html" class="related-card"><div class="r-icon">🎲</div><div class="r-title">随机数生成器</div><div class="r-desc">随机数批量生成</div></a>
+        </div>
+    </section>
+</body>
+</html>

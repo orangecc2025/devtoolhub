@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的在线Base32编解码工具，支持标准Base32和Hex扩展编码，文本与Base32互转。">
+    <meta name="keywords" content="Base32编码,Base32解码,Base32转换,在线Base32,Hex Base32">
+    <title>Base32 编解码 - 在线文本与Base32互转工具 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/base32-encoder.html">
+    <meta property="og:title" content="Base32 编解码 - 在线文本与Base32互转工具">
+    <meta property="og:description" content="免费的在线Base32编解码工具，支持标准Base32和Hex扩展编码，文本与Base32互转。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/base32-encoder.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Base32 编解码",
+        "description": "免费的在线Base32编解码工具，支持标准Base32和Hex扩展编码，文本与Base32互转。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .tool-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group textarea,
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+            resize: vertical;
+        }
+        .form-group textarea {
+            min-height: 120px;
+        }
+        .form-group textarea:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--bg);
+            cursor: pointer;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-error {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-error.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .error-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #991B1B;
+            margin-bottom: 12px;
+        }
+        .output-area {
+            background: #1E293B;
+            color: #E2E8F0;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow: auto;
+        }
+        .arrow-icon {
+            text-align: center;
+            font-size: 24px;
+            margin: 16px 0;
+            color: var(--primary);
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover { color: var(--primary); }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🔐 Base32 编解码</h1>
+            <p>文本与Base32互转，支持标准Base32和Hex扩展编码。</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="tool-icon">🔐</div>
+            
+            <div class="form-group">
+                <label for="mode">编码模式</label>
+                <select id="mode" onchange="toggleMode()">
+                    <option value="encode">文本 → Base32（编码）</option>
+                    <option value="decode">Base32 → 文本（解码）</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Base32 类型</label>
+                <select id="type">
+                    <option value="standard">标准 Base32（RFC 4648）</option>
+                    <option value="hex">Hex Base32（RFC 4648）</option>
+                    <option value="crockford">Crockford Base32</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="inputGroup">
+                <label for="textInput">输入文本</label>
+                <textarea id="textInput" placeholder="在此输入要编码的文本..."></textarea>
+            </div>
+
+            <div class="form-group" id="base32InputGroup" style="display: none;">
+                <label for="base32Input">输入 Base32</label>
+                <textarea id="base32Input" placeholder="在此输入要解码的Base32字符串..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" id="actionBtn" onclick="performAction()">🔄 编码</button>
+                <button class="btn btn-secondary" onclick="swapInput()">⇄ 交换</button>
+                <button class="btn btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+            </div>
+
+            <div class="result-error" id="errorBox">
+                <div class="error-title">❌ 操作失败</div>
+                <div id="errorMessage"></div>
+            </div>
+
+            <div class="result-box" id="successBox">
+                <div class="result-title">✅ 操作成功！</div>
+            </div>
+
+            <div class="form-group" style="margin-top: 24px;">
+                <label for="outputArea">输出结果</label>
+                <div class="output-area" id="outputArea">结果将显示在这里...</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="copyResult()">📋 复制结果</button>
+            </div>
+
+            <!-- 编码示例 -->
+            <div style="margin-top: 24px; padding: 16px; background: #F3F4F6; border-radius: 8px;">
+                <h4 style="margin-bottom: 12px;">📝 编码示例</h4>
+                <div style="font-size: 14px; color: var(--text-secondary);">
+                    <div><strong>输入：</strong>Hello, World!</div>
+                    <div><strong>标准Base32：</strong>JBSWY3DPFQQHO33SNQAC5K7DVDA====</div>
+                    <div><strong>Hex Base32：</strong>91IMOR3F41IG65DB8QQGV3DPKM======</div>
+                    <div style="margin-top: 8px;"><strong>输入：</strong>你好</div>
+                    <div><strong>标准Base32：</strong>5L2Q5YOR5YWL</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    什么是 Base32 编码？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    Base32是一种基于32个可打印字符的二进制到文本的编码方案，使用A-Z（26个字母）和2-7（6个数字）共32个字符。编码后数据体积约为原数据的1.6倍。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    标准Base32和Hex Base32有什么区别？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    标准Base32使用字母A-Z和数字2-7作为字符集，适合区分大小写的环境。Hex Base32使用数字0-9和字母A-V作为字符集，便于十六进制数据的编码。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    Crockford Base32有什么特点？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    Crockford Base32是Douglas Crockford设计的Base32变体，它忽略连字符、允许输入错误检测、并将字母I、L、O、U替换为1、1、0、V以提高可读性。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    Base32和Base64哪个更好？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    Base64编码效率更高（体积膨胀约33%），适合二进制数据传输。Base32编码效率较低（膨胀约60%），但字符集更安全，适合在可能混淆大小写的场景使用。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    数据是否安全？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    完全安全。所有编解码在浏览器本地完成，不会上传或存储任何数据。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="base64-tool.html" class="related-card"><div class="r-icon">🔄</div><div class="r-title">Base64 编码解码</div><div class="r-desc">文本和图片的Base64互转</div></a>
+        <a href="url-encoder.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">URL 编解码器</div><div class="r-desc">URL编码/解码</div></a>
+        <a href="html-entity-encoder.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">HTML 实体编码/解码</div><div class="r-desc">文本与HTML实体互转</div></a>
+        <a href="rot13-tool.html" class="related-card"><div class="r-icon">🔑</div><div class="r-title">ROT13 加密解密</div><div class="r-desc">ROT13/ROT47/ROT5</div></a>
+        <a href="morse-code-tool.html" class="related-card"><div class="r-icon">📡</div><div class="r-title">摩斯电码转换</div><div class="r-desc">文本与摩斯码互转</div></a>
+        <a href="caesar-cipher.html" class="related-card"><div class="r-icon">🏛</div><div class="r-title">凯撒密码</div><div class="r-desc">加密/解密/暴力破解</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        // Base32 字符集
+        const STANDARD_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        const HEX_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUV';
+        const CROCKFORD_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+
+        function toggleMode() {
+            const mode = document.getElementById('mode').value;
+            const inputGroup = document.getElementById('inputGroup');
+            const base32InputGroup = document.getElementById('base32InputGroup');
+            const actionBtn = document.getElementById('actionBtn');
+
+            if (mode === 'encode') {
+                inputGroup.style.display = 'block';
+                base32InputGroup.style.display = 'none';
+                actionBtn.textContent = '🔄 编码';
+                document.getElementById('textInput').placeholder = '在此输入要编码的文本...';
+            } else {
+                inputGroup.style.display = 'none';
+                base32InputGroup.style.display = 'block';
+                actionBtn.textContent = '🔄 解码';
+                document.getElementById('base32Input').placeholder = '在此输入要解码的Base32字符串...';
+            }
+            clearResult();
+        }
+
+        function performAction() {
+            const mode = document.getElementById('mode').value;
+            if (mode === 'encode') {
+                encodeBase32();
+            } else {
+                decodeBase32();
+            }
+        }
+
+        function encodeBase32() {
+            const input = document.getElementById('textInput').value;
+            if (!input) {
+                showError('请输入要编码的文本');
+                return;
+            }
+
+            const type = document.getElementById('type').value;
+            let alphabet;
+            switch (type) {
+                case 'hex': alphabet = HEX_ALPHABET; break;
+                case 'crockford': alphabet = CROCKFORD_ALPHABET; break;
+                default: alphabet = STANDARD_ALPHABET;
+            }
+
+            try {
+                // 将字符串转换为UTF-8字节数组
+                const encoder = new TextEncoder();
+                const bytes = encoder.encode(input);
+                
+                let result = '';
+                let buffer = 0;
+                let bitsLeft = 0;
+
+                for (const byte of bytes) {
+                    buffer = (buffer << 8) | byte;
+                    bitsLeft += 8;
+
+                    while (bitsLeft >= 5) {
+                        result += alphabet[(buffer >>> (bitsLeft - 5)) & 31];
+                        bitsLeft -= 5;
+                    }
+                }
+
+                // 处理剩余位
+                if (bitsLeft > 0) {
+                    result += alphabet[(buffer << (5 - bitsLeft)) & 31];
+                }
+
+                // 添加填充
+                if (type !== 'crockford') {
+                    const padding = (8 - (result.length % 8)) % 8;
+                    result += '='.repeat(padding);
+                }
+
+                showResult(result);
+            } catch (e) {
+                showError('编码失败：' + e.message);
+            }
+        }
+
+        function decodeBase32() {
+            const input = document.getElementById('base32Input').value.trim();
+            if (!input) {
+                showError('请输入要解码的Base32字符串');
+                return;
+            }
+
+            const type = document.getElementById('type').value;
+            let alphabet;
+
+            // 预处理输入
+            let cleanInput = input.toUpperCase();
+            if (type === 'crockford') {
+                // Crockford: 忽略连字符, O->0, I/L->1
+                cleanInput = cleanInput.replace(/[^A-Z0-9]/g, '');
+                cleanInput = cleanInput.replace(/O/g, '0');
+                cleanInput = cleanInput.replace(/I|L/g, '1');
+            } else {
+                cleanInput = cleanInput.replace(/[^A-Z2-7]/g, '');
+            }
+
+            // 选择字符集
+            switch (type) {
+                case 'hex': alphabet = HEX_ALPHABET; break;
+                case 'crockford': alphabet = CROCKFORD_ALPHABET; break;
+                default: alphabet = STANDARD_ALPHABET;
+            }
+
+            // 创建反向映射
+            const reverseMap = {};
+            for (let i = 0; i < alphabet.length; i++) {
+                reverseMap[alphabet[i]] = i;
+            }
+
+            try {
+                let result = '';
+                let buffer = 0;
+                let bitsLeft = 0;
+
+                for (const char of cleanInput) {
+                    const value = reverseMap[char];
+                    if (value === undefined) continue;
+
+                    buffer = (buffer << 5) | value;
+                    bitsLeft += 5;
+
+                    while (bitsLeft >= 8) {
+                        result += String.fromCharCode((buffer >>> (bitsLeft - 8)) & 255);
+                        bitsLeft -= 8;
+                    }
+                }
+
+                // 解码为UTF-8字符串
+                const decoder = new TextDecoder();
+                const bytes = new Uint8Array(result.split('').map(c => c.charCodeAt(0)));
+                
+                try {
+                    const decoded = decoder.decode(bytes);
+                    showResult(decoded);
+                } catch (e) {
+                    // 二进制数据可能解码失败
+                    showResult(result);
+                }
+            } catch (e) {
+                showError('解码失败：无效的Base32字符串');
+            }
+        }
+
+        function showResult(result) {
+            document.getElementById('errorBox').classList.remove('show');
+            document.getElementById('successBox').classList.add('show');
+            document.getElementById('outputArea').textContent = result;
+        }
+
+        function showError(message) {
+            document.getElementById('successBox').classList.remove('show');
+            document.getElementById('errorBox').classList.add('show');
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('outputArea').textContent = '结果将显示在这里...';
+        }
+
+        function clearResult() {
+            document.getElementById('errorBox').classList.remove('show');
+            document.getElementById('successBox').classList.remove('show');
+            document.getElementById('outputArea').textContent = '结果将显示在这里...';
+        }
+
+        function swapInput() {
+            const mode = document.getElementById('mode').value;
+            const output = document.getElementById('outputArea').textContent;
+            
+            if (output && output !== '结果将显示在这里...') {
+                if (mode === 'encode') {
+                    document.getElementById('mode').value = 'decode';
+                    toggleMode();
+                    document.getElementById('base32Input').value = output;
+                } else {
+                    document.getElementById('mode').value = 'encode';
+                    toggleMode();
+                    document.getElementById('textInput').value = output;
+                }
+            }
+        }
+
+        function clearAll() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('base32Input').value = '';
+            clearResult();
+        }
+
+        function copyResult() {
+            const text = document.getElementById('outputArea').textContent;
+            if (text && text !== '结果将显示在这里...') {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('已复制到剪贴板！');
+                });
+            }
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

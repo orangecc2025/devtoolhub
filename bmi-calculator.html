@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="BMI身体质量指数计算器，输入身高体重即可计算BMI值，评估健康等级。">
+    <meta name="keywords" content="BMI计算器,身体质量指数,BMI,体重指数">
+    <title>BMI计算器 - 体重指数健康评估 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/bmi-calculator.html">
+    <meta property="og:title" content="BMI计算器 - 体重指数健康评估 | DevToolBox">
+    <meta property="og:description" content="BMI身体质量指数计算器，输入身高体重即可计算BMI值，评估健康等级。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/bmi-calculator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "BMI计算器",
+        "description": "BMI身体质量指数计算器，输入身高体重即可计算BMI值，评估健康等级",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .unit-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .unit-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .unit-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .bmi-display {
+            text-align: center;
+            padding: 24px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .bmi-value {
+            font-size: 48px;
+            font-weight: 800;
+        }
+        .bmi-label {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .bmi-underweight { color: #3B82F6; }
+        .bmi-normal { color: #10B981; }
+        .bmi-overweight { color: #F59E0B; }
+        .bmi-obese { color: #EF4444; }
+        .bmi-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+        .bmi-table th, .bmi-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #E5E7EB;
+        }
+        .bmi-table th {
+            background: var(--bg);
+            font-weight: 600;
+        }
+        .bmi-table tr.current {
+            background: #FEF3C7;
+            font-weight: 600;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>⚖️ BMI计算器</h1>
+            <p>快速计算您的身体质量指数，了解您的健康等级</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="unit-toggle">
+                <button class="unit-btn active" onclick="setUnit('metric')">公制 (kg/cm)</button>
+                <button class="unit-btn" onclick="setUnit('imperial')">英制 (lb/ft-in)</button>
+            </div>
+
+            <div id="metricInputs">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="heightCm">身高 (cm)</label>
+                        <input type="number" id="heightCm" placeholder="例如：175" min="50" max="250">
+                    </div>
+                    <div class="form-group">
+                        <label for="weightKg">体重 (kg)</label>
+                        <input type="number" id="weightKg" placeholder="例如：70" min="10" max="300">
+                    </div>
+                </div>
+            </div>
+
+            <div id="imperialInputs" style="display: none;">
+                <div class="form-group">
+                    <label for="heightFt">身高 (英尺 + 英寸)</label>
+                    <div class="form-row">
+                        <input type="number" id="heightFt" placeholder="英尺" min="3" max="8">
+                        <input type="number" id="heightIn" placeholder="英寸" min="0" max="11">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="weightLb">体重 (磅)</label>
+                    <input type="number" id="weightLb" placeholder="例如：154" min="20" max="700">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="age">年龄</label>
+                <input type="number" id="age" placeholder="18-120" min="18" max="120" value="25">
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+                    注：18岁以下和65岁以上人群的BMI参考标准有所不同
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="calculateBMI()" style="width: 100%;">
+                计算BMI
+            </button>
+
+            <div class="result-box" id="result">
+                <div class="result-title">📊 BMI计算结果</div>
+                <div class="bmi-display">
+                    <div class="bmi-value" id="bmiValue">--</div>
+                    <div class="bmi-label" id="bmiLabel">--</div>
+                </div>
+                <table class="bmi-table" id="bmiTable">
+                    <thead>
+                        <tr>
+                            <th>分类</th>
+                            <th>BMI范围</th>
+                            <th>您的状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="row-underweight">
+                            <td>偏瘦</td>
+                            <td>&lt; 18.5</td>
+                            <td>-</td>
+                        </tr>
+                        <tr id="row-normal">
+                            <td>正常</td>
+                            <td>18.5 - 23.9</td>
+                            <td>-</td>
+                        </tr>
+                        <tr id="row-overweight">
+                            <td>偏胖</td>
+                            <td>24 - 27.9</td>
+                            <td>-</td>
+                        </tr>
+                        <tr id="row-obese">
+                            <td>肥胖</td>
+                            <td>≥ 28</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="margin-top: 16px; padding: 12px; background: white; border-radius: 8px; font-size: 14px;">
+                    <div><strong>理想体重范围：</strong><span id="idealWeight">--</span></div>
+                    <div style="margin-top: 8px;"><strong>健康建议：</strong><span id="healthAdvice">--</span></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    什么是BMI？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    BMI（Body Mass Index，身体质量指数）是国际上常用的衡量人体胖瘦程度以及是否健康的标准。计算公式为：BMI = 体重(kg) ÷ 身高²(m)。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    BMI值的健康范围是多少？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    对于成年人（18-65岁）：BMI &lt; 18.5 为偏瘦，18.5-23.9 为正常，24-27.9 为偏胖，≥28 为肥胖。中国标准与WHO标准略有不同，偏胖和肥胖的临界值更低。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    BMI能完全反映健康状况吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    BMI是一个参考指标，不能完全反映健康状况。它没有考虑肌肉量、骨密度、年龄、性别等因素。运动员、孕妇、老年人等人群的BMI参考意义有限。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    理想体重怎么计算？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    理想体重通常使用公式：理想体重(kg) = 身高(cm) - 105 或 身高(cm) - 100（男性/女性各有不同）。我们的计算器使用更精确的范围计算。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="percentage-calculator.html" class="related-card"><div class="r-icon">💯</div><div class="r-title">百分比计算器</div><div class="r-desc">百分比计算</div></a>
+        <a href="ratio-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">比例计算器</div><div class="r-desc">比例求解</div></a>
+        <a href="age-calculator.html" class="related-card"><div class="r-icon">🎂</div><div class="r-title">年龄计算器</div><div class="r-desc">精确年龄</div></a>
+        <a href="loan-calculator.html" class="related-card"><div class="r-icon">🏠</div><div class="r-title">贷款计算器</div><div class="r-desc">月供计算</div></a>
+        <a href="tip-calculator.html" class="related-card"><div class="r-icon">💰</div><div class="r-title">小费计算器</div><div class="r-desc">AA分账</div></a>
+        <a href="discount-calculator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">折扣计算器</div><div class="r-desc">折扣叠加</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentUnit = 'metric';
+
+        function setUnit(unit) {
+            currentUnit = unit;
+            document.querySelectorAll('.unit-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (unit === 'metric') {
+                document.getElementById('metricInputs').style.display = 'block';
+                document.getElementById('imperialInputs').style.display = 'none';
+            } else {
+                document.getElementById('metricInputs').style.display = 'none';
+                document.getElementById('imperialInputs').style.display = 'block';
+            }
+        }
+
+        function calculateBMI() {
+            let height, weight;
+
+            if (currentUnit === 'metric') {
+                height = parseFloat(document.getElementById('heightCm').value);
+                weight = parseFloat(document.getElementById('weightKg').value);
+            } else {
+                const ft = parseFloat(document.getElementById('heightFt').value) || 0;
+                const inch = parseFloat(document.getElementById('heightIn').value) || 0;
+                const totalInches = ft * 12 + inch;
+                height = totalInches * 2.54;
+                weight = parseFloat(document.getElementById('weightLb').value) * 0.453592;
+            }
+
+            if (!height || !weight || height <= 0 || weight <= 0) {
+                alert('请输入有效的身高和体重');
+                return;
+            }
+
+            const heightM = height / 100;
+            const bmi = weight / (heightM * heightM);
+            const bmiRounded = Math.round(bmi * 10) / 10;
+
+            let category, colorClass, advice;
+            if (bmi < 18.5) {
+                category = '偏瘦';
+                colorClass = 'bmi-underweight';
+                advice = '建议适当增加营养摄入，加强锻炼，增加肌肉量。';
+            } else if (bmi < 24) {
+                category = '正常';
+                colorClass = 'bmi-normal';
+                advice = '继续保持！建议维持均衡饮食和适度运动的习惯。';
+            } else if (bmi < 28) {
+                category = '偏胖';
+                colorClass = 'bmi-overweight';
+                advice = '建议控制饮食，减少高热量食物摄入，增加有氧运动。';
+            } else {
+                category = '肥胖';
+                colorClass = 'bmi-obese';
+                advice = '建议咨询医生或营养师，制定科学的减重计划。';
+            }
+
+            document.getElementById('bmiValue').textContent = bmiRounded;
+            document.getElementById('bmiValue').className = colorClass;
+            document.getElementById('bmiLabel').textContent = category;
+            document.getElementById('bmiLabel').className = 'bmi-label ' + colorClass;
+
+            // 高亮当前分类
+            ['underweight', 'normal', 'overweight', 'obese'].forEach(cat => {
+                document.getElementById('row-' + cat).classList.remove('current');
+            });
+            
+            if (bmi < 18.5) document.getElementById('row-underweight').classList.add('current');
+            else if (bmi < 24) document.getElementById('row-normal').classList.add('current');
+            else if (bmi < 28) document.getElementById('row-overweight').classList.add('current');
+            else document.getElementById('row-obese').classList.add('current');
+
+            // 计算理想体重
+            const idealLow = Math.round(18.5 * heightM * heightM);
+            const idealHigh = Math.round(23.9 * heightM * heightM);
+            document.getElementById('idealWeight').textContent = `${idealLow} - ${idealHigh} kg`;
+            document.getElementById('healthAdvice').textContent = advice;
+
+            document.getElementById('result').classList.add('show');
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

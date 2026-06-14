@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的在线摩斯电码转换工具，支持文本与摩斯码互转，可播放音频。字母、数字、标点符号全覆盖。">
+    <meta name="keywords" content="摩斯电码,莫尔斯电码,Morse Code,在线摩斯电码,摩斯密码">
+    <title>摩斯电码转换 - 在线文本与Morse Code互转工具 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/morse-code-tool.html">
+    <meta property="og:title" content="摩斯电码转换 - 在线文本与Morse Code互转工具">
+    <meta property="og:description" content="免费的在线摩斯电码转换工具，支持文本与摩斯码互转，可播放音频。字母、数字、标点符号全覆盖。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/morse-code-tool.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "摩斯电码转换",
+        "description": "免费的在线摩斯电码转换工具，支持文本与摩斯码互转，可播放音频。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .tool-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+            min-height: 120px;
+            resize: vertical;
+        }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-success:hover {
+            background: #059669;
+        }
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .output-area {
+            background: #1E293B;
+            color: #E2E8F0;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 16px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow: auto;
+            line-height: 2;
+        }
+        .arrow-icon {
+            text-align: center;
+            font-size: 24px;
+            margin: 16px 0;
+            color: var(--primary);
+        }
+        .player-controls {
+            background: #F3F4F6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .player-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .speed-control input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border);
+            outline: none;
+        }
+        .speed-control input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+        .visualizer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60px;
+            background: #1E293B;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .wave-bar {
+            width: 4px;
+            background: var(--success);
+            margin: 0 2px;
+            border-radius: 2px;
+            transition: height 0.1s;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover { color: var(--primary); }
+        .morse-preview {
+            margin-top: 12px;
+            padding: 12px;
+            background: #FEF3C7;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #92400E;
+        }
+        .morse-preview strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>📡 摩斯电码转换</h1>
+            <p>文本与摩斯电码互转，支持字母、数字、标点符号，可播放音频。</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="tool-icon">📡</div>
+            
+            <div class="form-group">
+                <label for="inputText">输入文本</label>
+                <textarea id="inputText" placeholder="在此输入要转换的文本或摩斯电码（用空格分隔点划）..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="textToMorse()">📝 文本→摩斯</button>
+                <button class="btn btn-primary" onclick="morseToText()">🔄 摩斯→文本</button>
+                <button class="btn btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+            </div>
+
+            <div class="arrow-icon">⬇</div>
+
+            <div class="form-group">
+                <label for="outputText">转换结果</label>
+                <div class="output-area" id="outputText">结果将显示在这里...</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="copyResult()">📋 复制</button>
+            </div>
+
+            <div class="morse-preview">
+                <strong>💡 示例</strong>
+                <div>SOS = ... --- ...</div>
+                <div>HELLO = .... . .-.. .-.. ---</div>
+                <div>123 = .---- ..--- ...--</div>
+            </div>
+
+            <!-- 音频播放器 -->
+            <div class="player-controls">
+                <div class="player-title">🎵 摩斯电码播放器</div>
+                <div class="speed-control">
+                    <span>慢速</span>
+                    <input type="range" id="speedSlider" min="5" max="30" value="15">
+                    <span>快速</span>
+                    <span id="speedValue">15 WPM</span>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-success" id="playBtn" onclick="playMorse()">▶ 播放</button>
+                    <button class="btn btn-danger" id="stopBtn" onclick="stopMorse()">⏹ 停止</button>
+                </div>
+                <div class="visualizer" id="visualizer">
+                    <!-- Wave bars will be added here -->
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    摩斯电码是如何表示的？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    摩斯电码使用点（.）和划（-）表示字符。<br>
+                    • 点（dit）：短促的信号<br>
+                    • 划（dah）：较长的信号<br>
+                    • 点划之间停顿，字符之间中等停顿，单词之间长停顿
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    如何输入摩斯电码进行解码？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    使用空格分隔每个字符的信号，用斜杠 "/" 分隔单词。例如：<br>
+                    <code>... --- ...</code> = SOS<br>
+                    <code>.... . .-.. .-.. --- / .- -. -.. / --. --- --- -.. ...</code> = HELLO AND GOODS
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    摩斯电码播放速度可调吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    是的，您可以拖动速度滑块调整播放速度（5-30 WPM）。WPM是"每分钟字数"的缩写，数值越大播放越快。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    SOS是什么？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    SOS是最著名的求救信号，摩斯电码为 "... --- ..."（三点三划三点）。它不是缩写，而是因其易于记忆和发送而被国际无线电报公约采用为标准求救信号。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    支持中文吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    目前摩斯电码只支持26个英文字母、0-9数字和常用标点符号。中文字符需要先转换为拼音或英文后才能编码。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="base64-tool.html" class="related-card"><div class="r-icon">🔄</div><div class="r-title">Base64 编码解码</div><div class="r-desc">文本和图片的Base64互转</div></a>
+        <a href="base32-encoder.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">Base32 编解码</div><div class="r-desc">文本与Base32互转</div></a>
+        <a href="url-encoder.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">URL 编解码器</div><div class="r-desc">URL编码/解码</div></a>
+        <a href="html-entity-encoder.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">HTML 实体编码/解码</div><div class="r-desc">文本与HTML实体互转</div></a>
+        <a href="rot13-tool.html" class="related-card"><div class="r-icon">🔑</div><div class="r-title">ROT13 加密解密</div><div class="r-desc">ROT13/ROT47/ROT5</div></a>
+        <a href="caesar-cipher.html" class="related-card"><div class="r-icon">🏛</div><div class="r-title">凯撒密码</div><div class="r-desc">加密/解密/暴力破解</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        // 摩斯电码映射表
+        const MORSE_CODE = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+            'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+            'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+            'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+            'Y': '-.--', 'Z': '--..',
+            '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+            '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
+            '.': '.-.-.-', ',': '--..--', '?': '..--..', "'": '.----.', '!': '-.-.--',
+            '/': '-..-.', '(': '-.--.', ')': '-.--.-', '&': '.-...', ':': '---...',
+            ';': '-.-.-.', '=': '-...-', '+': '.-.-.', '-': '-....-', '_': '..--.-',
+            '"': '.-..-.', '$': '...-..-', '@': '.--.-.', ' ': '/'
+        };
+
+        // 创建反向映射
+        const REVERSE_MORSE = {};
+        for (const [char, code] of Object.entries(MORSE_CODE)) {
+            REVERSE_MORSE[code] = char;
+        }
+
+        let audioContext = null;
+        let isPlaying = false;
+        let stopRequested = false;
+
+        function textToMorse() {
+            const input = document.getElementById('inputText').value.toUpperCase();
+            if (!input) {
+                document.getElementById('outputText').textContent = '请输入要转换的文本';
+                return;
+            }
+
+            let result = [];
+            for (const char of input) {
+                if (MORSE_CODE[char]) {
+                    result.push(MORSE_CODE[char]);
+                } else if (char === '\n') {
+                    result.push('/');
+                } else if (char === ' ') {
+                    result.push(' ');
+                }
+            }
+
+            document.getElementById('outputText').textContent = result.join(' ');
+        }
+
+        function morseToText() {
+            const input = document.getElementById('inputText').value.trim();
+            if (!input) {
+                document.getElementById('outputText').textContent = '请输入要转换的摩斯电码';
+                return;
+            }
+
+            // 分割为字符
+            const codes = input.split(' ');
+            let result = '';
+
+            for (const code of codes) {
+                if (code === '/') {
+                    result += ' ';
+                } else if (REVERSE_MORSE[code]) {
+                    result += REVERSE_MORSE[code];
+                }
+            }
+
+            document.getElementById('outputText').textContent = result;
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').textContent = '结果将显示在这里...';
+            stopMorse();
+        }
+
+        function copyResult() {
+            const text = document.getElementById('outputText').textContent;
+            if (text && text !== '结果将显示在这里...' && text !== '请输入要转换的文本' && text !== '请输入要转换的摩斯电码') {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('已复制到剪贴板！');
+                });
+            }
+        }
+
+        // 音频播放功能
+        document.getElementById('speedSlider').addEventListener('input', function() {
+            document.getElementById('speedValue').textContent = this.value + ' WPM';
+        });
+
+        function playMorse() {
+            const morse = document.getElementById('outputText').textContent;
+            if (!morse || morse === '结果将显示在这里...') {
+                alert('请先转换文本或输入摩斯电码');
+                return;
+            }
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            isPlaying = true;
+            stopRequested = false;
+            document.getElementById('playBtn').disabled = true;
+
+            playSequence(morse);
+        }
+
+        async function playSequence(morse) {
+            const wpm = parseInt(document.getElementById('speedSlider').value);
+            const dotDuration = 1200 / wpm; // 点的时间长度（毫秒）
+            const dashDuration = dotDuration * 3;
+            const symbolSpace = dotDuration;
+            const letterSpace = dotDuration * 3;
+            const wordSpace = dotDuration * 7;
+
+            for (let i = 0; i < morse.length && !stopRequested; i++) {
+                const char = morse[i];
+                
+                if (char === '.') {
+                    await playTone(dotDuration);
+                } else if (char === '-') {
+                    await playTone(dashDuration);
+                } else if (char === ' ') {
+                    // 字符间隔
+                    await sleep(letterSpace - symbolSpace);
+                } else if (char === '/') {
+                    // 单词间隔
+                    await sleep(wordSpace - letterSpace);
+                }
+                
+                if (!stopRequested) {
+                    await sleep(symbolSpace);
+                }
+            }
+
+            isPlaying = false;
+            document.getElementById('playBtn').disabled = false;
+        }
+
+        function playTone(duration) {
+            return new Promise(resolve => {
+                if (stopRequested) {
+                    resolve();
+                    return;
+                }
+
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.value = 600; // 标准摩斯频率
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration / 1000);
+
+                // 启动可视化
+                startVisualizer(duration);
+
+                setTimeout(resolve, duration);
+            });
+        }
+
+        function startVisualizer(duration) {
+            const visualizer = document.getElementById('visualizer');
+            visualizer.innerHTML = '';
+            
+            const barCount = Math.min(30, Math.floor(duration / 30));
+            
+            for (let i = 0; i < barCount; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'wave-bar';
+                bar.style.height = '20px';
+                bar.style.animation = `wave ${duration / 1000}s ease-out`;
+                visualizer.appendChild(bar);
+                
+                setTimeout(() => {
+                    bar.style.height = Math.random() * 40 + 20 + 'px';
+                }, i * 30);
+            }
+        }
+
+        function stopMorse() {
+            stopRequested = true;
+            isPlaying = false;
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('visualizer').innerHTML = '';
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+
+    <style>
+        @keyframes wave {
+            0% { height: 20px; }
+            50% { height: 50px; }
+            100% { height: 20px; }
+        }
+    </style>
+</body>
+</html>

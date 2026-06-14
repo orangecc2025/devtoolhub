@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的在线HTML校验器，支持标签闭合检查、嵌套规则验证和常见错误提示。统计标签数量。">
+    <meta name="keywords" content="HTML校验器,HTML验证,HTML检查,标签闭合,在线HTML工具">
+    <title>HTML 校验器 - 在线HTML标签闭合与嵌套规则验证工具 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/html-validator.html">
+    <meta property="og:title" content="HTML 校验器 - 在线HTML标签闭合与嵌套规则验证工具">
+    <meta property="og:description" content="免费的在线HTML校验器，支持标签闭合检查、嵌套规则验证和常见错误提示。统计标签数量。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/html-validator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "HTML 校验器",
+        "description": "免费的在线HTML校验器，支持标签闭合检查、嵌套规则验证和常见错误提示。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .tool-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+            min-height: 200px;
+            resize: vertical;
+        }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-warning {
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-warning.show { display: block; }
+        .result-error {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-error.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .warning-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #92400E;
+            margin-bottom: 12px;
+        }
+        .error-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #991B1B;
+            margin-bottom: 12px;
+        }
+        .output-area {
+            background: #1E293B;
+            color: #E2E8F0;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow: auto;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .stat-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .issue-list {
+            margin-top: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .issue-item {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            background: #FEF2F2;
+            border-left: 3px solid var(--error);
+        }
+        .warning-item {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            background: #FFFBEB;
+            border-left: 3px solid var(--warning);
+        }
+        .issue-item:last-child, .warning-item:last-child { margin-bottom: 0; }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover { color: var(--primary); }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🔍 HTML 校验器</h1>
+            <p>标签闭合检查，嵌套规则验证，常见错误提示。统计标签数量和结构。</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="tool-icon">🔍</div>
+            
+            <div class="form-group">
+                <label for="htmlInput">输入 HTML</label>
+                <textarea id="htmlInput" placeholder="在此粘贴您的HTML内容..."></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="validateHTML()">🔍 校验 HTML</button>
+                <button class="btn btn-secondary" onclick="prettifyHTML()">✨ 美化</button>
+                <button class="btn btn-secondary" onclick="clearHTML()">🗑️ 清空</button>
+            </div>
+
+            <div class="result-error" id="errorBox">
+                <div class="error-title">❌ 发现错误</div>
+                <div class="issue-list" id="errorList"></div>
+            </div>
+
+            <div class="result-warning" id="warningBox">
+                <div class="warning-title">⚠️ 发现警告</div>
+                <div class="issue-list" id="warningList"></div>
+            </div>
+
+            <div class="result-box" id="successBox">
+                <div class="result-title">✅ HTML 校验通过！</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="tagCount">0</div>
+                        <div class="stat-label">标签总数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="openTagCount">0</div>
+                        <div class="stat-label">开放标签</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="selfCloseCount">0</div>
+                        <div class="stat-label">自闭合</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="attrCount">0</div>
+                        <div class="stat-label">属性数量</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="depthCount">0</div>
+                        <div class="stat-label">最大深度</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 24px;">
+                <label for="outputArea">美化输出</label>
+                <div class="output-area" id="outputArea">美化后的HTML将显示在这里...</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="copyHTMLOutput()">📋 复制结果</button>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    HTML校验器检查哪些内容？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    我们的HTML校验器检查：标签闭合（所有标签必须正确关闭）、标签嵌套规则（如&lt;p&gt;不能嵌套在&lt;p&gt;内）、必需属性（如&lt;img&gt;必须有alt属性）、属性值引号、实体转义、重复ID检测等。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    HTML5和XHTML有什么区别？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    XHTML要求所有标签必须闭合、属性值必须加引号、标签名必须小写。HTML5更宽松，但遵循良好实践仍很重要。校验器主要检查格式问题和潜在错误。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    哪些是自闭合标签？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    在HTML5中：&lt;br&gt;、&lt;hr&gt;、&lt;img&gt;、&lt;input&gt;、&lt;meta&gt;、&lt;link&gt;、&lt;area&gt;、&lt;base&gt;、&lt;col&gt;、&lt;embed&gt;、&lt;source&gt;、&lt;track&gt;、&lt;wbr&gt;等。这些标签不应使用&lt;/xxx&gt;闭合。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    如何修复嵌套错误？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    确保标签按照正确的顺序嵌套。例如：&lt;div&gt;&lt;p&gt;&lt;/p&gt;&lt;/div&gt;是正确的，但&lt;div&gt;&lt;p&gt;&lt;/div&gt;&lt;/p&gt;是错误的。先开的标签后闭合。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    数据是否安全？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    完全安全。所有处理在浏览器本地完成，不会上传或存储任何数据。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="json-validator.html" class="related-card"><div class="r-icon">✓</div><div class="r-title">JSON 校验器</div><div class="r-desc">语法检查</div></a>
+        <a href="xml-validator.html" class="related-card"><div class="r-icon">📋</div><div class="r-title">XML 校验器</div><div class="r-desc">格式检查</div></a>
+        <a href="css-validator.html" class="related-card"><div class="r-icon">🎯</div><div class="r-title">CSS 校验器</div><div class="r-desc">语法验证</div></a>
+        <a href="regex-tester.html" class="related-card"><div class="r-icon">📝</div><div class="r-title">正则表达式测试器</div><div class="r-desc">实时匹配</div></a>
+        <a href="credit-card-validator.html" class="related-card"><div class="r-icon">💳</div><div class="r-title">信用卡号验证器</div><div class="r-desc">Luhn验证</div></a>
+        <a href="email-validator.html" class="related-card"><div class="r-icon">✉</div><div class="r-title">邮箱格式验证</div><div class="r-desc">格式验证</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        const htmlInput = document.getElementById('htmlInput');
+        const outputArea = document.getElementById('outputArea');
+        const errorBox = document.getElementById('errorBox');
+        const warningBox = document.getElementById('warningBox');
+        const successBox = document.getElementById('successBox');
+
+        // 自闭合标签列表
+        const selfClosingTags = ['br', 'hr', 'img', 'input', 'meta', 'link', 'area', 'base', 'col', 'embed', 'source', 'track', 'wbr', 'param', 'menuitem'];
+        
+        // 可选闭合标签
+        const optionalClosingTags = ['p', 'li', 'dt', 'dd', 'rt', 'rp', 'optgroup', 'option', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td'];
+
+        function validateHTML() {
+            const input = htmlInput.value.trim();
+            if (!input) {
+                showErrors(['请输入HTML内容']);
+                return;
+            }
+
+            const errors = [];
+            const warnings = [];
+            const stats = analyzeHTML(input, errors, warnings);
+
+            if (errors.length > 0) {
+                showErrors(errors);
+                successBox.classList.remove('show');
+                warningBox.classList.remove('show');
+            } else {
+                if (warnings.length > 0) {
+                    showWarnings(warnings);
+                    successBox.classList.remove('show');
+                } else {
+                    warningBox.classList.remove('show');
+                    successBox.classList.add('show');
+                }
+                showStats(stats);
+            }
+        }
+
+        function analyzeHTML(html, errors, warnings) {
+            const stats = {
+                tagCount: 0,
+                openTagCount: 0,
+                selfCloseCount: 0,
+                attrCount: 0,
+                maxDepth: 0
+            };
+
+            const tagStack = [];
+            const seenIds = new Set();
+            const lines = html.split('\n');
+            let currentDepth = 0;
+            let maxDepth = 0;
+
+            // 解析标签
+            const tagRegex = /<(\/?)([\w-]+)([^>]*)(\/?)>/g;
+            let match;
+
+            while ((match = tagRegex.exec(html)) !== null) {
+                const isCloseTag = match[1] === '/';
+                const tagName = match[2].toLowerCase();
+                const attributes = match[3];
+                const isSelfClosing = match[4] === '/' || selfClosingTags.includes(tagName);
+
+                // 跳过注释和doctype
+                if (tagName === '!doctype' || tagName === '!--' || tagName === '!xml') continue;
+
+                stats.tagCount++;
+
+                // 解析属性
+                const attrRegex = /([\w-]+)(?:=["']([^"']*)["'])?/g;
+                let attrMatch;
+                while ((attrMatch = attrRegex.exec(attributes)) !== null) {
+                    if (attrMatch[1] && attrMatch[1] !== '/') {
+                        stats.attrCount++;
+                        if (attrMatch[1] === 'id' && attrMatch[2]) {
+                            if (seenIds.has(attrMatch[2])) {
+                                warnings.push(`重复的ID属性值: "${attrMatch[2]}"`);
+                            }
+                            seenIds.add(attrMatch[2]);
+                        }
+                    }
+                }
+
+                if (isCloseTag) {
+                    if (tagStack.length === 0) {
+                        errors.push(`多余的闭合标签 </${tagName}>`);
+                    } else if (tagStack[tagStack.length - 1].name !== tagName) {
+                        errors.push(`标签不匹配：期望 <${tagStack[tagStack.length - 1].name}>，实际 </${tagName}>`);
+                    } else {
+                        tagStack.pop();
+                        currentDepth--;
+                    }
+                } else if (isSelfClosing) {
+                    stats.selfCloseCount++;
+                } else {
+                    stats.openTagCount++;
+                    tagStack.push({ name: tagName, selfClosing: false });
+                    currentDepth++;
+                    maxDepth = Math.max(maxDepth, currentDepth);
+                }
+            }
+
+            // 检查未闭合的标签
+            for (const tag of tagStack) {
+                if (!optionalClosingTags.includes(tag.name)) {
+                    errors.push(`缺少闭合标签: <${tag.name}>`);
+                }
+            }
+
+            // 检查常见问题
+            if (html.includes('<p>') && (html.match(/<p>/g) || []).length > (html.match(/<\/p>/g) || []).length) {
+                warnings.push('可能存在未闭合的 &lt;p&gt; 标签');
+            }
+
+            // 检查img标签alt属性
+            const imgWithoutAlt = html.match(/<img(?![^>]*alt)[^>]*>/gi);
+            if (imgWithoutAlt) {
+                warnings.push(`${imgWithoutAlt.length} 个 <img> 标签缺少 alt 属性`);
+            }
+
+            stats.maxDepth = maxDepth;
+            return stats;
+        }
+
+        function showErrors(errors) {
+            errorBox.classList.add('show');
+            const errorList = document.getElementById('errorList');
+            errorList.innerHTML = errors.map(e => `<div class="issue-item">${e}</div>`).join('');
+        }
+
+        function showWarnings(warnings) {
+            warningBox.classList.add('show');
+            const warningList = document.getElementById('warningList');
+            warningList.innerHTML = warnings.map(w => `<div class="warning-item">${w}</div>`).join('');
+        }
+
+        function showStats(stats) {
+            document.getElementById('tagCount').textContent = stats.tagCount;
+            document.getElementById('openTagCount').textContent = stats.openTagCount;
+            document.getElementById('selfCloseCount').textContent = stats.selfCloseCount;
+            document.getElementById('attrCount').textContent = stats.attrCount;
+            document.getElementById('depthCount').textContent = stats.maxDepth;
+        }
+
+        function prettifyHTML() {
+            const input = htmlInput.value.trim();
+            if (!input) {
+                outputArea.textContent = '请先输入HTML内容';
+                return;
+            }
+
+            try {
+                const temp = document.createElement('div');
+                temp.innerHTML = input;
+                outputArea.textContent = prettifyNode(temp, 0);
+            } catch (e) {
+                outputArea.textContent = '格式化失败：' + e.message;
+            }
+        }
+
+        function prettifyNode(node, level) {
+            let result = '';
+            const indent = '  '.repeat(level);
+            
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent.trim();
+                if (text) result += indent + text + '\n';
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                const children = Array.from(node.childNodes).filter(n => n.nodeType !== Node.TEXT_NODE || n.textContent.trim());
+                
+                if (children.length === 0) {
+                    result += indent + `<${node.tagName.toLowerCase()}`;
+                    for (const attr of node.attributes || []) {
+                        result += ` ${attr.name}="${attr.value}"`;
+                    }
+                    if (selfClosingTags.includes(node.tagName.toLowerCase())) {
+                        result += '>\n';
+                    } else {
+                        result += `></${node.tagName.toLowerCase()}>\n`;
+                    }
+                } else {
+                    result += indent + `<${node.tagName.toLowerCase()}`;
+                    for (const attr of node.attributes || []) {
+                        result += ` ${attr.name}="${attr.value}"`;
+                    }
+                    result += '>\n';
+                    for (const child of children) {
+                        result += prettifyNode(child, level + 1);
+                    }
+                    result += indent + `</${node.tagName.toLowerCase()}>\n`;
+                }
+            }
+
+            return result;
+        }
+
+        function clearHTML() {
+            htmlInput.value = '';
+            outputArea.textContent = '美化后的HTML将显示在这里...';
+            errorBox.classList.remove('show');
+            warningBox.classList.remove('show');
+            successBox.classList.remove('show');
+        }
+
+        function copyHTMLOutput() {
+            const text = outputArea.textContent;
+            if (text && text !== '美化后的HTML将显示在这里...') {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('已复制到剪贴板！');
+                });
+            }
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="行号添加器工具，支持添加/移除行号，可配置起始号、间隔、前缀、后缀、对齐方式。">
+    <meta name="keywords" content="添加行号,移除行号,行号工具,文本行号,编号工具">
+    <title>行号添加器 - 添加/移除行号工具 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/line-numbering.html">
+    <meta property="og:title" content="行号添加器 - 添加/移除行号工具 | DevToolBox">
+    <meta property="og:description" content="行号添加器工具，支持添加/移除行号，可配置起始号、间隔、前缀、后缀、对齐方式。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/line-numbering.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "行号添加器",
+        "description": "添加/移除行号，自定义起始号和间隔",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .result-content {
+            background: white;
+            border: 1px solid #D1FAE5;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .footer a:hover { text-decoration: underline; }
+        .mode-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .mode-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .settings-panel {
+            background: #F3F4F6;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .settings-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🔢 行号添加器</h1>
+            <p>添加/移除行号，自定义起始号和间隔</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="add">➕ 添加行号</button>
+                <button class="mode-btn" data-mode="remove">➖ 移除行号</button>
+            </div>
+
+            <div class="form-group">
+                <label>输入文本</label>
+                <textarea id="inputText" rows="10" placeholder="在此输入要处理的文本..."></textarea>
+            </div>
+
+            <div class="settings-panel" id="addSettings">
+                <div class="settings-title">行号设置</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>起始编号</label>
+                        <input type="number" id="startNumber" value="1" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>编号间隔</label>
+                        <input type="number" id="step" value="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>步进方式</label>
+                        <select id="stepMode">
+                            <option value="increment">递增</option>
+                            <option value="fixed">固定值</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>前缀</label>
+                        <input type="text" id="prefix" value="" placeholder="如: ">
+                    </div>
+                    <div class="form-group">
+                        <label>后缀</label>
+                        <input type="text" id="suffix" value=". " placeholder="如: .">
+                    </div>
+                    <div class="form-group">
+                        <label>对齐方式</label>
+                        <select id="align">
+                            <option value="left">左对齐</option>
+                            <option value="right">右对齐</option>
+                            <option value="none">不填充</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-panel" id="removeSettings" style="display:none;">
+                <div class="settings-title">移除设置</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>分隔符类型</label>
+                        <select id="separatorType">
+                            <option value="auto">自动检测</option>
+                            <option value="space">空格分隔</option>
+                            <option value="colon">冒号分隔</option>
+                            <option value="dot">点分隔</option>
+                            <option value="tab">制表符</option>
+                            <option value="custom">自定义</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="customSeparatorGroup" style="display:none;">
+                        <label>自定义分隔符</label>
+                        <input type="text" id="customSeparator" placeholder="输入自定义分隔符">
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="processLines()">🔄 执行</button>
+                <button class="btn btn-secondary" onclick="clearAll()">🗑 清空</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title">📋 处理结果</div>
+                <div class="result-content" id="resultText"></div>
+                <div class="btn-group" style="margin-top: 16px;">
+                    <button class="btn btn-secondary" onclick="copyResult()">📋 复制结果</button>
+                    <button class="btn btn-secondary" onclick="downloadResult()">📥 下载</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">如何添加代码风格的行号？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">设置前缀为空，后缀为" "（空格），对齐方式选择"右对齐"。这样可以生成如"   1 hello" "  10 world"格式的行号。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">步进方式"递增"和"固定值"有什么区别？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">递增模式下，每行行号会在前一行基础上增加步进值（默认+1）。固定值模式下，每行行号都使用起始编号，不进行累加。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">移除行号能处理哪些格式？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">支持自动检测常见格式：纯数字开头（如"1. "）、冒号分隔（如"1: "）、制表符分隔等。也可以手动指定分隔符进行精确匹配。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">对齐方式如何工作？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">右对齐会在行号前填充空格使其右对齐，最大行号有多少位就填充多少空格。左对齐则不进行任何填充，保持紧凑格式。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="text-diff.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">文本差异对比</div><div class="r-desc">差异高亮</div></a>
+        <a href="word-counter.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">字数统计器</div><div class="r-desc">中英文统计</div></a>
+        <a href="character-counter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">字符计数器</div><div class="r-desc">各类字符统计</div></a>
+        <a href="whitespace-remover.html" class="related-card"><div class="r-icon">🧹</div><div class="r-title">空白字符清理器</div><div class="r-desc">移除空格空行</div></a>
+        <a href="text-reverser.html" class="related-card"><div class="r-icon">🔃</div><div class="r-title">文本反转器</div><div class="r-desc">反转文本</div></a>
+        <a href="remove-duplicate-lines.html" class="related-card"><div class="r-icon">✂</div><div class="r-title">去除重复行</div><div class="r-desc">智能去重</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentMode = 'add';
+
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+                
+                if (currentMode === 'add') {
+                    document.getElementById('addSettings').style.display = 'block';
+                    document.getElementById('removeSettings').style.display = 'none';
+                } else {
+                    document.getElementById('addSettings').style.display = 'none';
+                    document.getElementById('removeSettings').style.display = 'block';
+                }
+            });
+        });
+
+        document.getElementById('separatorType').addEventListener('change', (e) => {
+            document.getElementById('customSeparatorGroup').style.display = 
+                e.target.value === 'custom' ? 'block' : 'none';
+        });
+
+        function getSeparator() {
+            const type = document.getElementById('separatorType').value;
+            switch (type) {
+                case 'space': return /\s{2,}/;
+                case 'colon': return /:\s*/;
+                case 'dot': return /\.\s*/;
+                case 'tab': return /\t/;
+                case 'custom': return document.getElementById('customSeparator').value || /\s{2,}/;
+                default: return null;
+            }
+        }
+
+        function addLineNumbers() {
+            const input = document.getElementById('inputText').value;
+            if (!input) {
+                alert('请输入要处理的文本');
+                return;
+            }
+
+            const lines = input.split('\n');
+            const startNum = parseInt(document.getElementById('startNumber').value) || 1;
+            const step = parseInt(document.getElementById('step').value) || 1;
+            const stepMode = document.getElementById('stepMode').value;
+            const prefix = document.getElementById('prefix').value;
+            const suffix = document.getElementById('suffix').value;
+            const align = document.getElementById('align').value;
+
+            const maxDigits = String(startNum + (lines.length - 1) * (stepMode === 'increment' ? step : 0)).length;
+            
+            const result = lines.map((line, index) => {
+                let num = stepMode === 'increment' 
+                    ? startNum + index * step 
+                    : startNum;
+                
+                let numStr = String(num);
+                if (align === 'right') {
+                    numStr = numStr.padStart(maxDigits, ' ');
+                }
+                
+                return prefix + numStr + suffix + line;
+            }).join('\n');
+
+            document.getElementById('resultText').textContent = result;
+            document.getElementById('resultBox').classList.add('show');
+        }
+
+        function removeLineNumbers() {
+            const input = document.getElementById('inputText').value;
+            if (!input) {
+                alert('请输入要处理的文本');
+                return;
+            }
+
+            const separatorType = document.getElementById('separatorType').value;
+            const lines = input.split('\n');
+            
+            const result = lines.map(line => {
+                let processed = line;
+                
+                // 尝试各种常见格式
+                if (separatorType === 'auto' || separatorType === 'space') {
+                    // 匹配: 数字 + 空格/制表符
+                    processed = processed.replace(/^\d+[\s\t]+/, '');
+                }
+                if (separatorType === 'auto' || separatorType === 'colon') {
+                    // 匹配: 数字 + 冒号 + 空格
+                    processed = processed.replace(/^\d+:[\s\t]*/, '');
+                }
+                if (separatorType === 'auto' || separatorType === 'dot') {
+                    // 匹配: 数字 + 点 + 空格
+                    processed = processed.replace(/^\d+\.[\s\t]*/, '');
+                }
+                if (separatorType === 'tab') {
+                    // 匹配: 制表符开头的数字
+                    processed = processed.replace(/^\d+\t/, '');
+                }
+                if (separatorType === 'custom') {
+                    const customSep = document.getElementById('customSeparator').value;
+                    if (customSep) {
+                        const regex = new RegExp('^\\d+' + customSep.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+                        processed = processed.replace(regex, '');
+                    }
+                }
+                
+                return processed;
+            }).join('\n');
+
+            document.getElementById('resultText').textContent = result;
+            document.getElementById('resultBox').classList.add('show');
+        }
+
+        function processLines() {
+            if (currentMode === 'add') {
+                addLineNumbers();
+            } else {
+                removeLineNumbers();
+            }
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('resultText').textContent = '';
+            document.getElementById('resultBox').classList.remove('show');
+        }
+
+        function copyResult() {
+            const result = document.getElementById('resultText').textContent;
+            if (result) {
+                navigator.clipboard.writeText(result).then(() => {
+                    alert('已复制到剪贴板！');
+                });
+            }
+        }
+
+        function downloadResult() {
+            const result = document.getElementById('resultText').textContent;
+            if (result) {
+                const blob = new Blob([result], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = currentMode === 'add' ? 'numbered-text.txt' : 'unnumbered-text.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

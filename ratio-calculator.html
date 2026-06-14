@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比例计算器 | DevToolBox</title>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费在线比例计算器：求解A:B=C:D未知数、比例化简与放大、黄金比例、屏幕宽高比计算、分数小数互换。">
+    <meta name="keywords" content="比例计算器,黄金比例,宽高比,比例简化,分数计算,在线计算器">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .lang-btn {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid rgba(255,255,255,0.5);
+            background: transparent;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: white;
+            color: #4F46E5;
+            border-color: white;
+        }
+        .lang-btn:hover:not(.active) {
+            border-color: white;
+        }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-title h1 {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+        .page-title p {
+            color: #64748b;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+        .tab-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            background: white;
+            color: #64748b;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .tab-btn:hover {
+            background: #f1f5f9;
+        }
+        .tab-btn.active {
+            background: #4F46E5;
+            color: white;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .calc-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .ratio-inputs {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .input-field {
+            flex: 1;
+            min-width: 100px;
+            max-width: 150px;
+        }
+        .input-field label {
+            display: block;
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 0.3rem;
+            text-align: center;
+        }
+        .input-field input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+        .input-field input:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .input-field input.unknown {
+            background: #fef3c7;
+            border-color: #fbbf24;
+        }
+        .ratio-symbol {
+            font-size: 1.5rem;
+            color: #4F46E5;
+            font-weight: 600;
+        }
+        .equals-symbol {
+            font-size: 2rem;
+            color: #4F46E5;
+            margin: 0 0.5rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #4F46E5;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        .result-box {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .result-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+        .result-formula {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        .preset-btn {
+            padding: 0.75rem;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .preset-btn:hover {
+            background: #4F46E5;
+            color: white;
+            border-color: #4F46E5;
+        }
+        .preset-btn .ratio {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .preset-btn .desc {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+        .golden-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        @media (max-width: 600px) {
+            .golden-info {
+                grid-template-columns: 1fr;
+            }
+        }
+        .golden-visual {
+            text-align: center;
+        }
+        .golden-rect {
+            width: 200px;
+            height: 124px;
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .golden-rect::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 77px;
+            height: 124px;
+            background: #a78bfa;
+            border-left: 2px dashed white;
+        }
+        .golden-values {
+            margin-top: 1rem;
+        }
+        .golden-values div {
+            padding: 0.5rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+        .golden-values span {
+            color: #4F46E5;
+            font-weight: 600;
+        }
+        .aspect-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .aspect-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .aspect-card .ratio {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4F46E5;
+            margin-bottom: 0.5rem;
+        }
+        .aspect-card .desc {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+        .aspect-card .example {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .fraction-display {
+            font-size: 2rem;
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .fraction-display .num, .fraction-display .den {
+            color: #4F46E5;
+            font-weight: 700;
+        }
+        .fraction-display .frac-line {
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: #4F46E5;
+            margin: 0.25rem auto;
+        }
+        .conversion-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .conversion-row .from, .conversion-row .to {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .conversion-row .arrow {
+            color: #4F46E5;
+            font-size: 1.5rem;
+        }
+        .footer {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: white;
+        }
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1 data-zh="比例计算器" data-en="Ratio Calculator">比例计算器</h1>
+            <p data-zh="求解比例未知数、化简比例、黄金比例、宽高比计算" data-en="Solve ratio unknowns, simplify ratios, golden ratio, aspect ratio">求解比例未知数、化简比例、黄金比例、宽高比计算</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="solve" data-zh="求解比例" data-en="Solve Ratio">求解比例</button>
+            <button class="tab-btn" data-tab="simplify" data-zh="化简/放大" data-en="Simplify/Scale">化简/放大</button>
+            <button class="tab-btn" data-tab="golden" data-zh="黄金比例" data-en="Golden Ratio">黄金比例</button>
+            <button class="tab-btn" data-tab="aspect" data-zh="宽高比" data-en="Aspect Ratio">宽高比</button>
+            <button class="tab-btn" data-tab="fraction" data-zh="分数互换" data-en="Fraction Conv">分数互换</button>
+        </div>
+
+        <!-- Solve Tab -->
+        <div class="tab-content active" id="tab-solve">
+            <div class="card">
+                <div class="card-title">
+                    <span>🔢</span>
+                    <span data-zh="A:B = C:D 求未知数" data-en="A:B = C:D Find Unknown">A:B = C:D 求未知数</span>
+                </div>
+                <div class="calc-form">
+                    <div class="ratio-inputs">
+                        <div class="input-field">
+                            <label data-zh="A" data-en="A">A</label>
+                            <input type="number" id="solveA" placeholder="?">
+                        </div>
+                        <span class="ratio-symbol">:</span>
+                        <div class="input-field">
+                            <label data-zh="B" data-en="B">B</label>
+                            <input type="number" id="solveB" placeholder="?">
+                        </div>
+                        <span class="equals-symbol">=</span>
+                        <div class="input-field">
+                            <label data-zh="C" data-en="C">C</label>
+                            <input type="number" id="solveC" placeholder="?">
+                        </div>
+                        <span class="ratio-symbol">:</span>
+                        <div class="input-field">
+                            <label data-zh="D (未知)" data-en="D (?)">D (未知)</label>
+                            <input type="number" id="solveD" class="unknown" placeholder="?">
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="solveRatio()" data-zh="求解D" data-en="Solve D">求解D</button>
+                        <button class="btn btn-secondary" onclick="swapRatio()" data-zh="交换求解C" data-en="Swap to Solve C">交换求解C</button>
+                        <button class="btn btn-secondary" onclick="clearSolve()" data-zh="清除" data-en="Clear">清除</button>
+                    </div>
+                </div>
+                <div class="result-box" id="solveResult" style="display: none;">
+                    <div class="result-label" data-zh="求解结果" data-en="Result">求解结果</div>
+                    <div class="result-value" id="solveValue">-</div>
+                    <div class="result-formula" id="solveFormula"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simplify Tab -->
+        <div class="tab-content" id="tab-simplify">
+            <div class="card">
+                <div class="card-title">
+                    <span>📐</span>
+                    <span data-zh="比例化简与放大" data-en="Simplify & Scale Ratio">比例化简与放大</span>
+                </div>
+                <div class="calc-form">
+                    <div class="ratio-inputs">
+                        <div class="input-field">
+                            <label data-zh="A" data-en="A">A</label>
+                            <input type="number" id="simpA" placeholder="12">
+                        </div>
+                        <span class="ratio-symbol">:</span>
+                        <div class="input-field">
+                            <label data-zh="B" data-en="B">B</label>
+                            <input type="number" id="simpB" placeholder="8">
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="simplifyRatio()" data-zh="化简" data-en="Simplify">化简</button>
+                        <button class="btn btn-secondary" onclick="scaleRatioUp()" data-zh="放大10倍" data-en="Scale ×10">放大10倍</button>
+                        <button class="btn btn-secondary" onclick="scaleRatioDown()" data-zh="缩小10倍" data-en="Scale ÷10">缩小10倍</button>
+                    </div>
+                </div>
+                <div class="result-box" id="simpResult" style="display: none;">
+                    <div class="result-label" data-zh="化简结果" data-en="Simplified">化简结果</div>
+                    <div class="result-value" id="simpValue">-</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">
+                    <span>✨</span>
+                    <span data-zh="常用比例预设" data-en="Common Ratio Presets">常用比例预设</span>
+                </div>
+                <div class="preset-grid">
+                    <button class="preset-btn" onclick="setPreset(1, 2)">
+                        <div class="ratio">1:2</div>
+                        <div class="desc" data-zh="一半" data-en="Half">一半</div>
+                    </button>
+                    <button class="preset-btn" onclick="setPreset(1, 3)">
+                        <div class="ratio">1:3</div>
+                        <div class="desc" data-zh="三分之一" data-en="Third">三分之一</div>
+                    </button>
+                    <button class="preset-btn" onclick="setPreset(2, 3)">
+                        <div class="ratio">2:3</div>
+                        <div class="desc" data-zh="三分之二" data-en="Two thirds">三分之二</div>
+                    </button>
+                    <button class="preset-btn" onclick="setPreset(3, 4)">
+                        <div class="ratio">3:4</div>
+                        <div class="desc" data-zh="四分之三" data-en="Three quarters">四分之三</div>
+                    </button>
+                    <button class="preset-btn" onclick="setPreset(4, 5)">
+                        <div class="ratio">4:5</div>
+                        <div class="desc" data-zh="五分之四" data-en="Four fifths">五分之四</div>
+                    </button>
+                    <button class="preset-btn" onclick="setPreset(16, 9)">
+                        <div class="ratio">16:9</div>
+                        <div class="desc" data-zh="高清视频" data-en="HD Video">高清视频</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Golden Ratio Tab -->
+        <div class="tab-content" id="tab-golden">
+            <div class="card">
+                <div class="card-title">
+                    <span>🌟</span>
+                    <span data-zh="黄金比例 φ ≈ 1.618" data-en="Golden Ratio φ ≈ 1.618">黄金比例 φ ≈ 1.618</span>
+                </div>
+                <div class="golden-info">
+                    <div class="golden-visual">
+                        <div class="golden-rect"></div>
+                        <div class="golden-values">
+                            <div><span>φ = 1.6180339887...</span></div>
+                            <div>1 : <span>1.618</span></div>
+                            <div>更短 : <span>1.618</span> = 更长 : <span>2.618</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="calc-form">
+                            <div class="input-field">
+                                <label data-zh="输入任意值" data-en="Enter any value">输入任意值</label>
+                                <input type="number" id="goldenInput" placeholder="100">
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-primary" onclick="calculateGolden()" data-zh="计算黄金比例" data-en="Calculate">计算</button>
+                            </div>
+                        </div>
+                        <div class="result-box" id="goldenResult" style="display: none; margin-top: 1rem;">
+                            <div class="result-label" data-zh="计算结果" data-en="Result">计算结果</div>
+                            <div class="result-value" id="goldenValue">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description" style="margin-top: 1rem;">
+                    <p data-zh="黄金比例是数学中一个独特的比例，存在于自然、艺术和建筑中。将整体分为两部分，较大部分与较小部分之比等于整体与较大部分之比。" data-en="The golden ratio is a unique proportion where the ratio of the larger part to the smaller part equals the ratio of the whole to the larger part. Found in nature, art, and architecture.">黄金比例是数学中一个独特的比例，存在于自然、艺术和建筑中。将整体分为两部分，较大部分与较小部分之比等于整体与较大部分之比。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aspect Ratio Tab -->
+        <div class="tab-content" id="tab-aspect">
+            <div class="card">
+                <div class="card-title">
+                    <span>📱</span>
+                    <span data-zh="屏幕宽高比计算" data-en="Aspect Ratio Calculator">屏幕宽高比计算</span>
+                </div>
+                <div class="calc-form">
+                    <div class="ratio-inputs">
+                        <div class="input-field">
+                            <label data-zh="宽度 (像素)" data-en="Width (px)">宽度 (像素)</label>
+                            <input type="number" id="aspectW" placeholder="1920">
+                        </div>
+                        <span class="ratio-symbol">×</span>
+                        <div class="input-field">
+                            <label data-zh="高度 (像素)" data-en="Height (px)">高度 (像素)</label>
+                            <input type="number" id="aspectH" placeholder="1080">
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="calculateAspect()" data-zh="计算宽高比" data-en="Calculate Ratio">计算宽高比</button>
+                        <button class="btn btn-secondary" onclick="findClosestAspect()" data-zh="匹配标准比例" data-en="Match Standard">匹配标准比例</button>
+                    </div>
+                </div>
+                <div class="result-box" id="aspectResult" style="display: none; margin-top: 1rem;">
+                    <div class="result-label" data-zh="宽高比" data-en="Aspect Ratio">宽高比</div>
+                    <div class="result-value" id="aspectValue">-</div>
+                    <div class="result-formula" id="aspectFormula"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">
+                    <span>📺</span>
+                    <span data-zh="常见屏幕比例" data-en="Common Aspect Ratios">常见屏幕比例</span>
+                </div>
+                <div class="aspect-grid">
+                    <div class="aspect-card">
+                        <div class="ratio">16:9</div>
+                        <div class="desc" data-zh="全高清/4K电视" data-en="Full HD / 4K TV">全高清/4K电视</div>
+                        <div class="example">1920×1080, 3840×2160</div>
+                    </div>
+                    <div class="aspect-card">
+                        <div class="ratio">4:3</div>
+                        <div class="desc" data-zh="传统显示器/iPad" data-en="Legacy monitor / iPad">传统显示器/平板</div>
+                        <div class="example">1024×768, 2048×1536</div>
+                    </div>
+                    <div class="aspect-card">
+                        <div class="ratio">21:9</div>
+                        <div class="desc" data-zh="超宽显示器" data-en="Ultrawide monitor">超宽显示器</div>
+                        <div class="example">2560×1080, 3440×1440</div>
+                    </div>
+                    <div class="aspect-card">
+                        <div class="ratio">1:1</div>
+                        <div class="desc" data-zh="方形/Instagram" data-en="Square / Instagram">方形/Instagram</div>
+                        <div class="example">1080×1080</div>
+                    </div>
+                    <div class="aspect-card">
+                        <div class="ratio">9:16</div>
+                        <div class="desc" data-zh="竖屏视频/TikTok" data-en="Vertical video">竖屏视频/TikTok</div>
+                        <div class="example">1080×1920</div>
+                    </div>
+                    <div class="aspect-card">
+                        <div class="ratio">3:2</div>
+                        <div class="desc" data-zh="笔记本电脑" data-en="Laptop">笔记本电脑</div>
+                        <div class="example">1440×960, 2160×1440</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fraction Tab -->
+        <div class="tab-content" id="tab-fraction">
+            <div class="card">
+                <div class="card-title">
+                    <span>➗</span>
+                    <span data-zh="分数与小数互换" data-en="Fraction ↔ Decimal">分数与小数互换</span>
+                </div>
+                <div class="calc-form">
+                    <div class="ratio-inputs">
+                        <div class="input-field">
+                            <label data-zh="分子/小数" data-en="Numerator / Decimal">分子/小数</label>
+                            <input type="number" id="fracInput" placeholder="0.75" step="any">
+                        </div>
+                        <span class="ratio-symbol">⇄</span>
+                        <div class="input-field">
+                            <label data-zh="分母" data-en="Denominator">分母</label>
+                            <input type="number" id="denomInput" placeholder="4">
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="decimalToFraction()" data-zh="小数→分数" data-en="Decimal→Fraction">小数→分数</button>
+                        <button class="btn btn-primary" onclick="fractionToDecimal()" data-zh="分数→小数" data-en="Fraction→Decimal">分数→小数</button>
+                    </div>
+                </div>
+                <div class="result-box" id="fracResult" style="display: none; margin-top: 1rem;">
+                    <div class="result-label" data-zh="转换结果" data-en="Result">转换结果</div>
+                    <div class="result-value" id="fracValue">-</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">
+                    <span>🔄</span>
+                    <span data-zh="常用转换对照" data-en="Common Conversions">常用转换对照</span>
+                </div>
+                <div class="conversion-row">
+                    <span class="from">0.25</span>
+                    <span class="arrow">→</span>
+                    <span class="to">1/4</span>
+                    <span class="arrow">→</span>
+                    <span class="to">25%</span>
+                </div>
+                <div class="conversion-row">
+                    <span class="from">0.333...</span>
+                    <span class="arrow">→</span>
+                    <span class="to">1/3</span>
+                    <span class="arrow">→</span>
+                    <span class="to">33.33%</span>
+                </div>
+                <div class="conversion-row">
+                    <span class="from">0.5</span>
+                    <span class="arrow">→</span>
+                    <span class="to">1/2</span>
+                    <span class="arrow">→</span>
+                    <span class="to">50%</span>
+                </div>
+                <div class="conversion-row">
+                    <span class="from">0.666...</span>
+                    <span class="arrow">→</span>
+                    <span class="to">2/3</span>
+                    <span class="arrow">→</span>
+                    <span class="to">66.67%</span>
+                </div>
+                <div class="conversion-row">
+                    <span class="from">0.75</span>
+                    <span class="arrow">→</span>
+                    <span class="to">3/4</span>
+                    <span class="arrow">→</span>
+                    <span class="to">75%</span>
+                </div>
+                <div class="conversion-row">
+                    <span class="from">0.2</span>
+                    <span class="arrow">→</span>
+                    <span class="to">1/5</span>
+                    <span class="arrow">→</span>
+                    <span class="to">20%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const PHI = 1.618033988749895;
+
+        // GCD function
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            while (b) {
+                [a, b] = [b, a % b];
+            }
+            return a;
+        }
+
+        // LCM function
+        function lcm(a, b) {
+            return Math.abs(a * b) / gcd(a, b);
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Solve ratio A:B = C:D
+        function solveRatio() {
+            const A = parseFloat(document.getElementById('solveA').value);
+            const B = parseFloat(document.getElementById('solveB').value);
+            const C = parseFloat(document.getElementById('solveC').value);
+            const D = parseFloat(document.getElementById('solveD').value);
+
+            let result, formula, unknown;
+
+            // Count knowns
+            const knowns = [A, B, C, D].filter(v => !isNaN(v));
+            
+            if (knowns.length < 3) {
+                showToast(document.querySelector('.lang-btn.active').dataset.lang === 'zh' ? '请至少填写3个值' : 'Please fill at least 3 values');
+                return;
+            }
+
+            if (isNaN(D)) {
+                // Solve for D: D = B * C / A
+                result = (B * C) / A;
+                formula = `${B} × ${C} ÷ ${A} = ${result.toFixed(4)}`;
+                unknown = 'D';
+                document.getElementById('solveD').value = result.toFixed(4);
+            } else if (isNaN(C)) {
+                // Solve for C: C = A * D / B
+                result = (A * D) / B;
+                formula = `${A} × ${D} ÷ ${B} = ${result.toFixed(4)}`;
+                unknown = 'C';
+                document.getElementById('solveC').value = result.toFixed(4);
+            } else if (isNaN(B)) {
+                // Solve for B: B = A * D / C
+                result = (A * D) / C;
+                formula = `${A} × ${D} ÷ ${C} = ${result.toFixed(4)}`;
+                unknown = 'B';
+                document.getElementById('solveB').value = result.toFixed(4);
+            } else if (isNaN(A)) {
+                // Solve for A: A = B * C / D
+                result = (B * C) / D;
+                formula = `${B} × ${C} ÷ ${D} = ${result.toFixed(4)}`;
+                unknown = 'A';
+                document.getElementById('solveA').value = result.toFixed(4);
+            }
+
+            document.getElementById('solveResult').style.display = 'block';
+            document.getElementById('solveValue').textContent = `${unknown} = ${result.toFixed(4)}`;
+            document.getElementById('solveFormula').textContent = formula;
+        }
+
+        function swapRatio() {
+            const A = document.getElementById('solveA').value;
+            const B = document.getElementById('solveB').value;
+            const C = document.getElementById('solveC').value;
+            const D = document.getElementById('solveD').value;
+            
+            document.getElementById('solveA').value = C;
+            document.getElementById('solveB').value = D;
+            document.getElementById('solveC').value = A;
+            document.getElementById('solveD').value = B;
+            
+            document.getElementById('solveD').classList.add('unknown');
+            document.getElementById('solveC').classList.remove('unknown');
+        }
+
+        function clearSolve() {
+            ['solveA', 'solveB', 'solveC', 'solveD'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            document.getElementById('solveResult').style.display = 'none';
+        }
+
+        // Simplify ratio
+        function simplifyRatio() {
+            const A = parseFloat(document.getElementById('simpA').value);
+            const B = parseFloat(document.getElementById('simpB').value);
+
+            if (isNaN(A) || isNaN(B) || A <= 0 || B <= 0) {
+                showToast(document.querySelector('.lang-btn.active').dataset.lang === 'zh' ? '请输入有效正数' : 'Please enter valid positive numbers');
+                return;
+            }
+
+            const divisor = gcd(A, B);
+            const simpA = A / divisor;
+            const simpB = B / divisor;
+
+            document.getElementById('simpResult').style.display = 'block';
+            document.getElementById('simpValue').textContent = `${simpA} : ${simpB}`;
+        }
+
+        function scaleRatioUp() {
+            let A = parseFloat(document.getElementById('simpA').value) || 1;
+            let B = parseFloat(document.getElementById('simpB').value) || 1;
+            document.getElementById('simpA').value = A * 10;
+            document.getElementById('simpB').value = B * 10;
+            simplifyRatio();
+        }
+
+        function scaleRatioDown() {
+            let A = parseFloat(document.getElementById('simpA').value) || 10;
+            let B = parseFloat(document.getElementById('simpB').value) || 10;
+            document.getElementById('simpA').value = A / 10;
+            document.getElementById('simpB').value = B / 10;
+            simplifyRatio();
+        }
+
+        function setPreset(a, b) {
+            document.getElementById('simpA').value = a;
+            document.getElementById('simpB').value = b;
+            simplifyRatio();
+        }
+
+        // Golden ratio
+        function calculateGolden() {
+            const val = parseFloat(document.getElementById('goldenInput').value);
+
+            if (isNaN(val)) {
+                showToast(document.querySelector('.lang-btn.active').dataset.lang === 'zh' ? '请输入有效数字' : 'Please enter a valid number');
+                return;
+            }
+
+            const smaller = val / PHI;
+            const larger = val;
+            const total = val * PHI;
+
+            document.getElementById('goldenResult').style.display = 'block';
+            document.getElementById('goldenValue').innerHTML = 
+                `φ = 1.618<br><br>` +
+                `较短部分: <strong>${smaller.toFixed(4)}</strong><br>` +
+                `较长部分: <strong>${larger.toFixed(4)}</strong><br>` +
+                `整体: <strong>${total.toFixed(4)}</strong>`;
+        }
+
+        // Aspect ratio
+        function calculateAspect() {
+            const w = parseFloat(document.getElementById('aspectW').value);
+            const h = parseFloat(document.getElementById('aspectH').value);
+
+            if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0) {
+                showToast(document.querySelector('.lang-btn.active').dataset.lang === 'zh' ? '请输入有效尺寸' : 'Please enter valid dimensions');
+                return;
+            }
+
+            const divisor = gcd(w, h);
+            const ratioW = w / divisor;
+            const ratioH = h / divisor;
+            const ratioDecimal = w / h;
+
+            document.getElementById('aspectResult').style.display = 'block';
+            document.getElementById('aspectValue').textContent = `${ratioW} : ${ratioH}`;
+            document.getElementById('aspectFormula').textContent = 
+                `${w} ÷ ${divisor} : ${h} ÷ ${divisor} | 小数值: ${ratioDecimal.toFixed(4)}`;
+        }
+
+        function findClosestAspect() {
+            const w = parseFloat(document.getElementById('aspectW').value);
+            const h = parseFloat(document.getElementById('aspectH').value);
+
+            if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0) {
+                showToast(document.querySelector('.lang-btn.active').dataset.lang === 'zh' ? '请输入有效尺寸' : 'Please enter valid dimensions');
+                return;
+            }
+
+            const ratio = w / h;
+            const standards = [
+                { w: 16, h: 9, name: '16:9 (HD/4K)' },
+                { w: 4, h: 3, name: '4:3 (传统)' },
+                { w: 21, h: 9, name: '21:9 (超宽)' },
+                { w: 1, h: 1, name: '1:1 (方形)' },
+                { w: 9, h: 16, name: '9:16 (竖屏)' },
+                { w: 3, h: 2, name: '3:2 (笔记本)' },
+                { w: 16, h: 10, name: '16:10 (笔记本)' }
+            ];
+
+            let closest = standards[0];
+            let minDiff = Math.abs(ratio - (standards[0].w / standards[0].h));
+
+            standards.forEach(std => {
+                const stdRatio = std.w / std.h;
+                const diff = Math.abs(ratio - stdRatio);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closest = std;
+                }
+            });
+
+            document.getElementById('aspectResult').style.display = 'block';
+            document.getElementById('aspectValue').textContent = closest.name;
+            document.getElementById('aspectFormula').textContent = 
+                `实际比例: ${ratio.toFixed(4)} | 建议使用: ${closest.w}/${closest.h} = ${(closest.w/closest.h).toFixed(4)}`;
+        }
+
+        // Fraction conversion
+        function decimalToFraction() {
+            const decimal = parseFloat(document.getElementById('fracInput').value);
+
+            if (isNaN(decimal)) {
+                showToast(document.querySelector('.lang-btn.active').dataset.lang === 'zh' ? '请输入有效小数' : 'Please enter a valid decimal');
+                return;
+            }
+
+            if (decimal < 0) {
+                showToast(document.querySelector('.lang-btn.active').dataset.lang === 'zh' ? '请输入正数' : 'Please enter a positive number');
+                return;
+            }
+
+            // Convert to fraction using continued fraction approximation
+            let num = decimal;
+            let den = 1;
+            while (Math.abs(num - Math.round(num)) > 0.0001 && den < 10000) {
+                den *= 10;
+                num = decimal * den;
+            }
+            num = Math.round(num);
+            const divisor = gcd(num, den);
+            num /= divisor;
+            den /= divisor;
+
+            document.getElementById('fracResult').style.display = 'block';
+            document.getElementById('fracValue').innerHTML = 
+                `${decimal} = <strong>${num}</strong>/<strong>${den}</strong>`;
+            document.getElementById('denomInput').value = den;
+        }
+
+        function fractionToDecimal() {
+            const num = parseFloat(document.getElementById('fracInput').value);
+            const den = parseFloat(document.getElementById('denomInput').value);
+
+            if (isNaN(num) || isNaN(den) || den === 0) {
+                showToast(document.querySelector('.lang-btn.active').dataset.lang === 'zh' ? '请输入有效分数' : 'Please enter a valid fraction');
+                return;
+            }
+
+            const result = num / den;
+
+            document.getElementById('fracResult').style.display = 'block';
+            document.getElementById('fracValue').innerHTML = 
+                `<strong>${num}</strong>/<strong>${den}</strong> = ${result.toFixed(6)}`;
+            document.getElementById('fracInput').value = result;
+        }
+
+        // Language toggle
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const lang = btn.dataset.lang;
+                document.querySelectorAll('[data-zh]').forEach(el => {
+                    el.textContent = el.dataset[lang];
+                });
+            });
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="percentage-calculator.html" class="related-card"><div class="r-icon">💯</div><div class="r-title">百分比计算器</div><div class="r-desc">百分比计算</div></a>
+        <a href="age-calculator.html" class="related-card"><div class="r-icon">🎂</div><div class="r-title">年龄计算器</div><div class="r-desc">精确年龄</div></a>
+        <a href="bmi-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">BMI 计算器</div><div class="r-desc">体重指数</div></a>
+        <a href="loan-calculator.html" class="related-card"><div class="r-icon">🏠</div><div class="r-title">贷款计算器</div><div class="r-desc">月供计算</div></a>
+        <a href="tip-calculator.html" class="related-card"><div class="r-icon">💰</div><div class="r-title">小费计算器</div><div class="r-desc">AA分账</div></a>
+        <a href="discount-calculator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">折扣计算器</div><div class="r-desc">折扣叠加</div></a>
+        </div>
+    </section>
+</body>
+</html>

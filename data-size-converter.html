@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的数据大小转换器，支持B/KB/MB/GB/TB/PB在二进制和十进制标准间互转。实时换算，简单易用。">
+    <meta name="keywords" content="数据大小转换,字节转换,KB MB GB TB,存储单位转换,在线工具">
+    <title>数据大小转换器 - B/KB/MB/GB/TB/PB 在线互转</title>
+    <link rel="canonical" href="https://devtoolhub.cc/data-size-converter.html">
+    <meta property="og:title" content="数据大小转换器 - B/KB/MB/GB/TB/PB 在线互转">
+    <meta property="og:description" content="免费的数据大小转换器，支持B/KB/MB/GB/TB/PB在二进制和十进制标准间互转。实时换算，简单易用。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/data-size-converter.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "数据大小转换器",
+        "description": "免费的数据大小转换器，支持B/KB/MB/GB/TB/PB在二进制和十进制标准间互转。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero-icon { font-size: 48px; margin-bottom: 16px; }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: #F3F4F6; }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #D1FAE5;
+        }
+        .result-item:last-child { border-bottom: none; }
+        .result-label { color: var(--text-secondary); }
+        .result-value { font-weight: 600; }
+        .result-highlight {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            text-align: center;
+            margin: 16px 0;
+            padding: 12px;
+            background: #EEF2FF;
+            border-radius: 8px;
+        }
+        .standard-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .standard-tab {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            background: var(--bg);
+            transition: all 0.2s;
+        }
+        .standard-tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .reference-box {
+            margin-top: 24px;
+            background: #FEF3C7;
+            border: 1px solid #FCD34D;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .reference-box h4 {
+            color: #92400E;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .reference-box p {
+            color: #78350F;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 6px;
+        }
+        .footer a:hover { color: var(--primary); }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-icon">💿</div>
+            <h1>数据大小转换器</h1>
+            <p>支持 B、KB、MB、GB、TB、PB 等存储单位在二进制(1024)和十进制(1000)标准间互转</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="inputValue">输入数值</label>
+                    <input type="number" id="inputValue" placeholder="请输入数值" step="any">
+                </div>
+                <div class="form-group">
+                    <label for="inputUnit">选择单位</label>
+                    <select id="inputUnit">
+                        <option value="B">字节 (B)</option>
+                        <option value="KB">千字节 (KB)</option>
+                        <option value="MB">兆字节 (MB)</option>
+                        <option value="GB">吉字节 (GB)</option>
+                        <option value="TB">太字节 (TB)</option>
+                        <option value="PB">拍字节 (PB)</option>
+                        <option value="EB">艾字节 (EB)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>换算标准</label>
+                <div class="standard-tabs">
+                    <div class="standard-tab active" data-standard="binary" onclick="setStandard('binary')">📦 二进制 (1 KB = 1024 B)</div>
+                    <div class="standard-tab" data-standard="decimal" onclick="setStandard('decimal')">📐 十进制 (1 KB = 1000 B)</div>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="convert()">转换</button>
+                <button class="btn btn-secondary" onclick="reset()">重置</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title">转换结果</div>
+                <div class="result-highlight" id="mainResult"></div>
+                <div id="resultDetails"></div>
+            </div>
+
+            <div class="reference-box">
+                <h4>📚 标准说明</h4>
+                <p>
+                    <strong>二进制标准 (IEC)</strong>：1 KiB = 1024 B, 1 MiB = 1024 KiB... 常用于计算机内存和存储计算<br>
+                    <strong>十进制标准 (SI)</strong>：1 KB = 1000 B, 1 MB = 1000 KB... 常用于硬盘厂商标称容量
+                </p>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>为什么买回来的硬盘实际容量比标称的小？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    硬盘厂商使用十进制标准(1 GB = 1,000,000,000 字节)，而操作系统使用二进制标准(1 GB = 1,073,741,824 字节)。所以标称500GB的硬盘在电脑上显示约为465GB。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>KiB、MiB、GiB和KB、MB、GB有什么区别？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    带"i"的单位(KiB、MiB、GiB)是国际电工委员会(IEC)规定的二进制单位，表示1024的幂次。不带"i"的单位(KB、MB、GB)传统上表示1000的幂次，但在不同场景下可能有歧义。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>为什么有1024和1000两种换算方式？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    计算机使用二进制(0和1)，所以早期用2的10次方(1024)作为千字节。但为了消除歧义，国际标准化组织定义了十进制标准，用1000作为千进制，更符合日常习惯。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>1 PB等于多少TB？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    二进制标准：1 PB = 1024 TB = 1,048,576 GB = 1,073,741,824 MB<br>
+                    十进制标准：1 PB = 1000 TB = 1,000,000 GB = 1,000,000,000 MB
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="css-unit-converter.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">CSS 单位转换器</div><div class="r-desc">9种单位互转</div></a>
+        <a href="pixel-to-rem-converter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">px/rem 转换器</div><div class="r-desc">px转rem</div></a>
+        <a href="timezone-converter.html" class="related-card"><div class="r-icon">🌍</div><div class="r-title">时区转换器</div><div class="r-desc">全球时区对比</div></a>
+        <a href="temperature-converter.html" class="related-card"><div class="r-icon">🌡</div><div class="r-title">温度转换器</div><div class="r-desc">温度互转</div></a>
+        <a href="speed-converter.html" class="related-card"><div class="r-icon">🚀</div><div class="r-title">速度转换器</div><div class="r-desc">速度单位互转</div></a>
+        <a href="area-converter.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">面积转换器</div><div class="r-desc">面积互转</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentStandard = 'binary';
+        
+        function setStandard(standard) {
+            currentStandard = standard;
+            document.querySelectorAll('.standard-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.standard === standard);
+            });
+        }
+        
+        function convert() {
+            const inputVal = document.getElementById('inputValue').value;
+            if (inputVal === '' || isNaN(parseFloat(inputVal))) {
+                alert('请输入有效的数值');
+                return;
+            }
+            
+            const value = parseFloat(inputVal);
+            const unit = document.getElementById('inputUnit').value;
+            const base = currentStandard === 'binary' ? 1024 : 1000;
+            
+            const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB'];
+            const unitIndex = units.indexOf(unit);
+            
+            // Convert to bytes first
+            const bytes = value * Math.pow(base, unitIndex);
+            
+            let results = [];
+            units.forEach((u, i) => {
+                const converted = bytes / Math.pow(base, i);
+                if (converted >= 0.000001 || i === 0) {
+                    results.push({
+                        unit: u,
+                        value: converted,
+                        fullName: getFullName(u)
+                    });
+                }
+            });
+            
+            document.getElementById('mainResult').textContent = `${value} ${unit} = ${formatNumber(bytes)} B`;
+            
+            let html = '';
+            results.forEach(r => {
+                if (r.unit !== unit) {
+                    html += `<div class="result-item">
+                        <span class="result-label">${r.fullName}</span>
+                        <span class="result-value">${formatNumber(r.value)} ${r.unit}</span>
+                    </div>`;
+                }
+            });
+            
+            document.getElementById('resultDetails').innerHTML = html;
+            document.getElementById('resultBox').classList.add('show');
+        }
+        
+        function getFullName(unit) {
+            const names = {
+                'B': '字节 (B)',
+                'KB': '千字节 (KB)',
+                'MB': '兆字节 (MB)',
+                'GB': '吉字节 (GB)',
+                'TB': '太字节 (TB)',
+                'PB': '拍字节 (PB)',
+                'EB': '艾字节 (EB)'
+            };
+            return names[unit] || unit;
+        }
+        
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return num.toExponential(6);
+            }
+            return num.toLocaleString('en-US', { maximumFractionDigits: 6 });
+        }
+        
+        function reset() {
+            document.getElementById('inputValue').value = '';
+            document.getElementById('inputUnit').selectedIndex = 0;
+            document.getElementById('resultBox').classList.remove('show');
+        }
+        
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

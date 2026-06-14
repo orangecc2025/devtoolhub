@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git命令速查表 | DevToolBox</title>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="最完整的Git命令速查表，按工作流分类：初始化、暂存、提交、分支、合并、远程操作、撤销、标签、查看等，支持搜索过滤和一键复制。">
+    <meta name="keywords" content="git,git命令,git速查,版本控制,git教程,git cheatsheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);
+        }
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .lang-btn {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid rgba(255,255,255,0.5);
+            background: transparent;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: white;
+            color: #4F46E5;
+            border-color: white;
+        }
+        .lang-btn:hover:not(.active) {
+            border-color: white;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-title h1 {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+        .page-title p {
+            color: #64748b;
+        }
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .search-box .icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+        .tab-btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            background: white;
+            color: #64748b;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .tab-btn:hover {
+            background: #f1f5f9;
+        }
+        .tab-btn.active {
+            background: #4F46E5;
+            color: white;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        .card-title .count {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        .command-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .command-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 3px solid #4F46E5;
+        }
+        .command-item.hidden {
+            display: none;
+        }
+        .command-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .command-code {
+            flex: 1;
+            min-width: 200px;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            position: relative;
+        }
+        .command-code code {
+            display: block;
+        }
+        .copy-btn {
+            padding: 0.5rem 1rem;
+            background: #4F46E5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover {
+            background: #4338ca;
+        }
+        .command-desc {
+            margin-top: 0.75rem;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .command-example {
+            margin-top: 0.5rem;
+            color: #475569;
+            font-size: 0.85rem;
+            background: #fff;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+        .command-example code {
+            color: #7C3AED;
+        }
+        .scenario-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #fbbf24;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .scenario-section h3 {
+            color: #92400e;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .scenario-item {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        .scenario-item h4 {
+            color: #4F46E5;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        .scenario-item p {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+        .scenario-item code {
+            display: block;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+        .footer {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: white;
+        }
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        @media (max-width: 600px) {
+            .command-header {
+                flex-direction: column;
+            }
+            .copy-btn {
+                align-self: flex-end;
+            }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1 data-zh="Git命令速查表" data-en="Git Command Cheatsheet">Git命令速查表</h1>
+            <p data-zh="完整的Git命令参考，按功能分类，支持搜索和一键复制" data-en="Complete Git command reference with categories, search and copy support">完整的Git命令参考，按功能分类，支持搜索和一键复制</p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="搜索命令或关键词..." data-zh-placeholder="搜索命令或关键词..." data-en-placeholder="Search commands or keywords...">
+            <span class="icon">🔍</span>
+        </div>
+
+        <div class="category-tabs" id="categoryTabs">
+            <button class="tab-btn active" data-category="all" data-zh="全部" data-en="All">全部</button>
+            <button class="tab-btn" data-category="init" data-zh="初始化" data-en="Init">初始化</button>
+            <button class="tab-btn" data-category="stage" data-zh="暂存" data-en="Stage">暂存</button>
+            <button class="tab-btn" data-category="commit" data-zh="提交" data-en="Commit">提交</button>
+            <button class="tab-btn" data-category="branch" data-zh="分支" data-en="Branch">分支</button>
+            <button class="tab-btn" data-category="merge" data-zh="合并" data-en="Merge">合并</button>
+            <button class="tab-btn" data-category="remote" data-zh="远程" data-en="Remote">远程</button>
+            <button class="tab-btn" data-category="undo" data-zh="撤销" data-en="Undo">撤销</button>
+            <button class="tab-btn" data-category="tag" data-zh="标签" data-en="Tag">标签</button>
+            <button class="tab-btn" data-category="view" data-zh="查看" data-en="View">查看</button>
+        </div>
+
+        <div id="commandContainer">
+            <!-- Init Section -->
+            <div class="card" data-category="init">
+                <div class="card-title">🚀 <span data-zh="初始化与配置" data-en="Init & Config">初始化与配置</span> <span class="count">4</span></div>
+                <div class="command-list">
+                    <div class="command-item" data-keywords="init initialize repository git init config">
+                        <div class="command-header">
+                            <div class="command-code"><code>git init</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="在当前目录初始化一个新的Git仓库" data-en="Initialize a new Git repository in current directory">在当前目录初始化一个新的Git仓库</div>
+                    </div>
+                    <div class="command-item" data-keywords="clone repository remote git clone">
+                        <div class="command-header">
+                            <div class="command-code"><code>git clone &lt;url&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="克隆远程仓库到本地" data-en="Clone a remote repository to local">克隆远程仓库到本地</div>
+                        <div class="command-example">git clone https://github.com/user/repo.git</div>
+                    </div>
+                    <div class="command-item" data-keywords="config username email git config">
+                        <div class="command-header">
+                            <div class="command-code"><code>git config --global user.name "Your Name"</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="设置全局用户名" data-en="Set global username">设置全局用户名</div>
+                    </div>
+                    <div class="command-item" data-keywords="config email git config">
+                        <div class="command-header">
+                            <div class="command-code"><code>git config --global user.email "<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f48d9b81b4918c9599849891da979b99">[email&#160;protected]</a>"</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="设置全局邮箱" data-en="Set global email">设置全局邮箱</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage Section -->
+            <div class="card" data-category="stage">
+                <div class="card-title">📦 <span data-zh="暂存文件" data-en="Staging">暂存文件</span> <span class="count">5</span></div>
+                <div class="command-list">
+                    <div class="command-item" data-keywords="add stage files git add">
+                        <div class="command-header">
+                            <div class="command-code"><code>git add &lt;file&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="暂存指定文件" data-en="Stage specific file">暂存指定文件</div>
+                    </div>
+                    <div class="command-item" data-keywords="add stage all git add">
+                        <div class="command-header">
+                            <div class="command-code"><code>git add .</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="暂存所有更改的文件" data-en="Stage all changed files">暂存所有更改的文件</div>
+                    </div>
+                    <div class="command-item" data-keywords="add stage all git add">
+                        <div class="command-header">
+                            <div class="command-code"><code>git add -A</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="暂存所有文件（包括删除）" data-en="Stage all files including deletions">暂存所有文件（包括删除）</div>
+                    </div>
+                    <div class="command-item" data-keywords="add interactive patch git add">
+                        <div class="command-header">
+                            <div class="command-code"><code>git add -p</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="交互式暂存（逐块选择）" data-en="Interactive staging (select hunks)">交互式暂存（逐块选择）</div>
+                    </div>
+                    <div class="command-item" data-keywords="rm remove staged unstage git rm">
+                        <div class="command-header">
+                            <div class="command-code"><code>git rm --cached &lt;file&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="从暂存区移除文件（保留本地）" data-en="Remove file from staging (keep local)">从暂存区移除文件（保留本地）</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commit Section -->
+            <div class="card" data-category="commit">
+                <div class="card-title">💾 <span data-zh="提交更改" data-en="Commit">提交更改</span> <span class="count">5</span></div>
+                <div class="command-list">
+                    <div class="command-item" data-keywords="commit message git commit">
+                        <div class="command-header">
+                            <div class="command-code"><code>git commit -m "message"</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="提交暂存的文件并添加消息" data-en="Commit staged files with message">提交暂存的文件并添加消息</div>
+                    </div>
+                    <div class="command-item" data-keywords="commit amend change message git commit">
+                        <div class="command-header">
+                            <div class="command-code"><code>git commit --amend</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="修改最后一次提交的消息或内容" data-en="Modify the last commit message or content">修改最后一次提交的消息或内容</div>
+                    </div>
+                    <div class="command-item" data-keywords="commit all shortcut git commit">
+                        <div class="command-header">
+                            <div class="command-code"><code>git commit -am "message"</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="暂存并提交所有已跟踪文件的更改" data-en="Stage and commit all tracked file changes">暂存并提交所有已跟踪文件的更改</div>
+                    </div>
+                    <div class="command-item" data-keywords="commit empty no changes git commit">
+                        <div class="command-header">
+                            <div class="command-code"><code>git commit --allow-empty -m "message"</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="允许创建空白提交" data-en="Allow creating empty commits">允许创建空白提交</div>
+                    </div>
+                    <div class="command-item" data-keywords="sign commit gpg secure git commit">
+                        <div class="command-header">
+                            <div class="command-code"><code>git commit -S -m "message"</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="创建GPG签名提交" data-en="Create a GPG-signed commit">创建GPG签名提交</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Branch Section -->
+            <div class="card" data-category="branch">
+                <div class="card-title">🌿 <span data-zh="分支操作" data-en="Branches">分支操作</span> <span class="count">8</span></div>
+                <div class="command-list">
+                    <div class="command-item" data-keywords="branch list git branch">
+                        <div class="command-header">
+                            <div class="command-code"><code>git branch</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="列出所有本地分支" data-en="List all local branches">列出所有本地分支</div>
+                    </div>
+                    <div class="command-item" data-keywords="branch list all remote git branch">
+                        <div class="command-header">
+                            <div class="command-code"><code>git branch -a</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="列出所有本地和远程分支" data-en="List all local and remote branches">列出所有本地和远程分支</div>
+                    </div>
+                    <div class="command-item" data-keywords="checkout switch branch git checkout">
+                        <div class="command-header">
+                            <div class="command-code"><code>git checkout &lt;branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="切换到指定分支" data-en="Switch to specified branch">切换到指定分支</div>
+                    </div>
+                    <div class="command-item" data-keywords="checkout -b create new branch git checkout">
+                        <div class="command-header">
+                            <div class="command-code"><code>git checkout -b &lt;new-branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="创建并切换到新分支" data-en="Create and switch to new branch">创建并切换到新分支</div>
+                    </div>
+                    <div class="command-item" data-keywords="switch branch git switch">
+                        <div class="command-header">
+                            <div class="command-code"><code>git switch &lt;branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="切换到指定分支（新版命令）" data-en="Switch to branch (modern command)">切换到指定分支（新版命令）</div>
+                    </div>
+                    <div class="command-item" data-keywords="switch create branch git switch">
+                        <div class="command-header">
+                            <div class="command-code"><code>git switch -c &lt;new-branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="创建并切换到新分支（新版命令）" data-en="Create and switch to new branch (modern)">创建并切换到新分支（新版命令）</div>
+                    </div>
+                    <div class="command-item" data-keywords="delete branch git branch">
+                        <div class="command-header">
+                            <div class="command-code"><code>git branch -d &lt;branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="删除本地分支" data-en="Delete local branch">删除本地分支</div>
+                    </div>
+                    <div class="command-item" data-keywords="force delete branch git branch">
+                        <div class="command-header">
+                            <div class="command-code"><code>git branch -D &lt;branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="强制删除本地分支" data-en="Force delete local branch">强制删除本地分支</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Merge Section -->
+            <div class="card" data-category="merge">
+                <div class="card-title">🔀 <span data-zh="合并与变基" data-en="Merge & Rebase">合并与变基</span> <span class="count">5</span></div>
+                <div class="command-list">
+                    <div class="command-item" data-keywords="merge branch git merge">
+                        <div class="command-header">
+                            <div class="command-code"><code>git merge &lt;branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="将指定分支合并到当前分支" data-en="Merge branch into current branch">将指定分支合并到当前分支</div>
+                    </div>
+                    <div class="command-item" data-keywords="merge abort cancel git merge">
+                        <div class="command-header">
+                            <div class="command-code"><code>git merge --abort</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="取消合并操作" data-en="Cancel merge operation">取消合并操作</div>
+                    </div>
+                    <div class="command-item" data-keywords="rebase interactive git rebase">
+                        <div class="command-header">
+                            <div class="command-code"><code>git rebase &lt;branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="将当前分支变基到目标分支" data-en="Rebase current branch onto target">将当前分支变基到目标分支</div>
+                    </div>
+                    <div class="command-item" data-keywords="rebase continue git rebase">
+                        <div class="command-header">
+                            <div class="command-code"><code>git rebase --continue</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="解决冲突后继续变基" data-en="Continue rebase after resolving conflicts">解决冲突后继续变基</div>
+                    </div>
+                    <div class="command-item" data-keywords="rebase abort cancel git rebase">
+                        <div class="command-header">
+                            <div class="command-code"><code>git rebase --abort</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="取消变基操作" data-en="Cancel rebase operation">取消变基操作</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Remote Section -->
+            <div class="card" data-category="remote">
+                <div class="card-title">☁️ <span data-zh="远程操作" data-en="Remote">远程操作</span> <span class="count">6</span></div>
+                <div class="command-list">
+                    <div class="command-item" data-keywords="remote list git remote">
+                        <div class="command-header">
+                            <div class="command-code"><code>git remote -v</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="查看远程仓库列表" data-en="List remote repositories">查看远程仓库列表</div>
+                    </div>
+                    <div class="command-item" data-keywords="push origin branch git push">
+                        <div class="command-header">
+                            <div class="command-code"><code>git push origin &lt;branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="推送分支到远程仓库" data-en="Push branch to remote repository">推送分支到远程仓库</div>
+                    </div>
+                    <div class="command-item" data-keywords="push set upstream tracking git push">
+                        <div class="command-header">
+                            <div class="command-code"><code>git push -u origin &lt;branch&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="推送并设置上游分支" data-en="Push and set upstream branch">推送并设置上游分支</div>
+                    </div>
+                    <div class="command-item" data-keywords="pull fetch merge git pull">
+                        <div class="command-header">
+                            <div class="command-code"><code>git pull</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="拉取并合并远程更改" data-en="Fetch and merge remote changes">拉取并合并远程更改</div>
+                    </div>
+                    <div class="command-item" data-keywords="fetch remote git fetch">
+                        <div class="command-header">
+                            <div class="command-code"><code>git fetch</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="从远程获取最新数据（不合并）" data-en="Fetch latest data from remote (no merge)">从远程获取最新数据（不合并）</div>
+                    </div>
+                    <div class="command-item" data-keywords="remote add origin git remote">
+                        <div class="command-header">
+                            <div class="command-code"><code>git remote add origin &lt;url&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="添加远程仓库" data-en="Add a remote repository">添加远程仓库</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Undo Section -->
+            <div class="card" data-category="undo">
+                <div class="card-title">↩️ <span data-zh="撤销与回退" data-en="Undo & Reset">撤销与回退</span> <span class="count">6</span></div>
+                <div class="command-list">
+                    <div class="command-item" data-keywords="restore unstage git restore">
+                        <div class="command-header">
+                            <div class="command-code"><code>git restore --staged &lt;file&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="取消暂存文件" data-en="Unstage a file">取消暂存文件</div>
+                    </div>
+                    <div class="command-item" data-keywords="restore discard changes git restore">
+                        <div class="command-header">
+                            <div class="command-code"><code>git restore &lt;file&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="丢弃文件的本地更改" data-en="Discard local changes to a file">丢弃文件的本地更改</div>
+                    </div>
+                    <div class="command-item" data-keywords="reset soft mixed hard git reset">
+                        <div class="command-header">
+                            <div class="command-code"><code>git reset --soft HEAD~1</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="软重置：保留更改在暂存区" data-en="Soft reset: keep changes staged">软重置：保留更改在暂存区</div>
+                    </div>
+                    <div class="command-item" data-keywords="reset mixed git reset">
+                        <div class="command-header">
+                            <div class="command-code"><code>git reset --mixed HEAD~1</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="混合重置：保留更改在工作区" data-en="Mixed reset: keep changes in working dir">混合重置：保留更改在工作区</div>
+                    </div>
+                    <div class="command-item" data-keywords="reset hard git reset">
+                        <div class="command-header">
+                            <div class="command-code"><code>git reset --hard HEAD~1</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="硬重置：丢弃所有更改（危险！）" data-en="Hard reset: discard all changes (dangerous!)">硬重置：丢弃所有更改（危险！）</div>
+                    </div>
+                    <div class="command-item" data-keywords="revert commit git revert">
+                        <div class="command-header">
+                            <div class="command-code"><code>git revert &lt;commit&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="创建新提交来撤销指定提交" data-en="Create new commit to revert a commit">创建新提交来撤销指定提交</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tag Section -->
+            <div class="card" data-category="tag">
+                <div class="card-title">🏷️ <span data-zh="标签管理" data-en="Tags">标签管理</span> <span class="count">4</span></div>
+                <div class="command-list">
+                    <div class="command-item" data-keywords="tag list git tag">
+                        <div class="command-header">
+                            <div class="command-code"><code>git tag</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="列出所有标签" data-en="List all tags">列出所有标签</div>
+                    </div>
+                    <div class="command-item" data-keywords="tag create lightweight git tag">
+                        <div class="command-header">
+                            <div class="command-code"><code>git tag &lt;tagname&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="创建轻量标签" data-en="Create a lightweight tag">创建轻量标签</div>
+                    </div>
+                    <div class="command-item" data-keywords="tag annotated message git tag">
+                        <div class="command-header">
+                            <div class="command-code"><code>git tag -a &lt;tagname&gt; -m "message"</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="创建带注释的标签" data-en="Create an annotated tag">创建带注释的标签</div>
+                    </div>
+                    <div class="command-item" data-keywords="tag push remote git tag">
+                        <div class="command-header">
+                            <div class="command-code"><code>git push origin &lt;tagname&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="推送标签到远程" data-en="Push tag to remote">推送标签到远程</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Section -->
+            <div class="card" data-category="view">
+                <div class="card-title">📊 <span data-zh="查看信息" data-en="View Info">查看信息</span> <span class="count">7</span></div>
+                <div class="command-list">
+                    <div class="command-item" data-keywords="status git status">
+                        <div class="command-header">
+                            <div class="command-code"><code>git status</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="查看当前仓库状态" data-en="View current repository status">查看当前仓库状态</div>
+                    </div>
+                    <div class="command-item" data-keywords="log history git log">
+                        <div class="command-header">
+                            <div class="command-code"><code>git log</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="查看提交历史" data-en="View commit history">查看提交历史</div>
+                    </div>
+                    <div class="command-item" data-keywords="log oneline graph git log">
+                        <div class="command-header">
+                            <div class="command-code"><code>git log --oneline --graph</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="查看简洁的图形化提交历史" data-en="View compact graph of commit history">查看简洁的图形化提交历史</div>
+                    </div>
+                    <div class="command-item" data-keywords="diff changes git diff">
+                        <div class="command-header">
+                            <div class="command-code"><code>git diff</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="查看未暂存的更改" data-en="View unstaged changes">查看未暂存的更改</div>
+                    </div>
+                    <div class="command-item" data-keywords="diff staged git diff">
+                        <div class="command-header">
+                            <div class="command-code"><code>git diff --staged</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="查看已暂存的更改" data-en="View staged changes">查看已暂存的更改</div>
+                    </div>
+                    <div class="command-item" data-keywords="show commit details git show">
+                        <div class="command-header">
+                            <div class="command-code"><code>git show &lt;commit&gt;</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="查看某个提交的详细信息" data-en="View details of a specific commit">查看某个提交的详细信息</div>
+                    </div>
+                    <div class="command-item" data-keywords="shortlog summary git shortlog">
+                        <div class="command-header">
+                            <div class="command-code"><code>git shortlog</code></div>
+                            <button class="copy-btn" data-zh="复制" data-en="Copy">复制</button>
+                        </div>
+                        <div class="command-desc" data-zh="按贡献者查看提交摘要" data-en="View commit summary by contributor">按贡献者查看提交摘要</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scenario-section">
+            <h3>🎯 <span data-zh="常见场景指引" data-en="Common Scenarios">常见场景指引</span></h3>
+            <div class="scenario-grid">
+                <div class="scenario-item">
+                    <h4 data-zh="第一次提交代码" data-en="First Commit">第一次提交代码</h4>
+                    <p data-zh="初始化仓库并提交第一次代码的完整流程" data-en="Complete workflow for first commit">初始化仓库并提交第一次代码的完整流程</p>
+                    <code>git init<br>git add .<br>git commit -m "Initial commit"</code>
+                </div>
+                <div class="scenario-item">
+                    <h4 data-zh="推送代码到GitHub" data-en="Push to GitHub">推送代码到GitHub</h4>
+                    <p data-zh="创建仓库后推送本地代码的步骤" data-en="Steps to push local code after creating repo">创建仓库后推送本地代码的步骤</p>
+                    <code>git remote add origin &lt;url&gt;<br>git push -u origin main</code>
+                </div>
+                <div class="scenario-item">
+                    <h4 data-zh="创建功能分支" data-en="Create Feature Branch">创建功能分支</h4>
+                    <p data-zh="基于主分支创建新功能分支" data-en="Create new feature branch from main">基于主分支创建新功能分支</p>
+                    <code>git checkout -b feature/new-feature<br>git push -u origin feature/new-feature</code>
+                </div>
+                <div class="scenario-item">
+                    <h4 data-zh="解决合并冲突" data-en="Resolve Merge Conflicts">解决合并冲突</h4>
+                    <p data-zh="合并时遇到冲突的处理方法" data-en="How to handle conflicts during merge">合并时遇到冲突的处理方法</p>
+                    <code>git merge feature/xxx<br># 编辑冲突文件<br>git add .<br>git commit -m "Resolve conflicts"</code>
+                </div>
+                <div class="scenario-item">
+                    <h4 data-zh="回退到上一个版本" data-en="Revert to Previous Version">回退到上一个版本</h4>
+                    <p data-zh="撤销最后一次提交的更改" data-en="Undo the last commit changes">撤销最后一次提交的更改</p>
+                    <code>git reset --soft HEAD~1  # 保留更改<br>git reset --hard HEAD~1  # 丢弃更改</code>
+                </div>
+                <div class="scenario-item">
+                    <h4 data-zh="更新本地仓库" data-en="Update Local Repository">更新本地仓库</h4>
+                    <p data-zh="从远程拉取最新代码并合并" data-en="Pull latest code from remote and merge">从远程拉取最新代码并合并</p>
+                    <code>git fetch origin<br>git pull origin main</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Copy functionality
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const code = btn.parentElement.querySelector('code').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    showToast(btn.dataset.zh === undefined ? 'Copied!' : '已复制!');
+                });
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', filterCommands);
+
+        function filterCommands() {
+            const query = searchInput.value.toLowerCase();
+            document.querySelectorAll('.command-item').forEach(item => {
+                const keywords = item.dataset.keywords.toLowerCase();
+                const desc = item.querySelector('.command-desc').textContent.toLowerCase();
+                const code = item.querySelector('code').textContent.toLowerCase();
+                const match = keywords.includes(query) || desc.includes(query) || code.includes(query);
+                item.classList.toggle('hidden', !match);
+            });
+            
+            // Update card visibility
+            document.querySelectorAll('.card[data-category]').forEach(card => {
+                const visibleItems = card.querySelectorAll('.command-item:not(.hidden)');
+                card.style.display = visibleItems.length === 0 ? 'none' : 'block';
+            });
+        }
+
+        // Category tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const category = btn.dataset.category;
+                
+                document.querySelectorAll('.card[data-category]').forEach(card => {
+                    if (category === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = card.dataset.category === category ? 'block' : 'none';
+                    }
+                });
+                
+                if (category !== 'all') {
+                    filterCommands();
+                } else {
+                    document.querySelectorAll('.command-item').forEach(item => {
+                        item.classList.remove('hidden');
+                    });
+                }
+            });
+        });
+
+        // Language toggle
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const lang = btn.dataset.lang;
+                document.querySelectorAll('[data-zh]').forEach(el => {
+                    el.textContent = el.dataset[lang];
+                });
+                document.querySelectorAll('[data-zh-placeholder]').forEach(el => {
+                    el.placeholder = el.dataset[lang + '-placeholder'];
+                });
+            });
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="meta-tag-generator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">Meta 标签生成器</div><div class="r-desc">SEO标签</div></a>
+        <a href="open-graph-generator.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">OG 标签生成器</div><div class="r-desc">社交分享标签</div></a>
+        <a href="twitter-card-generator.html" class="related-card"><div class="r-icon">🐦</div><div class="r-title">Twitter Card 生成器</div><div class="r-desc">卡片标签</div></a>
+        <a href="robots-txt-generator.html" class="related-card"><div class="r-icon">🤖</div><div class="r-title">robots.txt 生成器</div><div class="r-desc">生成规则</div></a>
+        <a href="url-slug-generator.html" class="related-card"><div class="r-icon">🔗</div><div class="r-title">URL Slug 生成器</div><div class="r-desc">SEO友好URL</div></a>
+        <a href="url-parser.html" class="related-card"><div class="r-icon">🔍</div><div class="r-title">URL 解析器</div><div class="r-desc">URL组件解析</div></a>
+        </div>
+    </section>
+</body>
+</html>

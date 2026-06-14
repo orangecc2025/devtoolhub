@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="Timezone Converter - 免费在线时区转换工具，支持全球主要城市时区对比、实时时间更新、时间戳转换和自定义时间输入">
+    <meta name="keywords" content="时区转换, 世界时钟, 时区计算, 时间转换, timestamp, UTC">
+    <title>Timezone Converter - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .lang-toggle {
+            float: right;
+            margin-top: 2px;
+        }
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid #4F46E5;
+            background: #fff;
+            color: #4F46E5;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .lang-btn.active {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        .page-desc {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .input-field::placeholder {
+            color: #999;
+        }
+        select.input-field {
+            cursor: pointer;
+        }
+        .timezones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .timezone-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            position: relative;
+        }
+        .timezone-card:nth-child(2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .timezone-card:nth-child(3) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .timezone-card:nth-child(4) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .timezone-card:nth-child(5) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .timezone-card:nth-child(6) {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+        .timezone-card.local {
+            background: linear-gradient(135deg, #4F46E5 0%, #7c3aed 100%);
+        }
+        .timezone-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .timezone-time {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .timezone-date {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .timezone-offset {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+        .remove-btn {
+            position: absolute;
+            top: 12px;
+            right: 60px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.2);
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .timezone-card:not(.local):hover .remove-btn {
+            display: flex;
+        }
+        .add-timezone-btn {
+            border: 2px dashed #e5e5e5;
+            background: transparent;
+            padding: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #999;
+            transition: all 0.2s;
+        }
+        .add-timezone-btn:hover {
+            border-color: #4F46E5;
+            color: #4F46E5;
+        }
+        .add-timezone-btn span {
+            font-size: 32px;
+        }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: #f3f4f6;
+            padding: 4px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+        .tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: #fff;
+            color: #4F46E5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .current-time-display {
+            background: linear-gradient(135deg, #4F46E5 0%, #7c3aed 100%);
+            color: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .current-time-display .time {
+            font-size: 48px;
+            font-weight: 700;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .current-time-display .date {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+        .live-badge {
+            display: inline-block;
+            background: #10b981;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .timestamp-input-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+        .timestamp-input-row .input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #666;
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .timestamp-results {
+            margin-top: 20px;
+        }
+        .timestamp-result-item {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .timestamp-result-label {
+            font-size: 13px;
+            color: #666;
+        }
+        .timestamp-result-value {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .copy-btn {
+            padding: 6px 12px;
+            background: #4F46E5;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: #4338ca;
+        }
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        .custom-time-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 4px solid #4F46E5;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 24px;
+        }
+        .tip-box h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4F46E5;
+            margin-bottom: 8px;
+        }
+        .tip-box p {
+            font-size: 14px;
+            color: #666;
+        }
+        .footer {
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            padding: 24px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer p {
+            font-size: 14px;
+            color: #666;
+        }
+        .footer a {
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        .modal-close:hover {
+            color: #333;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+            .page-title {
+                font-size: 24px;
+            }
+            .timezones-grid {
+                grid-template-columns: 1fr;
+            }
+            .current-time-display .time {
+                font-size: 36px;
+            }
+            .custom-time-row {
+                grid-template-columns: 1fr;
+            }
+            .timestamp-input-row {
+                flex-direction: column;
+            }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title" data-zh="时区转换器" data-en="Timezone Converter">时区转换器</h1>
+        <p class="page-desc" data-zh="全球时区实时转换，支持主要城市对比、时间戳转换和自定义时间输入" data-en="Real-time timezone conversion for all major cities, timestamp conversion and custom time input">全球时区实时转换，支持主要城市对比、时间戳转换和自定义时间输入</p>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab active" data-tab="compare" data-zh="时区对比" data-en="Compare">时区对比</button>
+                <button class="tab" data-tab="timestamp" data-zh="时间戳转换" data-en="Timestamp">时间戳转换</button>
+                <button class="tab" data-tab="custom" data-zh="自定义转换" data-en="Custom">自定义转换</button>
+            </div>
+
+            <div id="compare-tab" class="tab-content active">
+                <div class="current-time-display">
+                    <div class="live-badge" data-zh="实时更新" data-en="LIVE">实时更新</div>
+                    <div class="time" id="main-time">--:--:--</div>
+                    <div class="date" id="main-date">----/--/--</div>
+                </div>
+
+                <h3 class="card-title" data-zh="已添加的时区" data-en="Added Timezones">已添加的时区</h3>
+                <div class="timezones-grid" id="timezones-grid">
+                </div>
+                <button class="add-timezone-btn" id="add-timezone-btn">
+                    <span>+</span>
+                    <span data-zh="添加时区" data-en="Add Timezone">添加时区</span>
+                </button>
+            </div>
+
+            <div id="timestamp-tab" class="tab-content">
+                <div class="input-group">
+                    <label class="input-label" data-zh="输入时间戳（秒）" data-en="Enter timestamp (seconds)">输入时间戳（秒）</label>
+                    <input type="text" id="timestamp-input" class="input-field" placeholder="1735689600">
+                </div>
+                <div class="timestamp-input-row">
+                    <div class="input-group">
+                        <label class="input-label" data-zh="或输入日期时间" data-en="Or enter datetime">或输入日期时间</label>
+                        <input type="datetime-local" id="datetime-input" class="input-field">
+                    </div>
+                    <button class="btn btn-primary" id="convert-timestamp" data-zh="转换" data-en="Convert">转换</button>
+                </div>
+
+                <div class="timestamp-results" id="timestamp-results"></div>
+            </div>
+
+            <div id="custom-tab" class="tab-content">
+                <div class="input-group">
+                    <label class="input-label" data-zh="选择源时区" data-en="Select source timezone">选择源时区</label>
+                    <select id="source-timezone" class="input-field"></select>
+                </div>
+                <div class="custom-time-row">
+                    <div class="input-group">
+                        <label class="input-label" data-zh="年" data-en="Year">年</label>
+                        <input type="number" id="custom-year" class="input-field" placeholder="2025">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" data-zh="月" data-en="Month">月</label>
+                        <input type="number" id="custom-month" class="input-field" placeholder="1-12" min="1" max="12">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" data-zh="日" data-en="Day">日</label>
+                        <input type="number" id="custom-day" class="input-field" placeholder="1-31" min="1" max="31">
+                    </div>
+                </div>
+                <div class="custom-time-row" style="margin-top: 16px;">
+                    <div class="input-group">
+                        <label class="input-label" data-zh="时" data-en="Hour">时</label>
+                        <input type="number" id="custom-hour" class="input-field" placeholder="0-23" min="0" max="23">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" data-zh="分" data-en="Minute">分</label>
+                        <input type="number" id="custom-minute" class="input-field" placeholder="0-59" min="0" max="59">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" data-zh="秒" data-en="Second">秒</label>
+                        <input type="number" id="custom-second" class="input-field" placeholder="0-59" min="0" max="59">
+                    </div>
+                </div>
+
+                <h3 class="card-title" style="margin-top: 24px;" data-zh="转换结果" data-en="Conversion Results">转换结果</h3>
+                <div class="timestamp-results" id="custom-results"></div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h4 data-zh="💡 使用提示" data-en="💡 Tips">💡 使用提示</h4>
+            <p data-zh="• 时区对比页面实时更新当前时间<br>• 支持添加多个城市进行同时对比<br>• 时间戳转换支持秒级和毫秒级时间戳<br>• 自定义转换可指定任意时区进行转换" data-en="• Timezone compare page updates in real-time<br>• Add multiple cities for side-by-side comparison<br>• Timestamp conversion supports seconds and milliseconds<br>• Custom conversion allows any timezone">• 时区对比页面实时更新当前时间<br>• 支持添加多个城市进行同时对比<br>• 时间戳转换支持秒级和毫秒级时间戳<br>• 自定义转换可指定任意时区进行转换</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <div class="modal" id="timezone-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">×</button>
+            <h3 class="modal-title" data-zh="添加时区" data-en="Add Timezone">添加时区</h3>
+            <div class="input-group">
+                <label class="input-label" data-zh="选择城市" data-en="Select city">选择城市</label>
+                <select id="city-select" class="input-field"></select>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-primary" id="confirm-add" data-zh="添加" data-en="Add">添加</button>
+                <button class="btn btn-secondary" id="cancel-add" data-zh="取消" data-en="Cancel">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'zh';
+        let selectedTimezones = [];
+        let updateInterval;
+
+        const timezones = [
+            { id: 'Asia/Shanghai', name: '上海', nameEn: 'Shanghai', offset: 8 },
+            { id: 'Asia/Tokyo', name: '东京', nameEn: 'Tokyo', offset: 9 },
+            { id: 'Asia/Seoul', name: '首尔', nameEn: 'Seoul', offset: 9 },
+            { id: 'Asia/Singapore', name: '新加坡', nameEn: 'Singapore', offset: 8 },
+            { id: 'Asia/Hong_Kong', name: '香港', nameEn: 'Hong Kong', offset: 8 },
+            { id: 'Asia/Dubai', name: '迪拜', nameEn: 'Dubai', offset: 4 },
+            { id: 'Asia/Kolkata', name: '孟买', nameEn: 'Mumbai', offset: 5.5 },
+            { id: 'Europe/London', name: '伦敦', nameEn: 'London', offset: 0 },
+            { id: 'Europe/Paris', name: '巴黎', nameEn: 'Paris', offset: 1 },
+            { id: 'Europe/Berlin', name: '柏林', nameEn: 'Berlin', offset: 1 },
+            { id: 'Europe/Moscow', name: '莫斯科', nameEn: 'Moscow', offset: 3 },
+            { id: 'America/New_York', name: '纽约', nameEn: 'New York', offset: -5 },
+            { id: 'America/Los_Angeles', name: '洛杉矶', nameEn: 'Los Angeles', offset: -8 },
+            { id: 'America/Chicago', name: '芝加哥', nameEn: 'Chicago', offset: -6 },
+            { id: 'America/Toronto', name: '多伦多', nameEn: 'Toronto', offset: -5 },
+            { id: 'America/Vancouver', name: '温哥华', nameEn: 'Vancouver', offset: -8 },
+            { id: 'Australia/Sydney', name: '悉尼', nameEn: 'Sydney', offset: 11 },
+            { id: 'Australia/Melbourne', name: '墨尔本', nameEn: 'Melbourne', offset: 11 },
+            { id: 'Pacific/Auckland', name: '奥克兰', nameEn: 'Auckland', offset: 13 },
+            { id: 'UTC', name: 'UTC', nameEn: 'UTC', offset: 0 }
+        ];
+
+        function updateLanguage() {
+            document.querySelectorAll('[data-' + currentLang + ']').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = text;
+                } else {
+                    el.textContent = text;
+                }
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === currentLang);
+            });
+            renderTimezones();
+            populateSelects();
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentLang = btn.dataset.lang;
+                updateLanguage();
+            });
+        });
+
+        function formatTimezoneOffset(offset) {
+            const sign = offset >= 0 ? '+' : '-';
+            const absOffset = Math.abs(offset);
+            const hours = Math.floor(absOffset);
+            const minutes = (absOffset - hours) * 60;
+            if (minutes === 0) {
+                return `UTC${sign}${hours}`;
+            }
+            return `UTC${sign}${hours}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        function getTimeInTimezone(timezone) {
+            const now = new Date();
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const tzOffset = timezone.offset * 3600000;
+            const targetTime = new Date(utc + tzOffset);
+            return targetTime;
+        }
+
+        function formatTime(date) {
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const seconds = date.getSeconds().toString().padStart(2, '0');
+            return `${hours}:${minutes}:${seconds}`;
+        }
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const weekdays = currentLang === 'zh' 
+                ? ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+                : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const weekday = weekdays[date.getDay()];
+            return `${year}/${month}/${day} ${weekday}`;
+        }
+
+        function renderTimezones() {
+            const grid = document.getElementById('timezones-grid');
+            const mainTime = document.getElementById('main-time');
+            const mainDate = document.getElementById('main-date');
+            
+            const localTime = getTimeInTimezone({ offset: 8 });
+            mainTime.textContent = formatTime(localTime);
+            mainDate.textContent = formatDate(localTime);
+
+            const defaultTimezones = [
+                { id: 'local', name: '本地时间', nameEn: 'Local Time', offset: new Date().getTimezoneOffset() / -60, isLocal: true }
+            ];
+
+            if (selectedTimezones.length === 0) {
+                selectedTimezones = [
+                    { id: 'Asia/Shanghai', name: '上海', nameEn: 'Shanghai', offset: 8 },
+                    { id: 'America/New_York', name: '纽约', nameEn: 'New York', offset: -5 },
+                    { id: 'Europe/London', name: '伦敦', nameEn: 'London', offset: 0 },
+                    { id: 'Asia/Tokyo', name: '东京', nameEn: 'Tokyo', offset: 9 }
+                ];
+            }
+
+            grid.innerHTML = selectedTimezones.map((tz, index) => {
+                const time = getTimeInTimezone(tz);
+                const name = currentLang === 'zh' ? tz.name : tz.nameEn;
+                return `
+                    <div class="timezone-card ${tz.isLocal ? 'local' : ''}">
+                        <span class="timezone-offset">${formatTimezoneOffset(tz.offset)}</span>
+                        ${!tz.isLocal ? `<button class="remove-btn" data-index="${index}">×</button>` : ''}
+                        <div class="timezone-name">
+                            <span>📍</span>
+                            <span>${name}</span>
+                        </div>
+                        <div class="timezone-time">${formatTime(time)}</div>
+                        <div class="timezone-date">${formatDate(time)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            grid.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const index = parseInt(btn.dataset.index);
+                    selectedTimezones.splice(index, 1);
+                    renderTimezones();
+                });
+            });
+        }
+
+        function populateSelects() {
+            const citySelect = document.getElementById('city-select');
+            const sourceSelect = document.getElementById('source-timezone');
+
+            const options = timezones.map(tz => {
+                const name = currentLang === 'zh' ? tz.name : tz.nameEn;
+                return `<option value="${tz.id}">${name} (${formatTimezoneOffset(tz.offset)})</option>`;
+            }).join('');
+
+            if (citySelect) citySelect.innerHTML = options;
+            if (sourceSelect) sourceSelect.innerHTML = options;
+        }
+
+        function showModal() {
+            document.getElementById('timezone-modal').classList.add('active');
+            populateSelects();
+        }
+
+        function hideModal() {
+            document.getElementById('timezone-modal').classList.remove('active');
+        }
+
+        document.getElementById('add-timezone-btn').addEventListener('click', showModal);
+        document.getElementById('modal-close').addEventListener('click', hideModal);
+        document.getElementById('cancel-add').addEventListener('click', hideModal);
+
+        document.getElementById('confirm-add').addEventListener('click', () => {
+            const select = document.getElementById('city-select');
+            const selectedId = select.value;
+            const tz = timezones.find(t => t.id === selectedId);
+            if (tz && !selectedTimezones.find(s => s.id === tz.id)) {
+                selectedTimezones.push(tz);
+                renderTimezones();
+            }
+            hideModal();
+        });
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+            });
+        });
+
+        function convertTimestamp() {
+            const input = document.getElementById('timestamp-input').value;
+            const resultsDiv = document.getElementById('timestamp-results');
+            
+            let timestamp = parseInt(input);
+            if (isNaN(timestamp) || timestamp < 0) {
+                timestamp = Math.floor(Date.now() / 1000);
+            }
+
+            if (timestamp < 10000000000) {
+                timestamp = timestamp * 1000;
+            }
+
+            const date = new Date(timestamp);
+            
+            resultsDiv.innerHTML = timezones.slice(0, 8).map(tz => {
+                const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+                const tzOffset = tz.offset * 3600000;
+                const targetTime = new Date(utc + tzOffset);
+                const name = currentLang === 'zh' ? tz.name : tz.nameEn;
+                
+                return `
+                    <div class="timestamp-result-item">
+                        <span class="timestamp-result-label">${name}</span>
+                        <span class="timestamp-result-value">${formatDate(targetTime)} ${formatTime(targetTime)}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('convert-timestamp').addEventListener('click', convertTimestamp);
+        document.getElementById('timestamp-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') convertTimestamp();
+        });
+
+        function convertCustomTime() {
+            const sourceSelect = document.getElementById('source-timezone');
+            const sourceTzId = sourceSelect.value;
+            const sourceTz = timezones.find(t => t.id === sourceTzId);
+            
+            const year = parseInt(document.getElementById('custom-year').value) || new Date().getFullYear();
+            const month = parseInt(document.getElementById('custom-month').value) || 1;
+            const day = parseInt(document.getElementById('custom-day').value) || 1;
+            const hour = parseInt(document.getElementById('custom-hour').value) || 0;
+            const minute = parseInt(document.getElementById('custom-minute').value) || 0;
+            const second = parseInt(document.getElementById('custom-second').value) || 0;
+
+            const resultsDiv = document.getElementById('custom-results');
+            
+            const sourceTime = new Date(year, month - 1, day, hour, minute, second);
+            const utc = sourceTime.getTime() - (sourceTz.offset * 3600000);
+
+            resultsDiv.innerHTML = timezones.slice(0, 8).map(tz => {
+                const tzOffset = tz.offset * 3600000;
+                const targetTime = new Date(utc + tzOffset);
+                const name = currentLang === 'zh' ? tz.name : tz.nameEn;
+                
+                return `
+                    <div class="timestamp-result-item">
+                        <span class="timestamp-result-label">${name}</span>
+                        <span class="timestamp-result-value">${formatDate(targetTime)} ${formatTime(targetTime)}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        ['custom-year', 'custom-month', 'custom-day', 'custom-hour', 'custom-minute', 'custom-second'].forEach(id => {
+            document.getElementById(id).addEventListener('input', convertCustomTime);
+        });
+
+        updateInterval = setInterval(renderTimezones, 1000);
+        renderTimezones();
+        populateSelects();
+        updateLanguage();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="css-unit-converter.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">CSS 单位转换器</div><div class="r-desc">9种单位互转</div></a>
+        <a href="pixel-to-rem-converter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">px/rem 转换器</div><div class="r-desc">px转rem</div></a>
+        <a href="temperature-converter.html" class="related-card"><div class="r-icon">🌡</div><div class="r-title">温度转换器</div><div class="r-desc">温度互转</div></a>
+        <a href="data-size-converter.html" class="related-card"><div class="r-icon">💿</div><div class="r-title">数据大小转换器</div><div class="r-desc">B/KB/MB互转</div></a>
+        <a href="speed-converter.html" class="related-card"><div class="r-icon">🚀</div><div class="r-title">速度转换器</div><div class="r-desc">速度单位互转</div></a>
+        <a href="area-converter.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">面积转换器</div><div class="r-desc">面积互转</div></a>
+        </div>
+    </section>
+</body>
+</html>

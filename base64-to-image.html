@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的在线Base64转图片工具，粘贴Base64编码自动还原显示图片，支持下载为PNG/JPG格式。">
+    <meta name="keywords" content="Base64转图片, Base64解码, Data URI转图片">
+    <title>Base64转图片 - DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/base64-to-image.html">
+    <meta property="og:title" content="Base64转图片 - DevToolBox">
+    <meta property="og:description" content="免费的在线Base64转图片工具，粘贴Base64编码自动还原显示图片。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/base64-to-image.html">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Base64转图片",
+        "description": "免费的在线Base64转图片工具，粘贴Base64编码自动还原显示图片。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+            min-height: 150px;
+            resize: vertical;
+        }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .hint-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .preview-section {
+            margin-top: 32px;
+            display: none;
+        }
+        .preview-section.show {
+            display: block;
+        }
+        .preview-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+        .preview-box {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+        }
+        .preview-img {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        .error-box {
+            background: #FEE2E2;
+            border: 1px solid #FECACA;
+            border-radius: 8px;
+            padding: 16px;
+            color: #991B1B;
+            margin-top: 16px;
+            display: none;
+        }
+        .error-box.show {
+            display: block;
+        }
+        .info-table {
+            width: 100%;
+            margin-top: 20px;
+            text-align: left;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .info-value {
+            font-weight: 600;
+        }
+        .format-selector {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            justify-content: center;
+        }
+        .format-option {
+            padding: 8px 20px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        .format-option:hover {
+            border-color: var(--primary);
+        }
+        .format-option.selected {
+            border-color: var(--primary);
+            background: rgba(79,70,229,0.1);
+            color: var(--primary);
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 6px;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+            .format-selector { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🖼 Base64转图片</h1>
+            <p>粘贴Base64编码，自动还原并显示图片</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label for="base64Input">Base64编码内容</label>
+                <textarea id="base64Input" placeholder="请粘贴Base64编码，格式如：
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...
+或纯Base64字符串：
+iVBORw0KGgoAAAANSUhEUgAAAAUA..."></textarea>
+                <div class="hint-text">支持带前缀的Data URI（data:image/xxx;base64,）或纯Base64字符串</div>
+            </div>
+
+            <div class="error-box" id="errorBox">
+                <strong>⚠️ 错误：</strong>
+                <span id="errorMessage">无效的Base64编码</span>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="decodeBase64()">🔄 转换为图片</button>
+                <button class="btn btn-secondary" onclick="clearInput()">🗑 清空</button>
+            </div>
+
+            <div class="preview-section" id="previewSection">
+                <div class="preview-title">📷 图片预览</div>
+                <div class="preview-box">
+                    <img src="" alt="Decoded Image" class="preview-img" id="decodedImg">
+                    
+                    <div class="format-selector" id="formatSelector">
+                        <div class="format-option selected" data-format="png" onclick="selectFormat(this)">PNG</div>
+                        <div class="format-option" data-format="jpeg" onclick="selectFormat(this)">JPEG</div>
+                    </div>
+
+                    <div class="btn-group" style="justify-content: center; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="downloadImage()">💾 下载图片</button>
+                        <button class="btn btn-secondary" onclick="copyImageURL()">📋 复制Data URL</button>
+                    </div>
+                </div>
+
+                <table class="info-table">
+                    <tr class="info-row">
+                        <td class="info-label">检测格式</td>
+                        <td class="info-value" id="detectedFormat">-</td>
+                    </tr>
+                    <tr class="info-row">
+                        <td class="info-label">图片尺寸</td>
+                        <td class="info-value" id="imageDimensions">-</td>
+                    </tr>
+                    <tr class="info-row">
+                        <td class="info-label">Base64长度</td>
+                        <td class="info-value" id="base64Length">-</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>如何获取Base64编码？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    有多种方式：1) 在浏览器中打开图片，右键选择"检查"，在Network面板找到图片的Data URL；2) 使用我们的"图片转Base64"工具上传图片；3) 在开发者工具中运行 canvas.toDataURL() 方法获取。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>支持哪些图片格式？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    支持所有主流图片格式的Base64解码，包括PNG、JPEG、GIF、WebP、SVG等。工具会自动检测Data URI中的MIME类型并正确解析。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>下载时可以选择格式吗？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    可以。点击下载按钮时，会根据您选择的格式（PNG或JPEG）进行转换。PNG支持透明背景，JPEG会进行压缩且不支持透明。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>为什么解码失败？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    常见原因：1) Base64字符串包含非法字符；2) 缺少或错误的MIME类型前缀；3) 数据被截断或不完整；4) 编码本身损坏。请检查并确保Base64字符串完整且正确。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>这个工具是否上传我的数据？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    不上传。所有处理都在浏览器本地完成，图片不会发送到任何服务器。这确保了您的隐私安全，您可以在离线环境下正常使用。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="image-compressor.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">图片压缩器</div><div class="r-desc">图片压缩</div></a>
+        <a href="svg-viewer.html" class="related-card"><div class="r-icon">🎨</div><div class="r-title">SVG 查看器</div><div class="r-desc">SVG预览优化</div></a>
+        <a href="image-to-base64.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">图片转 Base64</div><div class="r-desc">图片转编码</div></a>
+        <a href="image-resizer.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">图片缩放工具</div><div class="r-desc">图片缩放</div></a>
+        <a href="favicon-generator.html" class="related-card"><div class="r-icon">⭐</div><div class="r-title">Favicon 生成器</div><div class="r-desc">图标生成</div></a>
+        <a href="placeholder-image.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">占位图生成器</div><div class="r-desc">占位图</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentDataUrl = '';
+        let currentFormat = 'png';
+
+        function selectFormat(el) {
+            document.querySelectorAll('.format-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            el.classList.add('selected');
+            currentFormat = el.dataset.format;
+        }
+
+        function decodeBase64() {
+            const input = document.getElementById('base64Input').value.trim();
+            const errorBox = document.getElementById('errorBox');
+            const previewSection = document.getElementById('previewSection');
+
+            if (!input) {
+                showError('请输入Base64编码');
+                return;
+            }
+
+            let dataUrl = input;
+            
+            // 如果没有前缀，尝试自动检测
+            if (!input.startsWith('data:')) {
+                // 尝试添加PNG前缀
+                dataUrl = 'data:image/png;base64,' + input;
+            }
+
+            try {
+                // 验证Base64是否有效
+                const base64Data = dataUrl.split(',')[1] || dataUrl.replace(/^data:image\/\w+;base64,/, '');
+                atob(base64Data); // 测试是否能解码
+
+                // 创建图片对象验证
+                const img = new Image();
+                img.onload = () => {
+                    currentDataUrl = dataUrl;
+                    
+                    // 显示预览
+                    document.getElementById('decodedImg').src = dataUrl;
+                    document.getElementById('detectedFormat').textContent = getFormatFromDataUrl(dataUrl);
+                    document.getElementById('imageDimensions').textContent = `${img.width} × ${img.height} px`;
+                    document.getElementById('base64Length').textContent = formatNumber(base64Data.length) + ' 字符';
+
+                    errorBox.classList.remove('show');
+                    previewSection.classList.add('show');
+                };
+                img.onerror = () => {
+                    showError('无法解析为有效图片，请检查Base64编码是否正确');
+                };
+                img.src = dataUrl;
+
+            } catch (e) {
+                showError('Base64解码失败：' + e.message);
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorBox').classList.add('show');
+            document.getElementById('previewSection').classList.remove('show');
+        }
+
+        function getFormatFromDataUrl(dataUrl) {
+            const match = dataUrl.match(/^data:image\/(\w+)/);
+            if (match) {
+                const format = match[1].toUpperCase();
+                if (format === 'JPEG') return 'JPEG/JPG';
+                return format;
+            }
+            return '未知';
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function downloadImage() {
+            if (!currentDataUrl) return;
+
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                
+                if (currentFormat === 'jpeg') {
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+                
+                ctx.drawImage(img, 0, 0);
+                
+                const downloadUrl = canvas.toDataURL('image/' + currentFormat, 0.95);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'decoded-image.' + (currentFormat === 'jpeg' ? 'jpg' : 'png');
+                a.click();
+            };
+            img.src = currentDataUrl;
+        }
+
+        function copyImageURL() {
+            if (!currentDataUrl) return;
+            navigator.clipboard.writeText(currentDataUrl).then(() => {
+                alert('Data URL已复制到剪贴板！');
+            });
+        }
+
+        function clearInput() {
+            document.getElementById('base64Input').value = '';
+            document.getElementById('errorBox').classList.remove('show');
+            document.getElementById('previewSection').classList.remove('show');
+            currentDataUrl = '';
+        }
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

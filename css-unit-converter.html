@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的在线CSS单位转换器，支持px、rem、em、vw、vh、pt、cm、mm、in之间互转，实时双向转换，响应式预览。">
+    <meta name="keywords" content="CSS单位转换,px转rem,rem转px,CSS单位计算,响应式单位转换,vwvh转换,单位换算">
+    <title>CSS单位转换器 | 在线px/rem/em/vw/vh转换工具 - DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/css-unit-converter.html">
+    <meta property="og:title" content="CSS单位转换器 | 在线px/rem/em/vw/vh转换工具">
+    <meta property="og:description" content="免费的在线CSS单位转换器，支持px、rem、em、vw、vh、pt、cm、mm、in之间互转，实时双向转换。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/css-unit-converter.html">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "CSS单位转换器",
+        "description": "免费的在线CSS单位转换器，支持px、rem、em、vw、vh、pt、cm、mm、in之间互转，实时双向转换",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .lang-toggle { display: flex; gap: 8px; align-items: center; }
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .lang-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .container { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
+        .hero { text-align: center; margin-bottom: 32px; }
+        .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+        .hero p { color: var(--text-secondary); font-size: 15px; }
+        
+        /* Tool Card */
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Input Section */
+        .input-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .input-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .input-group input,
+        .input-group select {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .input-group select {
+            cursor: pointer;
+            background: white;
+        }
+        
+        /* Result Grid */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .result-item {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .result-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .result-item.highlight {
+            background: #EEF2FF;
+            border: 2px solid var(--primary);
+        }
+        .result-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .result-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            word-break: break-all;
+        }
+        .result-unit {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Settings Section */
+        .settings-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .setting-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .setting-item label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .setting-item input {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        /* Reference Table */
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+        .ref-table th,
+        .ref-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        .ref-table th {
+            background: var(--bg);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+        .ref-table td:first-child {
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .ref-table tr:hover {
+            background: var(--bg);
+        }
+        
+        /* Responsive Preview */
+        .preview-section {
+            margin-top: 24px;
+            padding: 20px;
+            background: #F3F4F6;
+            border-radius: 8px;
+        }
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .preview-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .preview-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .preview-label {
+            width: 120px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .preview-bar {
+            flex: 1;
+            height: 24px;
+            background: #E5E7EB;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .preview-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        .preview-value {
+            width: 80px;
+            text-align: right;
+            font-size: 13px;
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: #E5E7EB; }
+        
+        /* Quick buttons */
+        .quick-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .quick-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .quick-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 32px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a { color: var(--text-secondary); text-decoration: none; }
+        .footer a:hover { color: var(--primary); }
+        .en { display: none; }
+        body.en-zh .en { display: inline; }
+        body.en-zh .zh { display: none; }
+        body.en-zh .en-block { display: block; }
+        body.en-zh .zh-block { display: none; }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 22px; }
+            .input-row { flex-direction: column; }
+            .result-grid { grid-template-columns: 1fr 1fr; }
+            .settings-row { grid-template-columns: 1fr; }
+            .ref-table { font-size: 12px; }
+            .ref-table th, .ref-table td { padding: 8px; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="https://devtoolhub.cc/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+                <button class="lang-btn" onclick="setLang('en')">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1><span class="zh-block">📐 CSS单位转换器</span><span class="en-block">📐 CSS Unit Converter</span></h1>
+            <p><span class="zh-block">支持px、rem、em、vw、vh、pt、cm、mm、in之间实时互转</span><span class="en-block">Convert between px, rem, em, vw, vh, pt, cm, mm, in in real-time</span></p>
+        </section>
+
+        <div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8352129303807728" data-ad-slot="YOUR_AD_SLOT" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+
+        <div class="tool-card">
+            <h3 class="card-title">🔢 <span class="zh-block">数值输入</span><span class="en-block">Value Input</span></h3>
+            
+            <div class="quick-btns">
+                <span style="font-size:13px;color:var(--text-secondary);margin-right:8px;">
+                    <span class="zh-block">快捷单位：</span><span class="en-block">Quick:</span>
+                </span>
+                <button class="quick-btn" onclick="setUnit('px')">px</button>
+                <button class="quick-btn" onclick="setUnit('rem')">rem</button>
+                <button class="quick-btn" onclick="setUnit('em')">em</button>
+                <button class="quick-btn" onclick="setUnit('vw')">vw</button>
+                <button class="quick-btn" onclick="setUnit('vh')">vh</button>
+                <button class="quick-btn" onclick="setUnit('pt')">pt</button>
+            </div>
+            
+            <div class="input-row">
+                <div class="input-group">
+                    <label><span class="zh-block">数值</span><span class="en-block">Value</span></label>
+                    <input type="number" id="input-value" placeholder="16" step="any" oninput="convert()">
+                </div>
+                <div class="input-group">
+                    <label><span class="zh-block">单位</span><span class="en-block">Unit</span></label>
+                    <select id="input-unit" onchange="convert()">
+                        <option value="px">px</option>
+                        <option value="rem">rem</option>
+                        <option value="em">em</option>
+                        <option value="vw">vw</option>
+                        <option value="vh">vh</option>
+                        <option value="pt">pt</option>
+                        <option value="cm">cm</option>
+                        <option value="mm">mm</option>
+                        <option value="in">in</option>
+                    </select>
+                </div>
+            </div>
+
+            <h4 style="margin: 20px 0 12px; font-size:14px;">
+                <span class="zh-block">⚙️ 基准设置（用于相对单位计算）</span>
+                <span class="en-block">⚙️ Base Settings (for relative units)</span>
+            </h4>
+            <div class="settings-row">
+                <div class="setting-item">
+                    <label><span class="zh-block">根字体大小</span><span class="en-block">Root Font Size</span></label>
+                    <input type="number" id="base-root" value="16" oninput="convert()">
+                </div>
+                <div class="setting-item">
+                    <label><span class="zh-block">父元素字体大小</span><span class="en-block">Parent Font Size</span></label>
+                    <input type="number" id="base-parent" value="16" oninput="convert()">
+                </div>
+                <div class="setting-item">
+                    <label><span class="zh-block">视口宽度 (px)</span><span class="en-block">Viewport Width</span></label>
+                    <input type="number" id="base-vw" value="375" oninput="convert()">
+                </div>
+                <div class="setting-item">
+                    <label><span class="zh-block">视口高度 (px)</span><span class="en-block">Viewport Height</span></label>
+                    <input type="number" id="base-vh" value="667" oninput="convert()">
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-card">
+            <h3 class="card-title">📊 <span class="zh-block">转换结果</span><span class="en-block">Conversion Results</span></h3>
+            <div class="result-grid" id="result-grid"></div>
+        </div>
+
+        <div class="tool-card">
+            <h3 class="card-title">📱 <span class="zh-block">响应式预览</span><span class="en-block">Responsive Preview</span></h3>
+            <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">
+                <span class="zh-block">当前值在不同屏幕宽度下的实际像素值</span>
+                <span class="en-block">Actual pixel values at different screen widths</span>
+            </p>
+            <div class="preview-section">
+                <div class="preview-bars" id="preview-bars"></div>
+            </div>
+        </div>
+
+        <div class="tool-card">
+            <h3 class="card-title">📋 <span class="zh-block">CSS单位速查表</span><span class="en-block">CSS Units Quick Reference</span></h3>
+            <table class="ref-table">
+                <thead>
+                    <tr>
+                        <th><span class="zh-block">单位</span><span class="en-block">Unit</span></th>
+                        <th><span class="zh-block">说明</span><span class="en-block">Description</span></th>
+                        <th><span class="zh-block">基准</span><span class="en-block">Base</span></th>
+                        <th><span class="zh-block">1单位 = ? px</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>px</td>
+                        <td><span class="zh-block">像素，绝对单位</span><span class="en-block">Pixels, absolute</span></td>
+                        <td>-</td>
+                        <td>1px</td>
+                    </tr>
+                    <tr>
+                        <td>rem</td>
+                        <td><span class="zh-block">根元素字体大小</span><span class="en-block">Root element font size</span></td>
+                        <td>16px</td>
+                        <td>16px</td>
+                    </tr>
+                    <tr>
+                        <td>em</td>
+                        <td><span class="zh-block">父元素字体大小</span><span class="en-block">Parent element font size</span></td>
+                        <td>16px</td>
+                        <td>16px</td>
+                    </tr>
+                    <tr>
+                        <td>vw</td>
+                        <td><span class="zh-block">视口宽度的1%</span><span class="en-block">1% of viewport width</span></td>
+                        <td>viewport</td>
+                        <td>~3.75px (基于375px)</td>
+                    </tr>
+                    <tr>
+                        <td>vh</td>
+                        <td><span class="zh-block">视口高度的1%</span><span class="en-block">1% of viewport height</span></td>
+                        <td>viewport</td>
+                        <td>~6.67px (基于667px)</td>
+                    </tr>
+                    <tr>
+                        <td>%</td>
+                        <td><span class="zh-block">父元素的百分比</span><span class="en-block">Percentage of parent</span></td>
+                        <td>parent</td>
+                        <td>variable</td>
+                    </tr>
+                    <tr>
+                        <td>pt</td>
+                        <td><span class="zh-block">磅，印刷单位</span><span class="en-block">Points, print unit</span></td>
+                        <td>1pt = 1.333px</td>
+                        <td>1.333px</td>
+                    </tr>
+                    <tr>
+                        <td>cm</td>
+                        <td><span class="zh-block">厘米</span><span class="en-block">Centimeters</span></td>
+                        <td>1cm = 37.8px</td>
+                        <td>37.8px</td>
+                    </tr>
+                    <tr>
+                        <td>mm</td>
+                        <td><span class="zh-block">毫米</span><span class="en-block">Millimeters</span></td>
+                        <td>1mm = 3.78px</td>
+                        <td>3.78px</td>
+                    </tr>
+                    <tr>
+                        <td>in</td>
+                        <td><span class="zh-block">英寸</span><span class="en-block">Inches</span></td>
+                        <td>1in = 96px</td>
+                        <td>96px</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8352129303807728" data-ad-slot="YOUR_AD_SLOT" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="pixel-to-rem-converter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">px/rem 转换器</div><div class="r-desc">px转rem</div></a>
+        <a href="timezone-converter.html" class="related-card"><div class="r-icon">🌍</div><div class="r-title">时区转换器</div><div class="r-desc">全球时区对比</div></a>
+        <a href="temperature-converter.html" class="related-card"><div class="r-icon">🌡</div><div class="r-title">温度转换器</div><div class="r-desc">温度互转</div></a>
+        <a href="data-size-converter.html" class="related-card"><div class="r-icon">💿</div><div class="r-title">数据大小转换器</div><div class="r-desc">B/KB/MB互转</div></a>
+        <a href="speed-converter.html" class="related-card"><div class="r-icon">🚀</div><div class="r-title">速度转换器</div><div class="r-desc">速度单位互转</div></a>
+        <a href="area-converter.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">面积转换器</div><div class="r-desc">面积互转</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="https://devtoolhub.cc/about.html">关于我们</a> | <a href="https://devtoolhub.cc/privacy.html">隐私政策</a> | <a href="https://devtoolhub.cc/terms.html">使用条款</a> | <a href="https://devtoolhub.cc/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        function setLang(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            if (lang === 'en') {
+                document.body.classList.add('en-zh');
+            } else {
+                document.body.classList.remove('en-zh');
+            }
+        }
+
+        function setUnit(unit) {
+            document.getElementById('input-unit').value = unit;
+            convert();
+        }
+
+        function getBaseValues() {
+            return {
+                rootFontSize: parseFloat(document.getElementById('base-root').value) || 16,
+                parentFontSize: parseFloat(document.getElementById('base-parent').value) || 16,
+                viewportWidth: parseFloat(document.getElementById('base-vw').value) || 375,
+                viewportHeight: parseFloat(document.getElementById('base-vh').value) || 667
+            };
+        }
+
+        function toPx(value, unit, base) {
+            switch (unit) {
+                case 'px': return value;
+                case 'rem': return value * base.rootFontSize;
+                case 'em': return value * base.parentFontSize;
+                case 'vw': return value * base.viewportWidth / 100;
+                case 'vh': return value * base.viewportHeight / 100;
+                case 'pt': return value * 96 / 72; // 72pt = 1in = 96px
+                case 'cm': return value * 37.8;
+                case 'mm': return value * 3.78;
+                case 'in': return value * 96;
+                default: return value;
+            }
+        }
+
+        function fromPx(px, unit, base) {
+            switch (unit) {
+                case 'px': return px;
+                case 'rem': return px / base.rootFontSize;
+                case 'em': return px / base.parentFontSize;
+                case 'vw': return px / base.viewportWidth * 100;
+                case 'vh': return px / base.viewportHeight * 100;
+                case 'pt': return px * 72 / 96;
+                case 'cm': return px / 37.8;
+                case 'mm': return px / 3.78;
+                case 'in': return px / 96;
+                default: return px;
+            }
+        }
+
+        function formatNumber(num) {
+            if (num === 0) return '0';
+            if (Math.abs(num) >= 1000) return num.toFixed(1);
+            if (Math.abs(num) >= 1) return num.toFixed(4);
+            if (Math.abs(num) >= 0.01) return num.toFixed(6);
+            if (Math.abs(num) >= 0.0001) return num.toFixed(8);
+            return num.toExponential(4);
+        }
+
+        function convert() {
+            const value = parseFloat(document.getElementById('input-value').value);
+            const unit = document.getElementById('input-unit').value;
+            const base = getBaseValues();
+            
+            if (isNaN(value)) {
+                document.getElementById('result-grid').innerHTML = '';
+                document.getElementById('preview-bars').innerHTML = '';
+                return;
+            }
+
+            const px = toPx(value, unit, base);
+            const units = ['px', 'rem', 'em', 'vw', 'vh', 'pt', 'cm', 'mm', 'in'];
+            const labels = {
+                px: 'px',
+                rem: 'rem',
+                em: 'em',
+                vw: 'vw',
+                vh: 'vh',
+                pt: 'pt',
+                cm: 'cm',
+                mm: 'mm',
+                in: 'in'
+            };
+            
+            let html = '';
+            units.forEach(u => {
+                const converted = fromPx(px, u, base);
+                const isHighlight = u === unit;
+                html += `
+                    <div class="result-item ${isHighlight ? 'highlight' : ''}">
+                        <div class="result-label">${labels[u]}</div>
+                        <div class="result-value">${formatNumber(converted)}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('result-grid').innerHTML = html;
+            
+            // Responsive preview
+            const screenSizes = [
+                { name: '320px (iPhone SE)', width: 320 },
+                { name: '375px (iPhone)', width: 375 },
+                { name: '414px (iPhone Max)', width: 414 },
+                { name: '768px (iPad)', width: 768 },
+                { name: '1024px (iPad Pro)', width: 1024 },
+                { name: '1440px (Desktop)', width: 1440 }
+            ];
+            
+            let previewHtml = '';
+            const maxPx = Math.max(px, 1);
+            const maxWidth = 200; // max bar width
+            
+            screenSizes.forEach(screen => {
+                // Calculate what the value would be in vw at this screen width
+                const vwValue = px / screen.width * 100;
+                const barWidth = Math.min((px / 200) * maxWidth, maxWidth); // cap at maxWidth
+                
+                previewHtml += `
+                    <div class="preview-item">
+                        <span class="preview-label">${screen.name}</span>
+                        <div class="preview-bar">
+                            <div class="preview-bar-fill" style="width:${barWidth}px"></div>
+                        </div>
+                        <span class="preview-value">${px.toFixed(1)}px / ${vwValue.toFixed(2)}vw</span>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('preview-bars').innerHTML = previewHtml;
+        }
+
+        // Initial conversion
+        document.getElementById('input-value').value = 16;
+        convert();
+    </script>
+</body>
+</html>

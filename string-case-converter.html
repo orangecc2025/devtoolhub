@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="String Case Converter - 免费在线字符串大小写转换工具，支持camelCase、PascalCase、snake_case、kebab-case等8种格式实时转换">
+    <meta name="keywords" content="大小写转换, camelCase, PascalCase, snake_case, kebab-case, 命名转换, 字符串格式化">
+    <title>String Case Converter - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .lang-toggle {
+            float: right;
+            margin-top: 2px;
+        }
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid #4F46E5;
+            background: #fff;
+            color: #4F46E5;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .lang-btn.active {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        .page-desc {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .input-field::placeholder {
+            color: #999;
+        }
+        textarea.input-field {
+            resize: vertical;
+            min-height: 150px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+        }
+        .mode-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .mode-btn {
+            padding: 10px 20px;
+            border: 2px solid #e5e5e5;
+            background: #fff;
+            color: #666;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .mode-btn.active {
+            border-color: #4F46E5;
+            background: #eef2ff;
+            color: #4F46E5;
+        }
+        .mode-btn:hover:not(.active) {
+            border-color: #4F46E5;
+            color: #4F46E5;
+        }
+        .formats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .format-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 16px;
+            position: relative;
+        }
+        .format-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4F46E5;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .format-value {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            color: #333;
+            word-break: break-all;
+            padding: 10px 40px 10px 12px;
+            background: #fff;
+            border-radius: 8px;
+            min-height: 40px;
+            border: 1px solid #e5e5e5;
+        }
+        .format-item .copy-btn {
+            position: absolute;
+            top: 38px;
+            right: 12px;
+        }
+        .copy-btn {
+            padding: 6px 12px;
+            background: #4F46E5;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: #4338ca;
+        }
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        .batch-results {
+            margin-top: 20px;
+        }
+        .batch-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-left: 3px solid #4F46E5;
+        }
+        .batch-original {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+        .batch-original span {
+            font-family: 'Monaco', 'Menlo', monospace;
+            background: #fff;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            max-width: 100%;
+            word-break: break-all;
+        }
+        .batch-converted {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            color: #333;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #666;
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .select-all-btn {
+            margin-bottom: 16px;
+        }
+        .selected-format {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #eef2ff;
+            color: #4F46E5;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 4px solid #4F46E5;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 24px;
+        }
+        .tip-box h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4F46E5;
+            margin-bottom: 8px;
+        }
+        .tip-box p {
+            font-size: 14px;
+            color: #666;
+        }
+        .footer {
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            padding: 24px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer p {
+            font-size: 14px;
+            color: #666;
+        }
+        .footer a {
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .preview-area {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .preview-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4F46E5;
+            margin-bottom: 8px;
+        }
+        .preview-value {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 18px;
+            color: #1a1a1a;
+            word-break: break-all;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+            .page-title {
+                font-size: 24px;
+            }
+            .formats-grid {
+                grid-template-columns: 1fr;
+            }
+            .mode-toggle {
+                flex-wrap: wrap;
+            }
+            .mode-btn {
+                flex: 1;
+                min-width: 45%;
+                text-align: center;
+            }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title" data-zh="字符串大小写转换器" data-en="String Case Converter">字符串大小写转换器</h1>
+        <p class="page-desc" data-zh="支持8种格式实时转换：camelCase、PascalCase、snake_case、kebab-case、CONSTANT_CASE、Title Case、UPPERCASE、lowercase" data-en="Convert strings to 8 formats: camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, Title Case, UPPERCASE, lowercase">支持8种格式实时转换：camelCase、PascalCase、snake_case、kebab-case、CONSTANT_CASE、Title Case、UPPERCASE、lowercase</p>
+
+        <div class="card">
+            <div class="mode-toggle">
+                <button class="mode-btn active" data-mode="single" data-zh="单个转换" data-en="Single">单个转换</button>
+                <button class="mode-btn" data-mode="batch" data-zh="批量转换" data-en="Batch">批量转换</button>
+            </div>
+
+            <div id="single-mode">
+                <div class="input-group">
+                    <label class="input-label" data-zh="输入字符串" data-en="Enter String">输入字符串</label>
+                    <input type="text" id="input-string" class="input-field" placeholder="hello world example" data-placeholder-zh="hello world example" data-placeholder-en="hello world example">
+                </div>
+
+                <div class="preview-area">
+                    <div class="preview-label" data-zh="实时预览" data-en="Live Preview">实时预览</div>
+                    <div class="preview-value" id="quick-preview">-</div>
+                </div>
+
+                <h3 class="card-title" style="margin-top: 24px;" data-zh="所有格式转换结果" data-en="All Format Results">所有格式转换结果</h3>
+                <div class="formats-grid" id="formats-grid">
+                    <div class="format-item">
+                        <div class="format-label">camelCase</div>
+                        <div class="format-value" id="camel">-</div>
+                        <button class="copy-btn" data-copy="camel" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-label">PascalCase</div>
+                        <div class="format-value" id="pascal">-</div>
+                        <button class="copy-btn" data-copy="pascal" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-label">snake_case</div>
+                        <div class="format-value" id="snake">-</div>
+                        <button class="copy-btn" data-copy="snake" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-label">kebab-case</div>
+                        <div class="format-value" id="kebab">-</div>
+                        <button class="copy-btn" data-copy="kebab" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-label">CONSTANT_CASE</div>
+                        <div class="format-value" id="constant">-</div>
+                        <button class="copy-btn" data-copy="constant" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-label">Title Case</div>
+                        <div class="format-value" id="title">-</div>
+                        <button class="copy-btn" data-copy="title" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-label">UPPERCASE</div>
+                        <div class="format-value" id="upper">-</div>
+                        <button class="copy-btn" data-copy="upper" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="format-item">
+                        <div class="format-label">lowercase</div>
+                        <div class="format-value" id="lower">-</div>
+                        <button class="copy-btn" data-copy="lower" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="copy-all-single" data-zh="复制所有格式" data-en="Copy All Formats">复制所有格式</button>
+                </div>
+            </div>
+
+            <div id="batch-mode" style="display: none;">
+                <div class="input-group">
+                    <label class="input-label" data-zh="输入多行字符串（每行一个）" data-en="Enter multiple strings (one per line)">输入多行字符串（每行一个）</label>
+                    <textarea id="batch-input" class="input-field" placeholder="hello world&#10;foo bar&#10;hello_world_example" data-placeholder-zh="hello world&#10;foo bar&#10;hello_world_example" data-placeholder-en="hello world&#10;foo bar&#10;hello_world_example"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label" data-zh="选择输出格式" data-en="Select Output Format">选择输出格式</label>
+                    <div id="format-selector" class="select-all-btn">
+                        <button class="mode-btn" data-format="camel" data-zh="camelCase" data-en="camelCase">camelCase</button>
+                        <button class="mode-btn active" data-format="snake" data-zh="snake_case" data-en="snake_case">snake_case</button>
+                        <button class="mode-btn" data-format="kebab" data-zh="kebab-case" data-en="kebab-case">kebab-case</button>
+                        <button class="mode-btn" data-format="pascal" data-zh="PascalCase" data-en="PascalCase">PascalCase</button>
+                        <button class="mode-btn" data-format="constant" data-zh="CONSTANT" data-en="CONSTANT">CONSTANT</button>
+                    </div>
+                </div>
+
+                <div class="batch-results" id="batch-results"></div>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="convert-batch" data-zh="转换" data-en="Convert">转换</button>
+                    <button class="btn btn-secondary" id="copy-batch" data-zh="复制结果" data-en="Copy Results">复制结果</button>
+                    <button class="btn btn-secondary" id="clear-batch" data-zh="清空" data-en="Clear">清空</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h4 data-zh="💡 使用提示" data-en="💡 Tips">💡 使用提示</h4>
+            <p data-zh="• 支持中划线、下划线、空格分隔的字符串自动识别<br>• 输入即实时转换，无需点击按钮<br>• 点击任意格式旁的复制按钮快速复制<br>• 批量模式支持每行一个字符串转换" data-en="• Automatically detects strings with hyphens, underscores, or spaces<br>• Real-time conversion as you type<br>• Click copy button next to any format<br>• Batch mode converts multiple lines at once">• 支持中划线、下划线、空格分隔的字符串自动识别<br>• 输入即实时转换，无需点击按钮<br>• 点击任意格式旁的复制按钮快速复制<br>• 批量模式支持每行一个字符串转换</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentLang = 'zh';
+        let selectedBatchFormat = 'snake';
+
+        function updateLanguage() {
+            document.querySelectorAll('[data-' + currentLang + ']').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = el.getAttribute('data-placeholder-' + currentLang) || text;
+                } else {
+                    el.textContent = text;
+                }
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === currentLang);
+            });
+            convertSingle();
+            convertBatch();
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentLang = btn.dataset.lang;
+                updateLanguage();
+            });
+        });
+
+        function toWords(str) {
+            return str
+                .replace(/([a-z])([A-Z])/g, '$1 $2')
+                .replace(/[_\-\s]+/g, ' ')
+                .trim()
+                .toLowerCase()
+                .split(' ')
+                .filter(w => w.length > 0);
+        }
+
+        function toCamelCase(str) {
+            const words = toWords(str);
+            if (words.length === 0) return '';
+            return words[0].toLowerCase() + words.slice(1).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+        }
+
+        function toPascalCase(str) {
+            return toWords(str).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+        }
+
+        function toSnakeCase(str) {
+            return toWords(str).join('_').toLowerCase();
+        }
+
+        function toKebabCase(str) {
+            return toWords(str).join('-').toLowerCase();
+        }
+
+        function toConstantCase(str) {
+            return toWords(str).join('_').toUpperCase();
+        }
+
+        function toTitleCase(str) {
+            return toWords(str).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+        }
+
+        function convertSingle() {
+            const input = document.getElementById('input-string').value;
+            
+            document.getElementById('quick-preview').textContent = input ? toCamelCase(input) : '-';
+            document.getElementById('camel').textContent = toCamelCase(input);
+            document.getElementById('pascal').textContent = toPascalCase(input);
+            document.getElementById('snake').textContent = toSnakeCase(input);
+            document.getElementById('kebab').textContent = toKebabCase(input);
+            document.getElementById('constant').textContent = toConstantCase(input);
+            document.getElementById('title').textContent = toTitleCase(input);
+            document.getElementById('upper').textContent = input.toUpperCase();
+            document.getElementById('lower').textContent = input.toLowerCase();
+        }
+
+        function convertBatch() {
+            const input = document.getElementById('batch-input').value;
+            const lines = input.split('\n').filter(l => l.trim());
+            const container = document.getElementById('batch-results');
+            
+            if (lines.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            container.innerHTML = lines.map((line, i) => {
+                let converted;
+                switch (selectedBatchFormat) {
+                    case 'camel': converted = toCamelCase(line); break;
+                    case 'pascal': converted = toPascalCase(line); break;
+                    case 'snake': converted = toSnakeCase(line); break;
+                    case 'kebab': converted = toKebabCase(line); break;
+                    case 'constant': converted = toConstantCase(line); break;
+                    default: converted = toSnakeCase(line);
+                }
+                return `
+                    <div class="batch-item">
+                        <div class="batch-original">#${i + 1}: <span>${line}</span></div>
+                        <div class="batch-converted">${converted}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showCopiedFeedback(event.target);
+            });
+        }
+
+        function showCopiedFeedback(btn) {
+            const originalText = btn.textContent;
+            btn.textContent = currentLang === 'zh' ? '✓ 已复制' : '✓ Copied';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('copied');
+            }, 1500);
+        }
+
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.dataset.copy;
+                const text = document.getElementById(targetId).textContent;
+                if (text && text !== '-') {
+                    copyToClipboard(text);
+                }
+            });
+        });
+
+        document.getElementById('input-string').addEventListener('input', convertSingle);
+
+        document.querySelectorAll('.mode-btn[data-mode]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn[data-mode]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const mode = btn.dataset.mode;
+                document.getElementById('single-mode').style.display = mode === 'single' ? 'block' : 'none';
+                document.getElementById('batch-mode').style.display = mode === 'batch' ? 'block' : 'none';
+            });
+        });
+
+        document.getElementById('copy-all-single').addEventListener('click', () => {
+            const formats = ['camel', 'pascal', 'snake', 'kebab', 'constant', 'title', 'upper', 'lower'];
+            const text = formats.map(f => `${f}: ${document.getElementById(f).textContent}`).join('\n');
+            copyToClipboard(text);
+        });
+
+        document.querySelectorAll('#format-selector .mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#format-selector .mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedBatchFormat = btn.dataset.format;
+                convertBatch();
+            });
+        });
+
+        document.getElementById('batch-input').addEventListener('input', convertBatch);
+
+        document.getElementById('convert-batch').addEventListener('click', convertBatch);
+
+        document.getElementById('copy-batch').addEventListener('click', () => {
+            const items = document.querySelectorAll('#batch-results .batch-converted');
+            const text = Array.from(items).map(i => i.textContent).join('\n');
+            if (text) {
+                copyToClipboard(text);
+            }
+        });
+
+        document.getElementById('clear-batch').addEventListener('click', () => {
+            document.getElementById('batch-input').value = '';
+            document.getElementById('batch-results').innerHTML = '';
+        });
+
+        // Initialize
+        updateLanguage();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="text-diff.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">文本差异对比</div><div class="r-desc">差异高亮</div></a>
+        <a href="word-counter.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">字数统计器</div><div class="r-desc">中英文统计</div></a>
+        <a href="character-counter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">字符计数器</div><div class="r-desc">各类字符统计</div></a>
+        <a href="whitespace-remover.html" class="related-card"><div class="r-icon">🧹</div><div class="r-title">空白字符清理器</div><div class="r-desc">移除空格空行</div></a>
+        <a href="text-reverser.html" class="related-card"><div class="r-icon">🔃</div><div class="r-title">文本反转器</div><div class="r-desc">反转文本</div></a>
+        <a href="remove-duplicate-lines.html" class="related-card"><div class="r-icon">✂</div><div class="r-title">去除重复行</div><div class="r-desc">智能去重</div></a>
+        </div>
+    </section>
+</body>
+</html>

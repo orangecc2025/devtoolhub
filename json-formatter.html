@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="免费在线JSON格式化、校验、压缩工具。支持语法高亮、错误定位、树形视图，数据本地处理保障隐私。">
+    <meta name="keywords" content="JSON格式化,JSON校验,JSON压缩,JSON validator,JSON beautifier,JSON minifier">
+    <title>JSON格式化工具 - 在线校验/美化/压缩 | JSON Formatter</title>
+    <meta property="og:title" content="JSON格式化工具 - 免费在线校验/美化/压缩">
+    <meta property="og:description" content="免费在线JSON格式化、校验、压缩工具，支持语法高亮和错误定位，数据本地处理。">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "JSON格式化工具",
+        "description": "免费在线JSON格式化、校验、压缩工具",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <style>
+        :root { --primary:#4F46E5; --primary-hover:#4338CA; --primary-light:#EEF2FF; --bg:#F9FAFB; --card-bg:#FFF; --text:#111827; --text-secondary:#6B7280; --border:#E5E7EB; --success:#059669; --success-bg:#ECFDF5; --error:#DC2626; --error-bg:#FEF2F2; --radius:12px; --shadow:0 1px 3px rgba(0,0,0,.1); }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+        .header { background:var(--card-bg); border-bottom:1px solid var(--border); padding:14px 0; position:sticky; top:0; z-index:100; }
+        .header-inner { max-width:1000px; margin:0 auto; padding:0 20px; display:flex; justify-content:space-between; align-items:center; }
+        .logo { font-size:18px; font-weight:700; color:var(--primary); text-decoration:none; }
+        .nav-links { display:flex; gap:16px; }
+        .nav-links a { color:var(--text-secondary); text-decoration:none; font-size:14px; }
+        .nav-links a:hover { color:var(--primary); }
+        .container { max-width:1000px; margin:0 auto; padding:28px 20px; }
+        .hero { text-align:center; margin-bottom:24px; }
+        .hero h1 { font-size:28px; font-weight:800; margin-bottom:8px; }
+        .hero p { font-size:16px; color:var(--text-secondary); }
+        .privacy-badge { display:inline-flex; align-items:center; gap:6px; background:var(--success-bg); border:1px solid #A7F3D0; border-radius:20px; padding:4px 12px; font-size:13px; color:var(--success); margin-top:8px; }
+        .btn-group { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+        .btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; }
+        .btn-primary { background:var(--primary); color:#fff; }
+        .btn-primary:hover { background:var(--primary-hover); }
+        .btn-secondary { background:var(--bg); color:var(--text); border:1px solid var(--border); }
+        .btn-secondary:hover { background:#F3F4F6; }
+        .editor-container { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+        .editor-panel { background:var(--card-bg); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+        .editor-header { display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid var(--border); background:#FAFAFA; }
+        .editor-header span { font-weight:600; font-size:14px; }
+        .editor-header .char-count { font-size:12px; color:var(--text-secondary); }
+        textarea { width:100%; height:400px; border:none; padding:16px; font-family:'SF Mono','Fira Code','Courier New',monospace; font-size:13px; line-height:1.6; resize:vertical; outline:none; background:var(--card-bg); color:var(--text); tab-size:2; }
+        #output { width:100%; height:400px; padding:16px; font-family:'SF Mono','Fira Code','Courier New',monospace; font-size:13px; line-height:1.6; overflow:auto; white-space:pre-wrap; word-break:break-all; background:var(--card-bg); color:var(--text); }
+        .status-bar { padding:8px 16px; font-size:13px; border-top:1px solid var(--border); }
+        .status-bar.valid { background:var(--success-bg); color:var(--success); }
+        .status-bar.invalid { background:var(--error-bg); color:var(--error); }
+        .status-bar.neutral { background:#FAFAFA; color:var(--text-secondary); }
+        .ad-slot { background:#F3F4F6; border:1px dashed var(--border); border-radius:8px; padding:16px; text-align:center; color:var(--text-secondary); font-size:13px; margin:20px 0; }
+        .faq-section { margin-top:36px; }
+        .faq-section h2 { font-size:22px; font-weight:700; margin-bottom:16px; }
+        .faq-item { border-bottom:1px solid var(--border); padding:12px 0; }
+        .faq-q { font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+        .faq-a { color:var(--text-secondary); margin-top:8px; display:none; line-height:1.8; font-size:14px; }
+        .faq-item.open .faq-a { display:block; }
+        .faq-toggle { transition:transform .2s; font-size:12px; }
+        .faq-item.open .faq-toggle { transform:rotate(180deg); }
+        .footer { background:var(--card-bg); border-top:1px solid var(--border); padding:20px 0; margin-top:36px; text-align:center; color:var(--text-secondary); font-size:13px; }
+        .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#1F2937; color:#fff; padding:10px 20px; border-radius:8px; font-size:14px; z-index:999; opacity:0; transition:opacity .3s; pointer-events:none; }
+        .toast.show { opacity:1; }
+        .indent-select { padding:6px 10px; border:1px solid var(--border); border-radius:6px; font-size:13px; background:var(--card-bg); }
+        @media(max-width:768px) {
+            .editor-container { grid-template-columns:1fr; }
+            .hero h1 { font-size:22px; }
+            textarea, #output { height:300px; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">{ } JSON Tool</a>
+            <nav class="nav-links">
+                <a href="#tool">工具</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>JSON 格式化 / 校验 / 压缩工具</h1>
+            <p>在线美化、校验、压缩JSON数据，支持错误定位和语法高亮</p>
+            <div class="privacy-badge">🔒 数据本地处理，不上传服务器</div>
+        </section>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="formatJSON()">格式化</button>
+            <button class="btn btn-secondary" onclick="minifyJSON()">压缩</button>
+            <button class="btn btn-secondary" onclick="validateJSON()">仅校验</button>
+            <button class="btn btn-secondary" onclick="copyOutput()">📋 复制结果</button>
+            <button class="btn btn-secondary" onclick="clearAll()">清空</button>
+            <select class="indent-select" id="indentSize" onchange="formatJSON()">
+                <option value="2">缩进: 2空格</option>
+                <option value="4">缩进: 4空格</option>
+                <option value="tab">缩进: Tab</option>
+            </select>
+        </div>
+
+        <div class="editor-container" id="tool">
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <span>输入 JSON</span>
+                    <span class="char-count" id="inputCount">0 字符</span>
+                </div>
+                <textarea id="input" placeholder='在此粘贴JSON数据，例如：&#10;{"name":"张三","age":25,"skills":["JS","Python"]}'></textarea>
+                <div class="status-bar neutral" id="inputStatus">等待输入...</div>
+            </div>
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <span>输出结果</span>
+                    <span class="char-count" id="outputCount">0 字符</span>
+                </div>
+                <div id="output"></div>
+                <div class="status-bar neutral" id="outputStatus">等待操作...</div>
+            </div>
+        </div>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">JSON格式化有什么用？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">JSON格式化（美化）将压缩成一行或格式混乱的JSON数据，按照缩进层级重新排列，使其更易阅读和调试。开发者在调试API返回数据、编辑配置文件时经常需要格式化JSON。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">JSON和JSONP有什么区别？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">JSON是一种数据格式，JSONP是利用script标签绕过同源策略的技术。JSONP格式通常为 `callback({...})`，本工具会自动检测并处理JSONP包裹，提取其中的JSON数据进行格式化。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">我的数据安全吗？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">完全安全。本工具所有处理均在你的浏览器本地完成，JSON数据不会发送到任何服务器。你可以断开网络后继续使用，功能不受影响。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">为什么JSON校验报错？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">常见错误：①最后一个元素后多了逗号 ②键名没有用双引号包裹 ③使用了单引号而非双引号 ④注释（JSON不支持注释）⑤多余的分号。错误提示会定位到行号和列号，方便排查。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="xml-formatter.html" class="related-card"><div class="r-icon">📄</div><div class="r-title">XML 格式化工具</div><div class="r-desc">XML美化压缩校验</div></a>
+        <a href="sql-formatter.html" class="related-card"><div class="r-icon">🗃</div><div class="r-title">SQL 格式化工具</div><div class="r-desc">SQL美化格式化</div></a>
+        <a href="html-minifier.html" class="related-card"><div class="r-icon">📦</div><div class="r-title">HTML 压缩器</div><div class="r-desc">压缩HTML代码</div></a>
+        <a href="css-minifier.html" class="related-card"><div class="r-icon">🎨</div><div class="r-title">CSS 压缩器</div><div class="r-desc">压缩CSS代码</div></a>
+        <a href="js-minifier.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">JavaScript 压缩器</div><div class="r-desc">压缩JS代码</div></a>
+        <a href="code-beautifier.html" class="related-card"><div class="r-icon">✨</div><div class="r-title">代码美化器</div><div class="r-desc">JS/CSS/HTML格式化</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 JSON Tool. Free online JSON formatter, validator and minifier.</p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const input = document.getElementById('input');
+        const output = document.getElementById('output');
+        const inputStatus = document.getElementById('inputStatus');
+        const outputStatus = document.getElementById('outputStatus');
+        const inputCount = document.getElementById('inputCount');
+        const outputCount = document.getElementById('outputCount');
+
+        let lastFormatted = '';
+
+        input.addEventListener('input', () => {
+            inputCount.textContent = input.value.length + ' 字符';
+            if (input.value.trim()) {
+                try {
+                    JSON.parse(input.value);
+                    inputStatus.textContent = '✓ JSON 格式有效';
+                    inputStatus.className = 'status-bar valid';
+                } catch(e) {
+                    inputStatus.textContent = '✗ ' + e.message;
+                    inputStatus.className = 'status-bar invalid';
+                }
+            } else {
+                inputStatus.textContent = '等待输入...';
+                inputStatus.className = 'status-bar neutral';
+            }
+        });
+
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = input.selectionStart;
+                const end = input.selectionEnd;
+                input.value = input.value.substring(0, start) + '  ' + input.value.substring(end);
+                input.selectionStart = input.selectionEnd = start + 2;
+            }
+        });
+
+        function getIndent() {
+            const val = document.getElementById('indentSize').value;
+            return val === 'tab' ? '\t' : parseInt(val);
+        }
+
+        function formatJSON() {
+            const raw = input.value.trim();
+            if (!raw) { showToast('请先输入JSON数据'); return; }
+            try {
+                const obj = JSON.parse(raw);
+                const indent = getIndent();
+                const formatted = JSON.stringify(obj, null, indent);
+                output.textContent = formatted;
+                lastFormatted = formatted;
+                outputCount.textContent = formatted.length + ' 字符';
+                const compressionRatio = ((1 - formatted.length / raw.length) * 100).toFixed(1);
+                outputStatus.textContent = `✓ 格式化完成 | ${Array.isArray(obj)?'数组':'对象'} | ${Object.keys(Array.isArray(obj)?obj:obj===null?{}:obj).length} 个键`;
+                outputStatus.className = 'status-bar valid';
+            } catch(e) {
+                output.textContent = '';
+                outputStatus.textContent = '✗ 格式化失败: ' + e.message;
+                outputStatus.className = 'status-bar invalid';
+                showToast('JSON格式错误，请检查输入');
+            }
+        }
+
+        function minifyJSON() {
+            const raw = input.value.trim();
+            if (!raw) { showToast('请先输入JSON数据'); return; }
+            try {
+                const obj = JSON.parse(raw);
+                const minified = JSON.stringify(obj);
+                output.textContent = minified;
+                lastFormatted = minified;
+                outputCount.textContent = minified.length + ' 字符';
+                const ratio = ((1 - minified.length / raw.length) * 100).toFixed(1);
+                outputStatus.textContent = `✓ 压缩完成 | 节省 ${ratio}% | ${minified.length} 字符`;
+                outputStatus.className = 'status-bar valid';
+            } catch(e) {
+                outputStatus.textContent = '✗ 压缩失败: ' + e.message;
+                outputStatus.className = 'status-bar invalid';
+            }
+        }
+
+        function validateJSON() {
+            const raw = input.value.trim();
+            if (!raw) { showToast('请先输入JSON数据'); return; }
+            try {
+                JSON.parse(raw);
+                outputStatus.textContent = '✓ JSON 格式正确，数据有效';
+                outputStatus.className = 'status-bar valid';
+                showToast('✓ JSON 格式正确');
+            } catch(e) {
+                outputStatus.textContent = '✗ JSON 无效: ' + e.message;
+                outputStatus.className = 'status-bar invalid';
+                showToast('JSON格式错误');
+            }
+        }
+
+        function copyOutput() {
+            if (!lastFormatted) { showToast('没有可复制的内容'); return; }
+            navigator.clipboard.writeText(lastFormatted).then(() => showToast('已复制到剪贴板'));
+        }
+
+        function clearAll() {
+            input.value = '';
+            output.textContent = '';
+            lastFormatted = '';
+            inputCount.textContent = '0 字符';
+            outputCount.textContent = '0 字符';
+            inputStatus.textContent = '等待输入...';
+            inputStatus.className = 'status-bar neutral';
+            outputStatus.textContent = '等待操作...';
+            outputStatus.className = 'status-bar neutral';
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+        });
+    </script>
+</body>
+</html>

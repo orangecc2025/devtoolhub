@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="小费计算器，支持多种小费比例预设，自定义比例，多人分账功能。">
+    <meta name="keywords" content="小费计算器,AA分账,餐厅分账,服务费计算">
+    <title>小费计算器 - 多种比例/多人分账 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/tip-calculator.html">
+    <meta property="og:title" content="小费计算器 - 多种比例/多人分账 | DevToolBox">
+    <meta property="og:description" content="小费计算器，支持多种小费比例预设，自定义比例，多人分账功能。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/tip-calculator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "小费计算器",
+        "description": "小费计算器，支持多种小费比例预设，自定义比例，多人分账功能",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .tip-presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .tip-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .tip-btn:hover {
+            border-color: var(--primary);
+        }
+        .tip-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .custom-tip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .custom-tip input {
+            width: 80px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .result-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .result-item-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .result-item-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .result-highlight {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--success);
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .split-list {
+            margin-top: 16px;
+        }
+        .split-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .result-grid { grid-template-columns: 1fr; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>💰 小费计算器</h1>
+            <p>快速计算小费金额，支持多种比例和多人大分账</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label for="billAmount">账单金额</label>
+                <input type="number" id="billAmount" placeholder="请输入账单金额" min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label>小费比例</label>
+                <div class="tip-presets">
+                    <button class="tip-btn" onclick="setTip(10)">10%</button>
+                    <button class="tip-btn" onclick="setTip(15)">15%</button>
+                    <button class="tip-btn active" onclick="setTip(18)">18%</button>
+                    <button class="tip-btn" onclick="setTip(20)">20%</button>
+                    <button class="tip-btn" onclick="setTip(25)">25%</button>
+                </div>
+                <div class="custom-tip">
+                    <span>自定义：</span>
+                    <input type="number" id="customTip" placeholder="0" min="0" max="100" onchange="setTip(this.value)">
+                    <span>%</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="splitCount">分账人数</label>
+                <input type="number" id="splitCount" placeholder="1" min="1" max="100" value="1" onchange="updateSplitDisplay()">
+            </div>
+
+            <div id="splitPeople" style="display: none;">
+                <div class="form-group">
+                    <label>各人消费金额</label>
+                    <div id="individualAmounts" class="form-row"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="calculateTip()">
+                计算小费
+            </button>
+
+            <div class="result-box" id="result">
+                <div class="result-title">📊 计算结果</div>
+                
+                <div class="result-highlight">
+                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">每人应付</div>
+                    <div id="perPersonTotal">¥0.00</div>
+                </div>
+
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-item-label">账单金额</div>
+                        <div class="result-item-value" id="resBill">¥0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">小费金额</div>
+                        <div class="result-item-value" id="resTip">¥0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">总金额</div>
+                        <div class="result-item-value" id="resTotal">¥0.00</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">每人小费</div>
+                        <div class="result-item-value" id="resTipPer">¥0.00</div>
+                    </div>
+                </div>
+
+                <div id="splitDetails" class="split-list" style="display: none;">
+                    <h4 style="margin-bottom: 12px;">📋 分账明细</h4>
+                    <div id="splitItems"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    各国小费文化有什么不同？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    美国通常给15-20%小费；欧洲多数国家已包含服务费；日本、韩国等亚洲国家通常不给小费。在美国等地区，不给小费可能被视为不礼貌。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    小费是怎么计算的？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    小费 = 账单金额 × 小费比例。总金额 = 账单金额 + 小费。如果选择分账，则每人应付金额 = 总金额 ÷ 人数。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    可以指定每人的消费金额吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    可以！当分账人数大于1时，可以展开各人消费金额输入框，分别输入每人实际消费的金额，系统会按比例计算每人的小费。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    账单含税时如何计算？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    本计算器按您输入的账单金额（含税）计算小费。如果您只想对不含税金额给的小费，请先手动计算不含税金额后再输入。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="percentage-calculator.html" class="related-card"><div class="r-icon">💯</div><div class="r-title">百分比计算器</div><div class="r-desc">百分比计算</div></a>
+        <a href="ratio-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">比例计算器</div><div class="r-desc">比例求解</div></a>
+        <a href="age-calculator.html" class="related-card"><div class="r-icon">🎂</div><div class="r-title">年龄计算器</div><div class="r-desc">精确年龄</div></a>
+        <a href="bmi-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">BMI 计算器</div><div class="r-desc">体重指数</div></a>
+        <a href="loan-calculator.html" class="related-card"><div class="r-icon">🏠</div><div class="r-title">贷款计算器</div><div class="r-desc">月供计算</div></a>
+        <a href="discount-calculator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">折扣计算器</div><div class="r-desc">折扣叠加</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentTipRate = 18;
+
+        function setTip(rate) {
+            currentTipRate = parseFloat(rate);
+            document.querySelectorAll('.tip-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('customTip').value = rate;
+            
+            document.querySelectorAll('.tip-btn').forEach(btn => {
+                if (btn.textContent === rate + '%') {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function updateSplitDisplay() {
+            const count = parseInt(document.getElementById('splitCount').value) || 1;
+            const container = document.getElementById('individualAmounts');
+            
+            if (count > 1) {
+                document.getElementById('splitPeople').style.display = 'block';
+                container.innerHTML = '';
+                for (let i = 1; i <= count; i++) {
+                    container.innerHTML += `
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>人 ${i}</label>
+                            <input type="number" id="split-${i}" placeholder="¥0" min="0" step="0.01">
+                        </div>
+                    `;
+                }
+            } else {
+                document.getElementById('splitPeople').style.display = 'none';
+            }
+        }
+
+        function calculateTip() {
+            const billAmount = parseFloat(document.getElementById('billAmount').value);
+            const splitCount = parseInt(document.getElementById('splitCount').value) || 1;
+
+            if (!billAmount || billAmount <= 0) {
+                alert('请输入有效的账单金额');
+                return;
+            }
+
+            const tipAmount = billAmount * (currentTipRate / 100);
+            const totalAmount = billAmount + tipAmount;
+
+            let perPersonBill, perPersonTip, perPersonTotal;
+
+            if (splitCount > 1) {
+                // 检查是否输入了个人金额
+                let totalIndividual = 0;
+                const individualAmounts = [];
+                for (let i = 1; i <= splitCount; i++) {
+                    const val = parseFloat(document.getElementById(`split-${i}`)?.value) || 0;
+                    individualAmounts.push(val);
+                    totalIndividual += val;
+                }
+
+                if (totalIndividual > 0) {
+                    // 使用个人金额计算
+                    const splitDetails = document.getElementById('splitItems');
+                    splitDetails.innerHTML = '';
+                    
+                    let totalPerPerson = 0;
+                    individualAmounts.forEach((amt, idx) => {
+                        const individualTip = amt * (currentTipRate / 100);
+                        const individualTotal = amt + individualTip;
+                        totalPerPerson += individualTotal;
+                        
+                        splitDetails.innerHTML += `
+                            <div class="split-item">
+                                <span>人 ${idx + 1}</span>
+                                <span>消费 ¥${amt.toFixed(2)} + 小费 ¥${individualTip.toFixed(2)} = <strong>¥${individualTotal.toFixed(2)}</strong></span>
+                            </div>
+                        `;
+                    });
+
+                    document.getElementById('splitDetails').style.display = 'block';
+                    document.getElementById('perPersonTotal').textContent = '（不等额分账）';
+                    document.getElementById('resTotal').textContent = '¥' + totalPerPerson.toFixed(2);
+                } else {
+                    // 平均分账
+                    perPersonBill = billAmount / splitCount;
+                    perPersonTip = tipAmount / splitCount;
+                    perPersonTotal = totalAmount / splitCount;
+                    document.getElementById('splitDetails').style.display = 'none';
+                }
+            } else {
+                perPersonTotal = totalAmount;
+                document.getElementById('splitDetails').style.display = 'none';
+            }
+
+            document.getElementById('resBill').textContent = '¥' + billAmount.toFixed(2);
+            document.getElementById('resTip').textContent = '¥' + tipAmount.toFixed(2);
+            document.getElementById('resTipPer').textContent = '¥' + (tipAmount / splitCount).toFixed(2);
+            
+            if (splitCount === 1) {
+                document.getElementById('resTotal').textContent = '¥' + totalAmount.toFixed(2);
+                document.getElementById('perPersonTotal').textContent = '¥' + perPersonTotal.toFixed(2);
+            } else if (perPersonTotal) {
+                document.getElementById('perPersonTotal').textContent = '¥' + perPersonTotal.toFixed(2);
+            }
+
+            document.getElementById('result').classList.add('show');
+        }
+
+        // 初始化
+        updateSplitDisplay();
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

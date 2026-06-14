@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lorem Ipsum生成器 - DevToolBox | 免费在线占位文本工具</title>
+  <meta name="description" content="免费的在线Lorem Ipsum占位文本生成器，支持中英文日文多语言、按段落句子单词生成、HTML标签输出、一键复制纯文本或HTML代码。">
+  <meta name="keywords" content="Lorem Ipsum, 占位文本生成器, 乱数假文, 填充文本, 假字, 英文占位, 中文占位, 日文占位">
+  <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+  <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+  <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+  <link rel="canonical" href="https://devtoolhub.cc/lorem-ipsum-generator.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #F9FAFB;
+      color: #1F2937;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .lang-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+    }
+    .lang-btn {
+      padding: 6px 12px;
+      border: 1px solid #D1D5DB;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover { background: #F3F4F6; }
+    .lang-btn.active {
+      background: #4F46E5;
+      color: white;
+      border-color: #4F46E5;
+    }
+    header {
+      background: white;
+      padding: 16px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    header a.logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #4F46E5;
+      text-decoration: none;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+    .subtitle {
+      color: #6B7280;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #374151;
+    }
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .control-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #6B7280;
+    }
+    .control-select, .control-input {
+      padding: 10px 12px;
+      border: 1px solid #D1D5DB;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+      cursor: pointer;
+    }
+    .control-select:focus, .control-input:focus {
+      outline: none;
+      border-color: #4F46E5;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .generate-btn {
+      padding: 12px 24px;
+      background: #4F46E5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .generate-btn:hover { background: #4338CA; }
+    .action-btn {
+      padding: 12px 20px;
+      background: white;
+      color: #374151;
+      border: 1px solid #D1D5DB;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .action-btn:hover {
+      background: #F3F4F6;
+    }
+    .action-btn.copied {
+      background: #10B981;
+      color: white;
+      border-color: #10B981;
+    }
+    .output-section {
+      margin-top: 20px;
+    }
+    .output-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .output-tab {
+      padding: 8px 16px;
+      border: 1px solid #D1D5DB;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .output-tab:hover { background: #F3F4F6; }
+    .output-tab.active {
+      background: #4F46E5;
+      color: white;
+      border-color: #4F46E5;
+    }
+    .output-content {
+      background: #F9FAFB;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.8;
+      min-height: 200px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .output-content p {
+      margin-bottom: 12px;
+    }
+    .output-content p:last-child {
+      margin-bottom: 0;
+    }
+    .output-content ul, .output-content ol {
+      margin-left: 20px;
+      margin-bottom: 12px;
+    }
+    .output-content li {
+      margin-bottom: 4px;
+    }
+    .output-content h1, .output-content h2, .output-content h3,
+    .output-content h4, .output-content h5, .output-content h6 {
+      margin-bottom: 8px;
+      margin-top: 16px;
+      color: #111827;
+    }
+    .output-content h1:first-child, .output-content h2:first-child,
+    .output-content h3:first-child, .output-content h4:first-child,
+    .output-content h5:first-child, .output-content h6:first-child {
+      margin-top: 0;
+    }
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #6B7280;
+    }
+    .stat-value {
+      font-weight: 600;
+      color: #374151;
+    }
+    .html-preview {
+      background: #1F2937;
+      color: #E5E7EB;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    footer {
+      background: white;
+      padding: 24px;
+      text-align: center;
+      margin-top: 40px;
+      border-top: 1px solid #E5E7EB;
+      color: #6B7280;
+    }
+    footer a {
+      color: #4F46E5;
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+  .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+  
+  <header>
+    <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+  </header>
+  
+  <div class="container">
+    <h1 data-zh="Lorem Ipsum生成器" data-en="Lorem Ipsum Generator">Lorem Ipsum生成器</h1>
+    <p class="subtitle" data-zh="生成占位文本用于设计和开发测试，支持中英文日文多语言" data-en="Generate placeholder text for design and development testing, supports Chinese, English, and Japanese">生成占位文本用于设计和开发测试，支持中英文日文多语言</p>
+    
+    <div class="card">
+      <div class="card-title" data-zh="生成设置" data-en="Settings">生成设置</div>
+      <div class="controls-grid">
+        <div class="control-group">
+          <label class="control-label" data-zh="语言" data-en="Language">语言</label>
+          <select class="control-select" id="langSelect">
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+            <option value="ja">日本語</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label class="control-label" data-zh="生成类型" data-en="Type">生成类型</label>
+          <select class="control-select" id="typeSelect">
+            <option value="paragraphs" data-zh="段落" data-en="Paragraphs">段落</option>
+            <option value="sentences" data-zh="句子" data-en="Sentences">句子</option>
+            <option value="words" data-zh="单词" data-en="Words">单词</option>
+            <option value="list" data-zh="列表" data-en="List">列表</option>
+            <option value="headings" data-zh="标题段落" data-en="Headings + Paragraphs">标题段落</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label class="control-label" data-zh="数量" data-en="Count">数量</label>
+          <input type="number" class="control-input" id="countInput" value="3" min="1" max="100">
+        </div>
+        <div class="control-group">
+          <label class="control-label" data-zh="HTML标签" data-en="HTML Tags">HTML标签</label>
+          <select class="control-select" id="tagSelect">
+            <option value="none" data-zh="无" data-en="None">无</option>
+            <option value="p" data-zh="段落 P" data-en="Paragraph P">段落 P</option>
+            <option value="ul" data-zh="无序列表 UL/LI" data-en="Unordered UL/LI">无序列表 UL/LI</option>
+            <option value="ol" data-zh="有序列表 OL/LI" data-en="Ordered OL/LI">有序列表 OL/LI</option>
+            <option value="h" data-zh="混合标题 H1-H6" data-en="Mixed H1-H6">混合标题 H1-H6</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="btn-row">
+        <button class="generate-btn" id="generateBtn" data-zh="生成文本" data-en="Generate Text">生成文本</button>
+        <button class="action-btn" id="copyTextBtn" data-zh="复制纯文本" data-en="Copy Plain Text">
+          📋 <span data-zh="复制纯文本" data-en="Copy Plain">复制纯文本</span>
+        </button>
+        <button class="action-btn" id="copyHtmlBtn" data-zh="复制HTML" data-en="Copy HTML">
+          🖥️ <span data-zh="复制HTML" data-en="Copy HTML">复制HTML</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-title" data-zh="预览" data-en="Preview">预览</div>
+      <div class="output-tabs">
+        <button class="output-tab active" data-view="preview" data-zh="可视化预览" data-en="Visual Preview">可视化预览</button>
+        <button class="output-tab" data-view="html" data-zh="HTML源码" data-en="HTML Source">HTML源码</button>
+      </div>
+      <div class="output-content" id="previewContent"></div>
+      <div class="html-preview" id="htmlContent" style="display: none;"></div>
+      <div class="stats-row" id="statsRow">
+        <div class="stat-item">
+          <span data-zh="字符数" data-en="Characters">字符数</span>:
+          <span class="stat-value" id="charCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span data-zh="单词数" data-en="Words">单词数</span>:
+          <span class="stat-value" id="wordCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span data-zh="句子数" data-en="Sentences">句子数</span>:
+          <span class="stat-value" id="sentenceCount">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    © 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a>
+  </footer>
+  
+  <script>
+    const translations = {
+      zh: {
+        'Lorem Ipsum生成器': 'Lorem Ipsum生成器',
+        '生成占位文本用于设计和开发测试，支持中英文日文多语言': '生成占位文本用于设计和开发测试，支持中英文日文多语言',
+        '生成设置': '生成设置',
+        '语言': '语言',
+        '生成类型': '生成类型',
+        '数量': '数量',
+        'HTML标签': 'HTML标签',
+        '段落': '段落',
+        '句子': '句子',
+        '单词': '单词',
+        '列表': '列表',
+        '标题段落': '标题段落',
+        '无': '无',
+        '段落 P': '段落 P',
+        '无序列表 UL/LI': '无序列表 UL/LI',
+        '有序列表 OL/LI': '有序列表 OL/LI',
+        '混合标题 H1-H6': '混合标题 H1-H6',
+        '生成文本': '生成文本',
+        '复制纯文本': '复制纯文本',
+        '复制HTML': '复制HTML',
+        '预览': '预览',
+        '可视化预览': '可视化预览',
+        'HTML源码': 'HTML源码',
+        '字符数': '字符数',
+        '单词数': '单词数',
+        '句子数': '句子数',
+        '复制成功': '复制成功',
+        '已复制': '已复制'
+      },
+      en: {
+        'Lorem Ipsum生成器': 'Lorem Ipsum Generator',
+        '生成占位文本用于设计和开发测试，支持中英文日文多语言': 'Generate placeholder text for design and development testing, supports Chinese, English, and Japanese',
+        '生成设置': 'Settings',
+        '语言': 'Language',
+        '生成类型': 'Type',
+        '数量': 'Count',
+        'HTML标签': 'HTML Tags',
+        '段落': 'Paragraphs',
+        '句子': 'Sentences',
+        '单词': 'Words',
+        '列表': 'List',
+        '标题段落': 'Headings + Paragraphs',
+        '无': 'None',
+        '段落 P': 'Paragraph P',
+        '无序列表 UL/LI': 'Unordered UL/LI',
+        '有序列表 OL/LI': 'Ordered OL/LI',
+        '混合标题 H1-H6': 'Mixed H1-H6',
+        '生成文本': 'Generate Text',
+        '复制纯文本': 'Copy Plain Text',
+        '复制HTML': 'Copy HTML',
+        '预览': 'Preview',
+        '可视化预览': 'Visual Preview',
+        'HTML源码': 'HTML Source',
+        '字符数': 'Characters',
+        '单词数': 'Words',
+        '句子数': 'Sentences',
+        '复制成功': 'Copied',
+        '已复制': 'Copied'
+      }
+    };
+
+    let currentLang = 'zh';
+    let currentView = 'preview';
+    let generatedText = '';
+    let generatedHtml = '';
+    
+    const loremData = {
+      en: {
+        words: [
+          'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
+          'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
+          'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
+          'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
+          'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
+          'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
+          'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
+          'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', ' Curabitur', 'pretium',
+          'tincidunt', 'lacus', 'Nulla', 'gravida', 'orci', 'a', 'odio', 'Cras', 'ante',
+          'oborti', 'vivamus', 'convallis', 'ligula', 'in', 'vulputate', 'massa', 'vestibulum',
+          'luctus', 'accumsan', 'vitae', 'congue', 'dignissim', 'pretium', 'nisl', 'Nunc',
+          'faucibus', 'pellentesque', 'risus', 'donec', 'vitae', 'semper', 'quam', 'liquam',
+          'totam', 'rem', 'aperiam', 'eaque', 'ipsa', 'quae', 'ab', 'illo', 'inventore',
+          'veritatis', 'quasi', 'architecto', 'beatae', 'vitae', 'dicta', 'explicabo'
+        ],
+        sentences: [
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+          'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.',
+          'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.',
+          'Curabitur pretium tincidunt lacus, sed interdum risus vestibulum eu.',
+          'Nulla gravida orci a odio, varius condimentum augue aliquet ac.',
+          'Praesent commodo cursus magna, vel scelerisque nisl consectetur et.',
+          'Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.',
+          'Donec id elit non mi porta gravida at eget metus.',
+          'Cras mattis consectetur purus sit amet fermentum.',
+          'Maecenas faucibus mollis interdum sed rega.',
+          'Nullam id dolor id nibh ultricies vehicula ut id elit.'
+        ]
+      },
+      zh: {
+        words: [
+          '的', '了', '在', '是', '我', '有', '和', '就',
+          '不', '人', '都', '一', '一个', '上', '也', '很',
+          '到', '说', '要', '去', '你', '会', '着', '没有',
+          '看', '好', '自己', '这', '什么', '可以', '这个', '他们',
+          '为什么', '因为', '但是', '如果', '虽然', '或者', '而且', '不过',
+          '只是', '已经', '这样', '那样', '一直', '一些', '一样', '一点',
+          '开始', '进行', '完成', '发生', '使用', '提供', '可能', '需要',
+          '应该', '认为', '知道', '觉得', '发现', '考虑', '处理', '了解',
+          '公司', '产品', '服务', '客户', '市场', '项目', '问题', '时间',
+          '问题', '结果', '方法', '过程', '情况', '方式', '部分', '内容',
+          '工作', '生活', '学习', '发展', '提高', '增长', '实现', '目标'
+        ],
+        sentences: [
+          '这是一个用于测试的占位文本段落。',
+          'Lorem ipsum用于排版设计领域已有几个世纪的历史。',
+          '在设计和开发过程中，占位文本可以帮助展示布局效果。',
+          '无论是网站还是应用，都需要合适的占位内容来测试。',
+          '这段文字可以重复使用，不会影响实际内容的呈现。',
+          '使用占位文本能够让你更专注于设计和结构本身。',
+          '它模拟了真实内容的密度和长度，便于评估视觉效果。',
+          '中文字符的占位文本也广泛应用于中文设计项目中。',
+          '无论是网页设计还是APP界面，都需要这样的工具。',
+          '一键生成多段文本，大大提高设计和开发的效率。',
+          '复制为纯文本或HTML格式，满足不同的使用场景。',
+          '支持多种输出格式，包括段落、列表和标题等。',
+          '你可以自定义生成的数量和语言类型。'
+        ]
+      },
+      ja: {
+        words: [
+          'の', 'に', 'は', 'を', 'た', 'が', 'で', 'て',
+          'と', 'し', 'れ', 'さ', 'ある', 'いる', 'も', 'する',
+          'から', 'な', 'こと', 'として', 'い', 'や', 'れる', 'など',
+          'なっ', 'ない', 'この', 'ため', 'その', 'とき', 'みな', 'もう',
+          'できる', 'それ', 'でき', 'ます', 'still', 'ゲーム', '動画',
+          '音楽', '写真', '技術', '科学', '歴史', '地理', '社会',
+          '文化', '経済', '政治', '国際', '環境', '健康', '教育',
+          'デザイン', '開発', 'ビジネス', 'マーケティング', 'コンテンツ'
+        ],
+        sentences: [
+          'これはテスト用のプレースホルダーテキストです。',
+          'Lorem ipsumは出版やウェブデザインの世界で広く使われています。',
+          'ダミーテキストはレイアウトやデザインの確認に不可欠です。',
+          '実際のコンテンツがない段階でも、視覚的な印象を把握できます。',
+          'このテキストは繰り返しても、実質的な意味には影響しません。',
+          'プレースホルダーを活用することで、デザイン作業が効率的になります。',
+          '本物のテキストのような密度と長さを再現できる点が利点です。',
+          '中国語や日本語対応のダミーテキストも利用可能です。',
+          'ウェブサイトでもアプリケーションでも、幅広い場面で活用できます。',
+          'ワンクリックで複数の段落を生成でき、作業効率が大幅に向上します。',
+          'プレーンテキストまたはHTML形式でコピーでき、用途に合わせて選べます。',
+          '段落、リスト、見出しなど、複数の出力形式に対応しています。',
+          '生成する段落数や言語をカスタマイズして、自由に使えます。'
+        ]
+      }
+    };
+    
+    function switchLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+        if (el.placeholder !== undefined) {
+          el.placeholder = el.dataset[lang];
+        } else {
+          el.textContent = el.dataset[lang];
+        }
+      });
+    }
+    
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchLang(btn.dataset.lang));
+    });
+    
+    function getRandomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+    
+    function generateWords(lang, count) {
+      const words = loremData[lang].words;
+      const result = [];
+      for (let i = 0; i < count; i++) {
+        result.push(getRandomItem(words));
+      }
+      return result.join(' ');
+    }
+    
+    function generateSentences(lang, count) {
+      const sentences = loremData[lang].sentences;
+      const result = [];
+      for (let i = 0; i < count; i++) {
+        result.push(getRandomItem(sentences));
+      }
+      return result.join(' ');
+    }
+    
+    function generateParagraphs(lang, count) {
+      const sentences = loremData[lang].sentences;
+      const result = [];
+      for (let p = 0; p < count; p++) {
+        const paraSentences = [];
+        const numSentences = Math.floor(Math.random() * 4) + 3;
+        for (let s = 0; s < numSentences; s++) {
+          paraSentences.push(getRandomItem(sentences));
+        }
+        result.push(paraSentences.join(' '));
+      }
+      return result;
+    }
+    
+    function generateWithTags(content, tagType) {
+      if (tagType === 'none') {
+        return { html: content.join ? content.join('\n\n') : content, plain: content.join ? content.join('\n\n') : content };
+      }
+      
+      let html = '';
+      let plain = '';
+      
+      if (tagType === 'p') {
+        content.forEach(text => {
+          html += `<p>${text}</p>\n`;
+          plain += text + '\n\n';
+        });
+      } else if (tagType === 'ul') {
+        html += '<ul>\n';
+        content.forEach(text => {
+          html += `  <li>${text}</li>\n`;
+          plain += '• ' + text + '\n';
+        });
+        html += '</ul>';
+        plain = plain.trim();
+      } else if (tagType === 'ol') {
+        html += '<ol>\n';
+        content.forEach(text => {
+          html += `  <li>${text}</li>\n`;
+          plain += text + '\n';
+        });
+        html += '</ol>';
+        plain = plain.trim();
+      } else if (tagType === 'h') {
+        const headings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+        content.forEach((text, i) => {
+          const htag = headings[Math.floor(Math.random() * 2)]; // Mostly h1 and h2
+          html += `<${htag}>${text}</${htag}>\n`;
+          plain += text + '\n\n';
+        });
+      }
+      
+      return { html, plain: plain.trim() };
+    }
+    
+    function generate() {
+      const lang = document.getElementById('langSelect').value;
+      const type = document.getElementById('typeSelect').value;
+      const count = parseInt(document.getElementById('countInput').value) || 3;
+      const tagType = document.getElementById('tagSelect').value;
+      
+      let content = [];
+      let plainText = '';
+      
+      switch (type) {
+        case 'words':
+          plainText = generateWords(lang, count);
+          content = [plainText];
+          break;
+        case 'sentences':
+          plainText = generateSentences(lang, count);
+          content = [plainText];
+          break;
+        case 'paragraphs':
+          content = generateParagraphs(lang, count);
+          plainText = content.join('\n\n');
+          break;
+        case 'list':
+          content = generateParagraphs(lang, count);
+          plainText = content.map(t => '• ' + t).join('\n');
+          break;
+        case 'headings':
+          const sentences = loremData[lang].sentences;
+          for (let i = 0; i < count; i++) {
+            content.push(getRandomItem(sentences));
+          }
+          plainText = content.join('\n\n');
+          break;
+      }
+      
+      let htmlResult;
+      if (tagType === 'none') {
+        htmlResult = { html: plainText, plain: plainText };
+      } else {
+        htmlResult = generateWithTags(content, tagType);
+      }
+      
+      generatedText = htmlResult.plain;
+      generatedHtml = htmlResult.html;
+      
+      updateOutput();
+      updateStats();
+    }
+    
+    function updateOutput() {
+      const previewEl = document.getElementById('previewContent');
+      const htmlEl = document.getElementById('htmlContent');
+      
+      if (currentView === 'preview') {
+        if (document.getElementById('tagSelect').value === 'none') {
+          previewEl.innerHTML = generatedText.split('\n\n').map(p => `<p>${p}</p>`).join('');
+        } else {
+          previewEl.innerHTML = generatedHtml;
+        }
+        previewEl.style.display = 'block';
+        htmlEl.style.display = 'none';
+      } else {
+        previewEl.style.display = 'none';
+        htmlEl.style.display = 'block';
+        htmlEl.textContent = generatedHtml;
+      }
+    }
+    
+    function updateStats() {
+      const charCount = generatedText.length;
+      const words = generatedText.trim().split(/\s+/).filter(w => w.length > 0);
+      const wordCount = words.length;
+      const sentences = generatedText.split(/[.。！？.!?]+/).filter(s => s.trim().length > 0);
+      const sentenceCount = sentences.length;
+      
+      document.getElementById('charCount').textContent = charCount;
+      document.getElementById('wordCount').textContent = wordCount;
+      document.getElementById('sentenceCount').textContent = sentenceCount;
+    }
+    
+    document.querySelectorAll('.output-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentView = tab.dataset.view;
+        updateOutput();
+      });
+    });
+    
+    document.getElementById('generateBtn').addEventListener('click', generate);
+    
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const span = btn.querySelector('span') || btn;
+        const originalText = span.textContent;
+        span.textContent = currentLang === 'zh' ? '已复制' : 'Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          span.textContent = originalText;
+          btn.classList.remove('copied');
+        }, 1500);
+      });
+    }
+    
+    document.getElementById('copyTextBtn').addEventListener('click', function() {
+      copyToClipboard(generatedText, this);
+    });
+    
+    document.getElementById('copyHtmlBtn').addEventListener('click', function() {
+      copyToClipboard(generatedHtml, this);
+    });
+    
+    // Generate initial content
+    generate();
+  </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="text-diff.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">文本差异对比</div><div class="r-desc">差异高亮</div></a>
+        <a href="word-counter.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">字数统计器</div><div class="r-desc">中英文统计</div></a>
+        <a href="character-counter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">字符计数器</div><div class="r-desc">各类字符统计</div></a>
+        <a href="whitespace-remover.html" class="related-card"><div class="r-icon">🧹</div><div class="r-title">空白字符清理器</div><div class="r-desc">移除空格空行</div></a>
+        <a href="text-reverser.html" class="related-card"><div class="r-icon">🔃</div><div class="r-title">文本反转器</div><div class="r-desc">反转文本</div></a>
+        <a href="remove-duplicate-lines.html" class="related-card"><div class="r-icon">✂</div><div class="r-title">去除重复行</div><div class="r-desc">智能去重</div></a>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的在线JWT解码器，可解析Header和Payload，验证HS256签名，检测Token过期状态。开发者调试JWT的必备工具。">
+    <meta name="keywords" content="JWT解码器,JWT解析,JWT验证,Token解析,HS256签名验证,JWT过期检测">
+    <title>JWT解码器 | 在线JWT解析验证工具 - DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/jwt-decoder.html">
+    <meta property="og:title" content="JWT解码器 | 在线JWT解析验证工具">
+    <meta property="og:description" content="免费的在线JWT解码器，可解析Header和Payload，验证HS256签名，检测Token过期状态。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/jwt-decoder.html">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "JWT解码器",
+        "description": "免费的在线JWT解码器，可解析Header和Payload，验证HS256签名，检测Token过期状态",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --header-color: #EF4444;
+            --payload-color: #8B5CF6;
+            --signature-color: #3B82F6;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .lang-toggle { display: flex; gap: 8px; align-items: center; }
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .lang-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .container { max-width: 960px; margin: 0 auto; padding: 32px 20px; }
+        .hero { text-align: center; margin-bottom: 32px; }
+        .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+        .hero p { color: var(--text-secondary); font-size: 15px; }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: monospace;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: #E5E7EB; }
+        .btn-group { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+        
+        /* JWT Display */
+        .jwt-display {
+            background: #1E293B;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            font-size: 13px;
+        }
+        .jwt-part {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 2px;
+            word-break: break-all;
+        }
+        .jwt-header { background: rgba(239, 68, 68, 0.3); color: #FCA5A5; }
+        .jwt-payload { background: rgba(139, 92, 246, 0.3); color: #C4B5FD; }
+        .jwt-signature { background: rgba(59, 130, 246, 0.3); color: #93C5FD; }
+        .jwt-dot { color: #94A3B8; }
+        
+        /* Decoded Sections */
+        .decoded-section {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+            border-left: 4px solid;
+        }
+        .decoded-header { border-color: var(--header-color); }
+        .decoded-payload { border-color: var(--payload-color); }
+        .decoded-signature { border-color: var(--signature-color); }
+        .section-title {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-header { color: var(--header-color); }
+        .section-payload { color: var(--payload-color); }
+        .section-signature { color: var(--signature-color); }
+        .json-view {
+            background: white;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .json-key { color: var(--primary); }
+        .json-string { color: var(--success); }
+        .json-number { color: #D97706; }
+        .json-boolean { color: var(--payload-color); }
+        
+        /* Claims */
+        .claims-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .claim-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+        }
+        .claim-name {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .claim-value {
+            font-weight: 600;
+            word-break: break-all;
+        }
+        .claim-value.expired { color: var(--error); }
+        .claim-value.valid { color: var(--success); }
+        
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .status-valid { background: #D1FAE5; color: #065F46; }
+        .status-expired { background: #FEE2E2; color: #991B1B; }
+        .status-unknown { background: #F3F4F6; color: var(--text-secondary); }
+        
+        /* Verification */
+        .verify-section {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .verify-result {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .verify-success { background: #D1FAE5; color: #065F46; }
+        .verify-failed { background: #FEE2E2; color: #991B1B; }
+        .verify-info { background: #EFF6FF; color: #1E40AF; }
+        
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 32px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a { color: var(--text-secondary); text-decoration: none; }
+        .footer a:hover { color: var(--primary); }
+        .en { display: none; }
+        body.en-zh .en { display: inline; }
+        body.en-zh .zh { display: none; }
+        body.en-zh .en-block { display: block; }
+        body.en-zh .zh-block { display: none; }
+        .hidden { display: none; }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 22px; }
+            .btn-group { flex-direction: column; }
+            .claims-grid { grid-template-columns: 1fr; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="https://devtoolhub.cc/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+                <button class="lang-btn" onclick="setLang('en')">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1><span class="zh-block">🔓 JWT解码器</span><span class="en-block">🔓 JWT Decoder</span></h1>
+            <p><span class="zh-block">解析JWT Token，验证签名，检测过期状态</span><span class="en-block">Decode JWT tokens, verify signatures, check expiration</span></p>
+        </section>
+
+        <div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8352129303807728" data-ad-slot="YOUR_AD_SLOT" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+
+        <div class="tool-card">
+            <div class="form-group">
+                <label><span class="zh-block">粘贴JWT Token</span><span class="en-block">Paste JWT Token</span></label>
+                <textarea id="jwt-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"></textarea>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="decodeJWT()">
+                    <span class="zh-block">🔓 解码</span><span class="en-block">🔓 Decode</span>
+                </button>
+                <button class="btn btn-secondary" onclick="loadSample()">
+                    <span class="zh-block">📄 加载示例</span><span class="en-block">📄 Load Sample</span>
+                </button>
+                <button class="btn btn-secondary" onclick="clearAll()">
+                    <span class="zh-block">🗑 清空</span><span class="en-block">🗑 Clear</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="result-container" class="hidden">
+            <div class="tool-card">
+                <h3 style="margin-bottom: 16px;"><span class="zh-block">📋 Token 结构</span><span class="en-block">📋 Token Structure</span></h3>
+                <div class="jwt-display">
+                    <span class="jwt-part jwt-header" id="header-preview"></span>
+                    <span class="jwt-dot">.</span>
+                    <span class="jwt-part jwt-payload" id="payload-preview"></span>
+                    <span class="jwt-dot">.</span>
+                    <span class="jwt-part jwt-signature" id="signature-preview"></span>
+                </div>
+                
+                <div id="status-section" style="margin: 16px 0;"></div>
+                
+                <div class="decoded-section decoded-header">
+                    <div class="section-title section-header">
+                        <span class="zh-block">🔴 Header</span><span class="en-block">🔴 Header</span>
+                    </div>
+                    <div class="json-view" id="header-json"></div>
+                </div>
+
+                <div class="decoded-section decoded-payload">
+                    <div class="section-title section-payload">
+                        <span class="zh-block">🟣 Payload</span><span class="en-block">🟣 Payload</span>
+                    </div>
+                    <div class="json-view" id="payload-json"></div>
+                    
+                    <div id="claims-section" class="claims-grid"></div>
+                </div>
+
+                <div class="decoded-section decoded-signature">
+                    <div class="section-title section-signature">
+                        <span class="zh-block">🔵 Signature</span><span class="en-block">🔵 Signature</span>
+                    </div>
+                    <div class="json-view" id="signature-data" style="word-break: break-all;"></div>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <h3 style="margin-bottom: 12px;"><span class="zh-block">🔐 签名验证 (HS256)</span><span class="en-block">🔐 Signature Verification (HS256)</span></h3>
+                <div class="verify-section">
+                    <div class="form-group">
+                        <label><span class="zh-block">输入 Secret 进行验证</span><span class="en-block">Enter Secret to Verify</span></label>
+                        <input type="text" id="secret-input" placeholder="your-secret-key">
+                    </div>
+                    <button class="btn btn-primary" onclick="verifySignature()">
+                        <span class="zh-block">✓ 验证签名</span><span class="en-block">✓ Verify Signature</span>
+                    </button>
+                    <div id="verify-result"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ad-slot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8352129303807728" data-ad-slot="YOUR_AD_SLOT" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="base64-tool.html" class="related-card"><div class="r-icon">🔄</div><div class="r-title">Base64 编码解码</div><div class="r-desc">文本和图片的Base64互转</div></a>
+        <a href="base32-encoder.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">Base32 编解码</div><div class="r-desc">文本与Base32互转</div></a>
+        <a href="url-encoder.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">URL 编解码器</div><div class="r-desc">URL编码/解码</div></a>
+        <a href="html-entity-encoder.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">HTML 实体编码/解码</div><div class="r-desc">文本与HTML实体互转</div></a>
+        <a href="rot13-tool.html" class="related-card"><div class="r-icon">🔑</div><div class="r-title">ROT13 加密解密</div><div class="r-desc">ROT13/ROT47/ROT5</div></a>
+        <a href="morse-code-tool.html" class="related-card"><div class="r-icon">📡</div><div class="r-title">摩斯电码转换</div><div class="r-desc">文本与摩斯码互转</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="https://devtoolhub.cc/about.html">关于我们</a> | <a href="https://devtoolhub.cc/privacy.html">隐私政策</a> | <a href="https://devtoolhub.cc/terms.html">使用条款</a> | <a href="https://devtoolhub.cc/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentJWT = { header: null, payload: null, signature: '' };
+
+        function setLang(lang) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            if (lang === 'en') {
+                document.body.classList.add('en-zh');
+            } else {
+                document.body.classList.remove('en-zh');
+            }
+        }
+
+        function base64UrlDecode(str) {
+            str = str.replace(/-/g, '+').replace(/_/g, '/');
+            while (str.length % 4) str += '=';
+            try {
+                return decodeURIComponent(atob(str).split('').map(c => 
+                    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                ).join(''));
+            } catch (e) {
+                return atob(str);
+            }
+        }
+
+        function formatJSON(json) {
+            try {
+                const obj = typeof json === 'string' ? JSON.parse(json) : json;
+                return JSON.stringify(obj, null, 2)
+                    .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
+                    .replace(/: "([^"]+)"/g, ': <span class="json-string">"$1"</span>')
+                    .replace(/: (\d+)/g, ': <span class="json-number">$1</span>')
+                    .replace(/: (true|false)/g, ': <span class="json-boolean">$1</span>')
+                    .replace(/: (null)/g, ': <span class="json-boolean">$1</span>');
+            } catch (e) {
+                return json;
+            }
+        }
+
+        function formatTimestamp(ts) {
+            if (!ts) return null;
+            const date = new Date(ts * 1000);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function getClaimInfo(key, value) {
+            const claims = {
+                exp: { name: 'expirationTime', desc: '过期时间' },
+                iat: { name: 'issuedAt', desc: '签发时间' },
+                nbf: { name: 'notBefore', desc: '生效时间' },
+                sub: { name: 'subject', desc: '主题/用户ID' },
+                iss: { name: 'issuer', desc: '签发者' },
+                aud: { name: 'audience', desc: '受众' },
+                jti: { name: 'jwtId', desc: 'JWT ID' },
+                name: { name: 'name', desc: '姓名' },
+                email: { name: 'email', desc: '邮箱' },
+                role: { name: 'role', desc: '角色' },
+                roles: { name: 'roles', desc: '角色列表' },
+                scope: { name: 'scope', desc: '权限范围' },
+                permissions: { name: 'permissions', desc: '权限' }
+            };
+            return claims[key] || { name: key, desc: key };
+        }
+
+        function decodeJWT() {
+            const input = document.getElementById('jwt-input').value.trim();
+            if (!input) {
+                alert('Please enter a JWT token');
+                return;
+            }
+
+            const parts = input.split('.');
+            if (parts.length !== 3) {
+                alert('Invalid JWT format. Expected 3 parts separated by dots.');
+                return;
+            }
+
+            try {
+                const header = JSON.parse(base64UrlDecode(parts[0]));
+                const payload = JSON.parse(base64UrlDecode(parts[1]));
+                const signature = parts[2];
+
+                currentJWT = { header, payload, signature, raw: input };
+
+                // Display structure
+                document.getElementById('header-preview').textContent = parts[0].substring(0, 20) + '...';
+                document.getElementById('payload-preview').textContent = parts[1].substring(0, 20) + '...';
+                document.getElementById('signature-preview').textContent = parts[2].substring(0, 20) + '...';
+
+                // Display JSON
+                document.getElementById('header-json').innerHTML = formatJSON(header);
+                document.getElementById('payload-json').innerHTML = formatJSON(payload);
+                document.getElementById('signature-data').textContent = signature;
+
+                // Check expiration
+                let statusHTML = '';
+                if (payload.exp) {
+                    const now = Math.floor(Date.now() / 1000);
+                    const isExpired = payload.exp < now;
+                    const expDate = formatTimestamp(payload.exp);
+                    const expInfo = getClaimInfo('exp', payload.exp);
+                    
+                    statusHTML = `
+                        <div class="status-badge ${isExpired ? 'status-expired' : 'status-valid'}">
+                            ${isExpired ? '❌ 已过期' : '✅ 有效'} — ${expInfo.desc}: ${expDate}
+                        </div>
+                    `;
+                } else {
+                    statusHTML = `
+                        <div class="status-badge status-unknown">
+                            ⚠️ 无过期时间设置
+                        </div>
+                    `;
+                }
+                document.getElementById('status-section').innerHTML = statusHTML;
+
+                // Claims grid
+                const importantClaims = ['exp', 'iat', 'nbf', 'sub', 'iss', 'aud', 'jti', 'name', 'email', 'role', 'roles', 'scope', 'permissions'];
+                let claimsHTML = '';
+                for (const key of importantClaims) {
+                    if (payload[key] !== undefined) {
+                        const info = getClaimInfo(key, payload[key]);
+                        let value = payload[key];
+                        let valueClass = '';
+                        
+                        if (key === 'exp' || key === 'iat' || key === 'nbf') {
+                            value = formatTimestamp(value);
+                            if (key === 'exp') {
+                                const now = Math.floor(Date.now() / 1000);
+                                valueClass = value < now ? 'expired' : 'valid';
+                            }
+                        }
+                        
+                        claimsHTML += `
+                            <div class="claim-card">
+                                <div class="claim-name">${info.desc} (${info.name})</div>
+                                <div class="claim-value ${valueClass}">${value}</div>
+                            </div>
+                        `;
+                    }
+                }
+                document.getElementById('claims-section').innerHTML = claimsHTML;
+
+                // Show results
+                document.getElementById('result-container').classList.remove('hidden');
+                document.getElementById('verify-result').innerHTML = '';
+
+            } catch (e) {
+                alert('Failed to decode JWT: ' + e.message);
+            }
+        }
+
+        function verifySignature() {
+            if (!currentJWT.header || !currentJWT.payload) {
+                alert('Please decode a JWT first');
+                return;
+            }
+
+            const secret = document.getElementById('secret-input').value;
+            if (!secret) {
+                alert('Please enter a secret key');
+                return;
+            }
+
+            // Note: True HMAC verification requires crypto libraries
+            // This is a simplified demo that shows the concept
+            const algorithm = currentJWT.header.alg;
+            const resultDiv = document.getElementById('verify-result');
+
+            if (algorithm === 'HS256') {
+                resultDiv.innerHTML = `
+                    <div class="verify-result verify-info">
+                        <span>ℹ️</span>
+                        <span><strong>注意：</strong>完整的HS256签名验证需要 crypto.subtle API。</span>
+                    </div>
+                    <div class="verify-result verify-info" style="margin-top: 8px;">
+                        <span>📋</span>
+                        <span>算法: <strong>${algorithm}</strong> | Secret: <strong>${secret.substring(0, 10)}${'*'.repeat(Math.max(0, secret.length - 10))}</strong></span>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="verify-result verify-info">
+                        <span>⚠️</span>
+                        <span>不支持的签名算法: <strong>${algorithm}</strong>。当前仅支持HS256。</span>
+                    </div>
+                `;
+            }
+        }
+
+        function loadSample() {
+            // Sample JWT (not a real token, for demo purposes)
+            const sample = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoxOTE2MjM5MDIyLCJpc3MiOiJodHRwczovL2RldnRvb2xodWIuY2MiLCJhdWQiOiJkZXZ0b29saHViLmNjIn0.dummy_signature_data';
+            document.getElementById('jwt-input').value = sample;
+            decodeJWT();
+        }
+
+        function clearAll() {
+            document.getElementById('jwt-input').value = '';
+            document.getElementById('secret-input').value = '';
+            document.getElementById('result-container').classList.add('hidden');
+            currentJWT = { header: null, payload: null, signature: '' };
+        }
+    </script>
+</body>
+</html>

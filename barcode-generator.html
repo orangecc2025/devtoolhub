@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="条形码生成器 - 支持Code128/Code39/EAN-13/CODABAR多种格式，自定义尺寸颜色，Canvas渲染导出PNG">
+    <meta name="keywords" content="条形码生成器,Code128,Code39,EAN-13,CODABAR,条形码导出,条形码制作">
+    <title>条形码生成器 - 支持多种格式导出PNG | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/barcode-generator.html">
+    <meta property="og:title" content="条形码生成器 - 支持多种格式导出PNG">
+    <meta property="og:description" content="支持Code128/Code39/EAN-13/CODABAR多种格式，自定义尺寸颜色，Canvas渲染导出PNG">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/barcode-generator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "条形码生成器",
+        "description": "支持Code128/Code39/EAN-13/CODABAR多种格式，自定义尺寸颜色，Canvas渲染导出PNG",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+            text-align: center;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 16px;
+        }
+        #barcodeCanvas {
+            max-width: 100%;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover { color: var(--primary); }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>📊 条形码生成器</h1>
+            <p>支持Code128/Code39/EAN-13/CODABAR多种格式，自定义尺寸颜色，导出PNG</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label for="barcodeType">条形码类型</label>
+                <select id="barcodeType">
+                    <option value="CODE128">Code128（通用，最常用）</option>
+                    <option value="CODE39">Code39（工业标准）</option>
+                    <option value="EAN13">EAN-13（商品条码）</option>
+                    <option value="CODABAR">CODABAR（图书馆/物流）</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="barcodeContent">条形码内容</label>
+                <input type="text" id="barcodeContent" placeholder="输入要编码的内容" value="123456789012">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="barcodeWidth">宽度</label>
+                    <input type="number" id="barcodeWidth" value="300" min="100" max="800">
+                </div>
+                <div class="form-group">
+                    <label for="barcodeHeight">高度</label>
+                    <input type="number" id="barcodeHeight" value="100" min="50" max="300">
+                </div>
+                <div class="form-group">
+                    <label for="barcodeQuietZone">左右边距</label>
+                    <input type="number" id="barcodeQuietZone" value="20" min="0" max="50">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="barcodeColor">条形颜色</label>
+                    <input type="color" id="barcodeColor" value="#000000">
+                </div>
+                <div class="form-group">
+                    <label for="barcodeBgColor">背景颜色</label>
+                    <input type="color" id="barcodeBgColor" value="#FFFFFF">
+                </div>
+                <div class="form-group">
+                    <label for="barcodeShowText">
+                        <input type="checkbox" id="barcodeShowText" checked> 显示文字
+                    </label>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="generateBarcode()">🔄 生成条形码</button>
+                <button class="btn btn-secondary" onclick="downloadBarcode()">📥 导出PNG</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title">条形码预览</div>
+                <canvas id="barcodeCanvas"></canvas>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">📊 Code128和Code39有什么区别？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">Code128支持全部128个ASCII字符，密度更高，是最常用的通用条形码。Code39只支持43个字符（26字母+10数字+7符号），但不需要校验位，常用于工业和军事领域。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">🏷️ EAN-13是什么？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">EAN-13是国际通用的商品条码，由13位数字组成，前3位为国家代码，后9位为企业代码和商品代码，最后1位为校验位。中国国家代码为690-699。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">📐 如何调整条形码大小？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">可以通过设置宽度、高度和左右边距来调整条形码尺寸。建议保持适当的高度以确保扫描设备能够正确识别。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">🎨 可以自定义颜色吗？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">可以。条形颜色和背景颜色都可以自定义，但请注意深色条配浅色背景效果最佳，以确保扫描设备的识别率。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="password-generator.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">安全密码生成器</div><div class="r-desc">高强度密码</div></a>
+        <a href="uuid-generator.html" class="related-card"><div class="r-icon">🔑</div><div class="r-title">UUID 生成器</div><div class="r-desc">批量UUID</div></a>
+        <a href="qrcode-generator.html" class="related-card"><div class="r-icon">📱</div><div class="r-title">二维码生成器</div><div class="r-desc">生成二维码</div></a>
+        <a href="fake-data-generator.html" class="related-card"><div class="r-icon">🎭</div><div class="r-title">假数据生成器</div><div class="r-desc">批量假数据</div></a>
+        <a href="random-number-generator.html" class="related-card"><div class="r-icon">🎲</div><div class="r-title">随机数生成器</div><div class="r-desc">随机数批量生成</div></a>
+        <a href="ascii-art-generator.html" class="related-card"><div class="r-icon">✏</div><div class="r-title">ASCII 艺术生成器</div><div class="r-desc">ASCII艺术</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        const BARS = {
+            'START_CODE128': [[2,1,2,1,2,1]],
+            'CODE128_B': [
+                [2,1,2,1,1,2,1,1], [1,1,1,2,2,1,1,1], [1,1,1,1,2,2,1,1], [1,2,1,1,2,1,1,1],
+                [1,1,2,1,2,1,1,1], [1,1,2,1,1,2,1,1], [1,2,1,1,1,2,1,1], [1,2,1,1,1,1,2,1],
+                [1,1,2,1,1,1,2,1], [1,1,1,2,1,2,1,1], [2,1,1,1,2,1,1,1], [2,1,1,1,1,2,1,1],
+                [1,1,1,2,1,1,2,1], [2,1,1,2,1,1,1,1], [2,1,1,1,1,2,1,1], [1,1,2,1,2,1,1,1],
+                [2,1,1,2,1,1,1,1], [1,1,1,2,1,2,1,1], [1,1,1,1,1,2,2,1], [1,2,1,1,1,1,2,1],
+                [1,1,1,2,1,1,1,2], [1,2,1,1,2,1,1,1], [1,2,1,1,1,1,1,2], [1,1,1,2,2,1,1,1],
+                [1,1,1,1,2,1,2,1], [1,2,2,1,1,1,1,1], [1,1,2,2,1,1,1,1], [1,1,2,1,1,1,2,1],
+                [2,1,1,2,1,1,1,1], [2,1,1,1,1,1,2,1], [2,1,1,1,1,2,1,1], [2,2,1,1,1,1,1,1],
+                [1,1,2,1,2,1,1,1], [1,1,2,1,1,2,1,1], [1,1,2,2,1,1,1,1], [1,2,1,1,2,1,1,1],
+                [1,2,1,1,1,2,1,1], [1,2,2,1,1,1,1,1], [1,2,2,1,1,1,1,2], [1,1,1,1,2,1,2,1],
+                [1,1,1,2,1,1,1,2], [1,1,1,2,1,2,1,1], [1,2,1,1,1,1,2,1], [1,2,1,1,1,2,1,1],
+                [1,1,2,1,1,1,2,1], [1,1,2,1,2,1,1,1], [1,2,1,2,1,1,1,1], [1,2,1,1,1,1,1,2],
+                [1,1,2,2,1,1,1,1], [1,1,2,1,1,1,1,2], [2,1,1,1,1,1,1,2], [2,1,1,1,1,2,1,1],
+                [2,1,1,2,1,1,1,1], [2,1,2,1,1,1,1,1], [2,2,1,1,1,1,1,1], [2,1,2,1,1,1,2,1],
+                [1,1,1,2,1,2,1,1], [1,2,1,1,1,1,2,1], [1,2,1,1,1,2,1,1], [1,1,2,1,1,1,2,1],
+                [1,1,2,1,2,1,1,1], [1,1,2,2,1,1,1,1], [1,1,2,1,1,2,1,1], [1,1,1,1,2,2,1,1],
+                [1,1,1,2,2,1,1,1], [1,2,1,1,2,1,1,1], [1,2,1,1,1,1,2,2], [1,1,1,1,1,1,2,2],
+                [1,1,1,1,2,1,1,2], [1,1,1,2,1,1,1,2], [1,1,1,2,1,2,1,1], [1,1,1,2,2,1,1,1],
+                [1,1,2,1,1,1,1,2], [1,1,2,1,1,2,1,1], [1,2,1,1,1,1,1,2], [1,2,1,1,1,1,2,1],
+                [1,1,2,1,2,1,1,1], [1,1,2,2,1,1,1,1], [1,2,1,2,1,1,1,1], [1,2,1,1,1,2,1,1],
+                [1,1,1,2,2,1,1,1], [1,1,1,1,2,1,2,1], [1,1,2,1,1,1,1,2], [2,1,1,2,1,1,1,1],
+                [2,1,1,1,1,2,1,1], [2,1,1,1,2,1,1,1], [2,1,2,1,1,1,1,1], [2,1,2,1,1,1,2,1],
+                [2,1,1,1,1,1,2,1], [2,1,1,1,1,2,1,1], [2,2,1,1,1,1,1,1], [2,2,1,1,1,1,2,1],
+                [2,2,1,1,1,2,1,1], [2,2,1,2,1,1,1,1], [2,1,1,2,1,1,1,2], [2,1,1,1,1,2,1,2]
+            ],
+            'CODE128_STOP': [[2,1,3,1,1,1]],
+            'CODE39_CHARS': '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%*',
+            'CODE39_BARS': [
+                [1,0,1,0,1,0,0,1,0], [0,1,0,1,0,0,1,0,1], [0,1,0,1,0,1,0,0,1],
+                [0,1,0,1,0,1,0,0,1], [1,0,1,0,0,1,0,1,0], [1,0,1,0,0,1,0,0,1],
+                [1,0,1,0,1,0,0,1,0], [0,1,0,1,0,0,1,0,1], [0,1,0,1,0,0,1,0,1],
+                [0,1,0,1,0,1,0,0,1], [1,0,0,1,0,1,0,1,0], [1,0,0,1,0,1,0,0,1],
+                [0,1,0,1,0,1,0,1,0], [0,1,0,0,1,1,0,1,0], [0,1,0,0,1,1,0,0,1],
+                [1,0,0,1,0,0,1,0,1], [1,0,0,1,0,1,0,1,0], [0,1,0,1,0,1,0,1,0],
+                [1,0,0,1,0,1,0,0,1], [1,0,1,1,0,0,1,0,0], [1,0,1,1,0,0,1,0,0],
+                [1,0,0,1,1,0,0,1,0], [1,0,0,1,1,0,0,0,1], [1,1,0,0,1,0,0,1,0],
+                [0,1,0,1,0,0,1,0,1], [0,1,0,0,1,0,1,0,1], [0,1,0,0,1,0,1,1,0],
+                [0,0,1,0,0,1,1,0,1], [0,0,1,0,0,1,0,1,1], [0,0,1,1,0,1,0,0,1],
+                [0,1,1,0,0,1,0,1,0], [0,1,1,0,0,0,1,0,1], [1,1,0,0,0,0,1,0,1],
+                [1,0,0,1,0,1,1,0,0], [1,0,1,0,0,0,1,1,0], [1,0,1,0,1,0,0,1,0],
+                [0,1,0,1,0,0,1,1,0], [1,1,0,0,1,0,0,1,0], [0,1,1,0,1,0,0,0,1],
+                [0,1,1,0,1,0,1,0,0], [1,1,0,0,1,0,1,0,0], [1,0,0,1,1,0,1,0,0],
+                [1,0,1,1,0,1,0,0,0], [1,1,0,0,0,1,0,0,1], [1,0,1,0,0,1,1,0,0],
+                [1,0,0,1,0,1,1,0,0], [1,0,0,0,1,1,0,1,0], [0,1,0,1,1,0,0,1,0],
+                [0,1,0,1,1,0,0,0,1], [0,0,1,1,0,0,0,1,1], [1,1,0,0,0,0,1,1,0]
+            ],
+            'CODABAR_START': [[0,0,0,1,0,0,1], [0,0,1,0,0,0,1], [0,0,1,0,0,1,0], [0,1,0,0,0,0,1]],
+            'CODABAR_END': [[0,1,0,0,0,0,1], [0,0,0,1,0,0,1], [0,0,1,0,0,0,1], [0,0,1,0,0,1,0]],
+            'CODABAR_BARS': {
+                '0': [[0,0,0,1,0,0,1], [0,0,1,0,0,0,1]], '1': [[0,0,0,1,0,0,1], [0,0,1,0,0,1,0]],
+                '2': [[0,0,0,1,0,0,1], [0,1,0,0,0,0,1]], '3': [[0,0,0,1,0,1,0], [0,0,0,0,1,0,1]],
+                '4': [[0,0,0,1,0,1,0], [0,1,0,0,0,0,1]], '5': [[0,0,0,1,1,0,0], [0,0,0,0,1,0,1]],
+                '6': [[0,1,0,0,0,1,0], [0,0,0,0,1,0,1]], '7': [[0,1,0,0,0,1,0], [0,0,0,1,0,0,1]],
+                '8': [[0,1,0,0,1,0,0], [0,0,0,1,0,0,1]], '9': [[0,0,0,1,1,0,0], [0,0,0,1,0,0,1]],
+                '-': [[0,1,0,0,0,0,1], [0,0,0,1,0,0,1]], '$': [[0,1,0,1,0,1,0], [0,0,0,0,0,0,1]],
+                ':': [[0,0,0,0,1,0,1], [0,1,0,1,0,0,0]], '/': [[0,0,0,0,1,0,1], [0,1,0,0,0,1,0]],
+                '.': [[0,0,0,0,1,0,1], [0,1,0,0,1,0,0]], '+': [[0,0,0,0,0,0,1], [0,1,0,1,0,1,0]]
+            },
+            'EAN13_WEIGHTS': [1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3]
+        };
+
+        function getCode128Value(char) {
+            return char.charCodeAt(0) - 32;
+        }
+
+        function calcCode128Checksum(data) {
+            let sum = 104;
+            for (let i = 0; i < data.length; i++) {
+                sum += getCode128Value(data[i]) * (i + 1);
+            }
+            return sum % 103;
+        }
+
+        function encodeCode128(data) {
+            const bars = [];
+            bars.push(...BARS['START_CODE128'][0]);
+            for (let i = 0; i < data.length; i++) {
+                const pattern = BARS['CODE128_B'][getCode128Value(data[i])];
+                for (let j = 0; j < 6; j++) {
+                    for (let k = 0; k < pattern[j]; k++) {
+                        bars.push(1);
+                    }
+                    if (j < 5) bars.push(1);
+                }
+            }
+            const checksum = calcCode128Checksum(data);
+            for (let j = 0; j < 6; j++) {
+                for (let k = 0; k < BARS['CODE128_B'][checksum][j]; k++) {
+                    bars.push(1);
+                }
+                if (j < 5) bars.push(1);
+            }
+            bars.push(...BARS['CODE128_STOP'][0]);
+            return bars;
+        }
+
+        function encodeCode39(data) {
+            const bars = [];
+            for (let i = 0; i < data.length; i++) {
+                const idx = BARS['CODE39_CHARS'].indexOf(data[i].toUpperCase());
+                if (idx === -1) return null;
+                const pattern = BARS['CODE39_BARS'][idx];
+                if (i > 0) bars.push(1);
+                for (let j = 0; j < 9; j++) {
+                    for (let k = 0; k < pattern[j]; k++) {
+                        bars.push(0);
+                    }
+                    bars.push(1);
+                }
+            }
+            return bars;
+        }
+
+        function encodeEAN13(data) {
+            if (!/^\d{12}$/.test(data)) return null;
+            let sum = 0;
+            for (let i = 0; i < 12; i++) {
+                sum += parseInt(data[i]) * BARS['EAN13_WEIGHTS'][i];
+            }
+            const checkDigit = (10 - (sum % 10)) % 10;
+            data += checkDigit;
+            
+            const L = ['0001101', '0011001', '0010011', '0111101', '0100011', '0110001', '0101111', '0111011', '0110111', '0001011'];
+            const G = ['0100111', '0110011', '0011011', '0100001', '0011101', '0111001', '0000101', '0010001', '0001001', '0010111'];
+            const R = ['1110010', '1100110', '1101100', '1000010', '1011100', '1001110', '1010000', '1000100', '1001000', '1110100'];
+            
+            const bars = [];
+            bars.push(1, 0, 1);
+            const firstDigit = parseInt(data[0]);
+            for (let i = 1; i < 7; i++) {
+                const digit = parseInt(data[i]);
+                bars.push(...(firstDigit % 2 === 0 ? L[digit] : G[digit]).split('').map(Number));
+            }
+            bars.push(0, 1, 0, 1, 0);
+            for (let i = 7; i < 13; i++) {
+                bars.push(...R[parseInt(data[i])].split('').map(Number));
+            }
+            bars.push(1, 0, 1);
+            return { bars, checkDigit };
+        }
+
+        function encodeCODABAR(data) {
+            const bars = [];
+            const startChar = data[0].toUpperCase();
+            const endChar = data[data.length - 1].toUpperCase();
+            const startMap = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+            const endMap = { 'A': 0, 'B': 1, 'C': 2, 'D': 3 };
+            if (!(startChar in startMap) || !(endChar in endMap)) return null;
+            bars.push(...BARS['CODABAR_START'][startMap[startChar]]);
+            bars.push(1);
+            for (let i = 1; i < data.length - 1; i++) {
+                const c = data[i].toUpperCase();
+                if (!(c in BARS['CODABAR_BARS'])) return null;
+                for (let j = 0; j < 7; j++) {
+                    bars.push(BARS['CODABAR_BARS'][c][j]);
+                }
+                bars.push(1);
+            }
+            bars.push(...BARS['CODABAR_END'][endMap[endChar]]);
+            return bars;
+        }
+
+        function validateInput(type, content) {
+            switch (type) {
+                case 'EAN13':
+                    if (!/^\d{12}$/.test(content)) {
+                        alert('EAN-13需要输入12位数字');
+                        return false;
+                    }
+                    return true;
+                case 'CODE39':
+                    if (!/^[0-9A-Z\-. $/+%]+$/i.test(content)) {
+                        alert('Code39只能包含：0-9, A-Z, - . $ / + % 和空格');
+                        return false;
+                    }
+                    return true;
+                case 'CODABAR':
+                    if (!/^[A-D][0-9\-$:/.+]+[A-D]$/i.test(content)) {
+                        alert('CODABAR必须以A-D开头和结尾');
+                        return false;
+                    }
+                    return true;
+                default:
+                    return true;
+            }
+        }
+
+        function generateBarcode() {
+            const type = document.getElementById('barcodeType').value;
+            const content = document.getElementById('barcodeContent').value.trim();
+            const width = parseInt(document.getElementById('barcodeWidth').value) || 300;
+            const height = parseInt(document.getElementById('barcodeHeight').value) || 100;
+            const quietZone = parseInt(document.getElementById('barcodeQuietZone').value) || 20;
+            const barColor = document.getElementById('barcodeColor').value;
+            const bgColor = document.getElementById('barcodeBgColor').value;
+            const showText = document.getElementById('barcodeShowText').checked;
+
+            if (!content) {
+                alert('请输入条形码内容');
+                return;
+            }
+
+            if (!validateInput(type, content)) return;
+
+            const canvas = document.getElementById('barcodeCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            let encoded, displayText = content;
+            switch (type) {
+                case 'CODE128':
+                    encoded = encodeCode128(content);
+                    break;
+                case 'CODE39':
+                    encoded = encodeCode39(content);
+                    break;
+                case 'EAN13':
+                    const eanResult = encodeEAN13(content);
+                    encoded = eanResult.bars;
+                    displayText = content;
+                    break;
+                case 'CODABAR':
+                    encoded = encodeCODABAR(content);
+                    break;
+            }
+
+            if (!encoded) {
+                alert('无法编码此内容');
+                return;
+            }
+
+            const textHeight = showText ? 20 : 0;
+            canvas.width = width;
+            canvas.height = height + textHeight;
+
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const totalBars = encoded.length;
+            const barWidth = (width - 2 * quietZone) / totalBars;
+
+            ctx.fillStyle = barColor;
+            let x = quietZone;
+            for (let i = 0; i < totalBars; i++) {
+                if (encoded[i] === 0) {
+                    ctx.fillRect(Math.round(x), 0, Math.ceil(barWidth), height);
+                }
+                x += barWidth;
+            }
+
+            if (showText) {
+                ctx.fillStyle = barColor;
+                ctx.font = '14px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(displayText, width / 2, height + 14);
+            }
+
+            document.getElementById('resultBox').classList.add('show');
+        }
+
+        function downloadBarcode() {
+            const canvas = document.getElementById('barcodeCanvas');
+            if (!canvas.width) {
+                alert('请先生成条形码');
+                return;
+            }
+            const link = document.createElement('a');
+            link.download = 'barcode.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

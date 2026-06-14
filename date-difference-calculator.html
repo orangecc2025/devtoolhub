@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="日期差计算器，计算两个日期之间的天数、周数、月数，支持工作日计算。">
+    <meta name="keywords" content="日期差计算器,日期间隔,工作日计算,日期计算">
+    <title>日期差计算器 - 日期间隔/工作日 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/date-difference-calculator.html">
+    <meta property="og:title" content="日期差计算器 - 日期间隔/工作日 | DevToolBox">
+    <meta property="og:description" content="日期差计算器，计算两个日期之间的天数、周数、月数，支持工作日计算。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/date-difference-calculator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "日期差计算器",
+        "description": "日期差计算器，计算两个日期之间的天数、周数、月数，支持工作日计算",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            align-items: end;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .result-item {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        .result-item-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .result-item-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .result-highlight {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .result-highlight .big-num {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .result-highlight .desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .result-grid { grid-template-columns: repeat(2, 1fr); }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>📅 日期差计算器</h1>
+            <p>计算两个日期之间的间隔，支持工作日计算和日期加减</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="startDate">开始日期</label>
+                    <input type="date" id="startDate">
+                </div>
+                <div class="form-group">
+                    <label for="endDate">结束日期</label>
+                    <input type="date" id="endDate">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>计算选项</label>
+                <select id="calcMode">
+                    <option value="all">包含首尾（全部天数）</option>
+                    <option value="exclusive">不包含首尾（间隔天数）</option>
+                    <option value="inclusive">仅包含开始日期</option>
+                    <option value="inclusive-end">仅包含结束日期</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="excludeWeekends"> 排除周末（仅计算工作日）
+                </label>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="calculateDifference()" style="flex: 1;">
+                    计算日期差
+                </button>
+                <button class="btn btn-secondary" onclick="setThisMonth()">本月</button>
+                <button class="btn btn-secondary" onclick="setThisYear()">今年</button>
+            </div>
+
+            <div class="result-box" id="result">
+                <div class="result-title">📊 计算结果</div>
+                
+                <div class="result-highlight">
+                    <div class="big-num" id="mainDays">0</div>
+                    <div class="desc" id="mainDesc">天</div>
+                </div>
+
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-item-label">天数</div>
+                        <div class="result-item-value" id="resDays">0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">周数</div>
+                        <div class="result-item-value" id="resWeeks">0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">月数</div>
+                        <div class="result-item-value" id="resMonths">0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">年数</div>
+                        <div class="result-item-value" id="resYears">0</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 16px; padding: 16px; background: white; border-radius: 8px;">
+                    <h4 style="margin-bottom: 12px;">📋 详细说明</h4>
+                    <div id="detailedInfo"></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);">
+                <h3 style="margin-bottom: 16px;">🔢 日期加减计算</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="calcDate">基准日期</label>
+                        <input type="date" id="calcDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="addDays">加减天数</label>
+                        <input type="number" id="addDays" placeholder="正数加，负数减" value="7">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="calculateAddDays()" style="margin-top: 8px;">
+                    计算新日期
+                </button>
+                <div id="addResult" style="margin-top: 16px; padding: 12px; background: white; border-radius: 8px; display: none;">
+                    <strong>结果：</strong><span id="newDate"></span>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    "包含首尾"和"间隔天数"有什么区别？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    假设日期为1月1日到1月2日：<br>
+                    - 包含首尾：3天（1月1日、1月2日这两天都算）<br>
+                    - 间隔天数：1天（1月1日到1月2日之间相差1天）
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    工作日是怎么计算的？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    工作日计算会排除周六和周日，仅统计周一到周五的天数。法定节假日暂未纳入排除范围。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    日期加减可以跨月跨年吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    可以！输入负数会自动往前计算，系统会自动处理跨月、跨年的情况，包括闰年的2月天数处理。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    如何计算年龄（周岁）？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    使用日期差计算：用当前日期减去出生日期，设置"不包含首尾"模式即可得到准确的年龄天数，再换算成周岁。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="percentage-calculator.html" class="related-card"><div class="r-icon">💯</div><div class="r-title">百分比计算器</div><div class="r-desc">百分比计算</div></a>
+        <a href="ratio-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">比例计算器</div><div class="r-desc">比例求解</div></a>
+        <a href="age-calculator.html" class="related-card"><div class="r-icon">🎂</div><div class="r-title">年龄计算器</div><div class="r-desc">精确年龄</div></a>
+        <a href="bmi-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">BMI 计算器</div><div class="r-desc">体重指数</div></a>
+        <a href="loan-calculator.html" class="related-card"><div class="r-icon">🏠</div><div class="r-title">贷款计算器</div><div class="r-desc">月供计算</div></a>
+        <a href="tip-calculator.html" class="related-card"><div class="r-icon">💰</div><div class="r-title">小费计算器</div><div class="r-desc">AA分账</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        function setThisMonth() {
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            document.getElementById('startDate').value = formatDate(firstDay);
+            document.getElementById('endDate').value = formatDate(lastDay);
+        }
+
+        function setThisYear() {
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), 0, 1);
+            const lastDay = new Date(now.getFullYear(), 11, 31);
+            document.getElementById('startDate').value = formatDate(firstDay);
+            document.getElementById('endDate').value = formatDate(lastDay);
+        }
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function getDaysBetween(start, end, mode) {
+            const diffTime = end - start;
+            let days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            switch (mode) {
+                case 'all':
+                    return days + 1;
+                case 'exclusive':
+                    return days;
+                case 'inclusive':
+                    return days + 1;
+                case 'inclusive-end':
+                    return days + 1;
+                default:
+                    return days;
+            }
+        }
+
+        function getWorkingDays(start, end) {
+            let count = 0;
+            const current = new Date(start);
+            
+            while (current <= end) {
+                const dayOfWeek = current.getDay();
+                if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                    count++;
+                }
+                current.setDate(current.getDate() + 1);
+            }
+            
+            return count;
+        }
+
+        function calculateDifference() {
+            const startDateStr = document.getElementById('startDate').value;
+            const endDateStr = document.getElementById('endDate').value;
+            
+            if (!startDateStr || !endDateStr) {
+                alert('请选择开始日期和结束日期');
+                return;
+            }
+
+            const start = new Date(startDateStr);
+            const end = new Date(endDateStr);
+            
+            if (end < start) {
+                alert('结束日期不能早于开始日期');
+                return;
+            }
+
+            const mode = document.getElementById('calcMode').value;
+            const excludeWeekends = document.getElementById('excludeWeekends').checked;
+            
+            let totalDays = getDaysBetween(start, end, mode);
+            
+            // 计算工作日
+            let workingDays = 0;
+            if (excludeWeekends) {
+                workingDays = getWorkingDays(start, end);
+            }
+
+            // 计算年月日
+            let years = end.getFullYear() - start.getFullYear();
+            let months = end.getMonth() - start.getMonth();
+            let days = end.getDate() - start.getDate();
+            
+            if (days < 0) {
+                months--;
+                const lastMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // 显示结果
+            document.getElementById('mainDays').textContent = excludeWeekends ? workingDays : totalDays;
+            document.getElementById('mainDesc').textContent = excludeWeekends ? '个工作日' : '天';
+            document.getElementById('resDays').textContent = totalDays;
+            document.getElementById('resWeeks').textContent = Math.floor(totalDays / 7);
+            document.getElementById('resMonths').textContent = years * 12 + months;
+            document.getElementById('resYears').textContent = years + '.' + months;
+
+            // 详细说明
+            const modeText = {
+                'all': '包含首尾',
+                'exclusive': '不包含首尾',
+                'inclusive': '仅包含开始日期',
+                'inclusive-end': '仅包含结束日期'
+            };
+
+            document.getElementById('detailedInfo').innerHTML = `
+                <div style="font-size: 14px; line-height: 2;">
+                    <div>📅 <strong>开始日期：</strong>${start.toLocaleDateString('zh-CN', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</div>
+                    <div>📅 <strong>结束日期：</strong>${end.toLocaleDateString('zh-CN', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</div>
+                    <div>📊 <strong>计算方式：</strong>${modeText[mode]}</div>
+                    ${excludeWeekends ? `<div>💼 <strong>工作日：</strong>${workingDays} 天（排除周末）</div>` : ''}
+                    <div>⏰ <strong>共计：</strong>${totalDays} 天 ≈ ${(totalDays/365).toFixed(2)} 年</div>
+                </div>
+            `;
+
+            document.getElementById('result').classList.add('show');
+        }
+
+        function calculateAddDays() {
+            const dateStr = document.getElementById('calcDate').value;
+            const addDays = parseInt(document.getElementById('addDays').value) || 0;
+            
+            if (!dateStr) {
+                alert('请选择基准日期');
+                return;
+            }
+
+            const date = new Date(dateStr);
+            date.setDate(date.getDate() + addDays);
+
+            document.getElementById('newDate').textContent = date.toLocaleDateString('zh-CN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById('addResult').style.display = 'block';
+        }
+
+        // 初始化日期
+        const today = new Date();
+        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+        document.getElementById('startDate').value = formatDate(monthStart);
+        document.getElementById('endDate').value = formatDate(today);
+        document.getElementById('calcDate').value = formatDate(today);
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

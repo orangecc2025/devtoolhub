@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="Remove unwanted whitespace from text. Trim spaces, remove all spaces, clear empty lines, handle tabs, and strip HTML tags. Real-time preview with statistics." />
+    <meta name="keywords" content="whitespace remover, trim spaces, remove blank lines, clean text, HTML stripper, text formatter" />
+    <title>Whitespace Remover - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 14px;
+        }
+        .header {
+            background: #4F46E5;
+            padding: 20px 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .option-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .option-item:hover {
+            background: #f0f0f0;
+        }
+        .option-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+        .option-content {
+            flex: 1;
+        }
+        .option-title {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .option-desc {
+            font-size: 13px;
+            color: #888;
+        }
+        .textarea-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .textarea-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+        .textarea-container {
+            position: relative;
+        }
+        .textarea-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+            line-height: 1.6;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .btn {
+            padding: 12px 24px;
+            background: #4F46E5;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #4338ca;
+        }
+        .btn-secondary {
+            background: #6b7280;
+        }
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .stats-bar {
+            display: flex;
+            gap: 24px;
+            padding: 16px;
+            background: #f0f0ff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+        }
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4F46E5;
+            font-family: monospace;
+        }
+        .stat-change {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .stat-removed {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .char-highlight {
+            background: #fef3c7;
+            border-radius: 2px;
+        }
+        .preview-note {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .quick-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quick-btn:hover {
+            border-color: #4F46E5;
+            color: #4F46E5;
+        }
+        .help-text {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #92400e;
+        }
+        .footer {
+            background: #1f2937;
+            color: #9ca3af;
+            padding: 30px 0;
+            text-align: center;
+        }
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        [data-lang="en"] { display: none; }
+        body.en [data-lang="zh"] { display: none; }
+        body.en [data-lang="en"] { display: block; }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <button class="lang-toggle" onclick="toggleLang()">
+        <span data-lang="zh">EN</span>
+        <span data-lang="en">中文</span>
+    </button>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 data-lang="zh">🧹 空白字符清理器</h1>
+        <h1 data-lang="en">🧹 Whitespace Remover</h1>
+        
+        <p class="subtitle" data-lang="zh">快速清理文本中的多余空白字符，包括空格、制表符、换行符和零宽字符</p>
+        <p class="subtitle" data-lang="en">Quickly clean up extra whitespace from text, including spaces, tabs, newlines, and zero-width characters</p>
+
+        <div class="help-text" data-lang="zh">
+            💡 提示：选择清理选项后，结果将实时显示在右侧预览区
+        </div>
+        <div class="help-text" data-lang="en">
+            💡 Tip: Select cleanup options and results will display in real-time on the right preview
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">⚙️ 清理选项</div>
+            <div class="card-title" data-lang="en">⚙️ Cleanup Options</div>
+            
+            <div class="options-grid">
+                <label class="option-item">
+                    <input type="checkbox" id="optTrim" checked>
+                    <div class="option-content">
+                        <div class="option-title" data-lang="zh">移除首尾空白</div>
+                        <div class="option-title" data-lang="en">Trim Leading/Trailing</div>
+                        <div class="option-desc" data-lang="zh">删除文本开头和结尾的空格</div>
+                        <div class="option-desc" data-lang="en">Remove spaces at start and end</div>
+                    </div>
+                </label>
+                
+                <label class="option-item">
+                    <input type="checkbox" id="optCollapseSpaces">
+                    <div class="option-content">
+                        <div class="option-title" data-lang="zh">合并多个空格</div>
+                        <div class="option-title" data-lang="en">Collapse Multiple Spaces</div>
+                        <div class="option-desc" data-lang="zh">将连续多个空格合并为一个</div>
+                        <div class="option-desc" data-lang="en">Convert multiple spaces to one</div>
+                    </div>
+                </label>
+                
+                <label class="option-item">
+                    <input type="checkbox" id="optRemoveAllSpaces">
+                    <div class="option-content">
+                        <div class="option-title" data-lang="zh">移除所有空格</div>
+                        <div class="option-title" data-lang="en">Remove All Spaces</div>
+                        <div class="option-desc" data-lang="zh">删除文本中所有空格字符</div>
+                        <div class="option-desc" data-lang="en">Remove all space characters</div>
+                    </div>
+                </label>
+                
+                <label class="option-item">
+                    <input type="checkbox" id="optRemoveTabs" checked>
+                    <div class="option-content">
+                        <div class="option-title" data-lang="zh">移除制表符</div>
+                        <div class="option-title" data-lang="en">Remove Tabs</div>
+                        <div class="option-desc" data-lang="zh">将Tab字符替换为空格</div>
+                        <div class="option-desc" data-lang="en">Replace tab characters with spaces</div>
+                    </div>
+                </label>
+                
+                <label class="option-item">
+                    <input type="checkbox" id="optRemoveEmptyLines">
+                    <div class="option-content">
+                        <div class="option-title" data-lang="zh">移除空行</div>
+                        <div class="option-title" data-lang="en">Remove Empty Lines</div>
+                        <div class="option-desc" data-lang="zh">删除完全空白的行</div>
+                        <div class="option-desc" data-lang="en">Remove completely blank lines</div>
+                    </div>
+                </label>
+                
+                <label class="option-item">
+                    <input type="checkbox" id="optRemoveNewlines">
+                    <div class="option-content">
+                        <div class="option-title" data-lang="zh">移除换行符</div>
+                        <div class="option-title" data-lang="en">Remove Newlines</div>
+                        <div class="option-desc" data-lang="zh">将所有换行合并为单行</div>
+                        <div class="option-desc" data-lang="en">Convert all newlines to single line</div>
+                    </div>
+                </label>
+                
+                <label class="option-item">
+                    <input type="checkbox" id="optRemoveZeroWidth">
+                    <div class="option-content">
+                        <div class="option-title" data-lang="zh">移除零宽字符</div>
+                        <div class="option-title" data-lang="en">Remove Zero-Width Characters</div>
+                        <div class="option-desc" data-lang="zh">删除零宽空格、零宽连接符等</div>
+                        <div class="option-desc" data-lang="en">Remove zero-width spaces and joiners</div>
+                    </div>
+                </label>
+                
+                <label class="option-item">
+                    <input type="checkbox" id="optStripHTML">
+                    <div class="option-content">
+                        <div class="option-title" data-lang="zh">移除HTML标签</div>
+                        <div class="option-title" data-lang="en">Strip HTML Tags</div>
+                        <div class="option-desc" data-lang="zh">删除所有HTML/XML标签</div>
+                        <div class="option-desc" data-lang="en">Remove all HTML/XML tags</div>
+                    </div>
+                </label>
+            </div>
+
+            <div class="quick-actions">
+                <button class="quick-btn" onclick="presetWeb()" data-lang="zh">🌐 网页文本</button>
+                <button class="quick-btn" onclick="presetWeb()" data-lang="en">🌐 Web Text</button>
+                <button class="quick-btn" onclick="presetCode()" data-lang="zh">💻 代码清理</button>
+                <button class="quick-btn" onclick="presetCode()" data-lang="en">💻 Code Cleanup</button>
+                <button class="quick-btn" onclick="presetMinify()" data-lang="zh">📦 全部压缩</button>
+                <button class="quick-btn" onclick="presetMinify()" data-lang="en">📦 Minify All</button>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label" data-lang="zh">原始长度：</span>
+                <span class="stat-label" data-lang="en">Original:</span>
+                <span class="stat-value" id="originalLength">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label" data-lang="zh">清理后：</span>
+                <span class="stat-label" data-lang="en">Cleaned:</span>
+                <span class="stat-value" id="cleanedLength">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label" data-lang="zh">已移除：</span>
+                <span class="stat-label" data-lang="en">Removed:</span>
+                <span class="stat-value stat-removed" id="removedChars">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label" data-lang="zh">空行移除：</span>
+                <span class="stat-label" data-lang="en">Lines Removed:</span>
+                <span class="stat-value stat-removed" id="removedLines">0</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="textarea-wrapper">
+                <div class="textarea-container">
+                    <div class="textarea-label">
+                        <span data-lang="zh">📝 输入文本</span>
+                        <span data-lang="en">📝 Input Text</span>
+                    </div>
+                    <textarea id="inputText" data-lang-placeholder-zh="在此粘贴或输入需要清理的文本..." data-lang-placeholder-en="Paste or type text to clean here..."></textarea>
+                </div>
+                <div class="textarea-container">
+                    <div class="textarea-label">
+                        <span data-lang="zh">✨ 清理后结果</span>
+                        <span data-lang="en">✨ Cleaned Result</span>
+                    </div>
+                    <textarea id="outputText" readonly data-lang-placeholder-zh="清理后的文本将显示在这里..." data-lang-placeholder-en="Cleaned text will appear here..."></textarea>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="cleanText()" data-lang="zh">🔄 清理文本</button>
+                <button class="btn" onclick="cleanText()" data-lang="en">🔄 Clean Text</button>
+                <button class="btn btn-secondary" onclick="copyOutput()" data-lang="zh">📋 复制结果</button>
+                <button class="btn btn-secondary" onclick="copyOutput()" data-lang="en">📋 Copy Result</button>
+                <button class="btn btn-secondary" onclick="swapText()" data-lang="zh">⇄ 交换</button>
+                <button class="btn btn-secondary" onclick="swapText()" data-lang="en">⇄ Swap</button>
+                <button class="btn btn-secondary" onclick="clearAll()" data-lang="zh">🗑️ 清空</button>
+                <button class="btn btn-secondary" onclick="clearAll()" data-lang="en">🗑️ Clear</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">📖 支持的空白字符类型</div>
+            <div class="card-title" data-lang="en">📖 Supported Whitespace Characters</div>
+            
+            <table style="width:100%; border-collapse: collapse; margin-top: 12px;">
+                <thead>
+                    <tr style="background:#f9f9f9;">
+                        <th style="padding:12px; text-align:left;">Unicode</th>
+                        <th style="padding:12px; text-align:left;" data-lang="zh">名称</th>
+                        <th style="padding:12px; text-align:left;" data-lang="en">Name</th>
+                        <th style="padding:12px; text-align:left;" data-lang="zh">描述</th>
+                        <th style="padding:12px; text-align:left;" data-lang="en">Description</th>
+                    </tr>
+                </thead>
+                <tbody style="font-family: monospace;">
+                    <tr><td style="padding:8px;">U+0020</td><td data-lang="zh">普通空格</td><td data-lang="en">Space</td><td data-lang="zh">标准空格字符</td><td data-lang="en">Standard space</td></tr>
+                    <tr style="background:#f9f9f9;"><td style="padding:8px;">U+0009</td><td data-lang="zh">水平制表符</td><td data-lang="en">Tab</td><td data-lang="zh">Tab缩进字符</td><td data-lang="en">Tab indentation</td></tr>
+                    <tr><td style="padding:8px;">U+000A</td><td data-lang="zh">换行符</td><td data-lang="en">LF</td><td data-lang="zh">换行/Line Feed</td><td data-lang="en">Line Feed</td></tr>
+                    <tr style="background:#f9f9f9;"><td style="padding:8px;">U+000D</td><td data-lang="zh">回车符</td><td data-lang="en">CR</td><td data-lang="zh">回车/Carriage Return</td><td data-lang="en">Carriage Return</td></tr>
+                    <tr><td style="padding:8px;">U+200B</td><td data-lang="zh">零宽空格</td><td data-lang="en">Zero-Width Space</td><td data-lang="zh">不可见空格</td><td data-lang="en">Invisible space</td></tr>
+                    <tr style="background:#f9f9f9;"><td style="padding:8px;">U+200D</td><td data-lang="zh">零宽连接符</td><td data-lang="en">ZWJ</td><td data-lang="zh">用于emoji连接</td><td data-lang="en">For emoji joining</td></tr>
+                    <tr><td style="padding:8px;">U+200C</td><td data-lang="zh">零宽非连接符</td><td data-lang="en">ZWNJ</td><td data-lang="zh">控制字符</td><td data-lang="en">Control character</td></tr>
+                    <tr style="background:#f9f9f9;"><td style="padding:8px;">U+FEFF</td><td data-lang="zh">字节顺序标记</td><td data-lang="en">BOM</td><td data-lang="zh">文件开头的隐藏字符</td><td data-lang="en">Hidden at file start</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentLang = 'zh';
+
+        function toggleLang() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            document.body.classList.toggle('en', currentLang === 'en');
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:8px;z-index:1000;';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        function countLines(text) {
+            if (!text) return 0;
+            return text.split('\n').length;
+        }
+
+        function cleanText() {
+            let text = document.getElementById('inputText').value;
+            const originalLength = text.length;
+            const originalLines = countLines(text);
+            const originalEmptyLines = (text.match(/^[\s]*$/gm) || []).length;
+
+            // Get options
+            const trim = document.getElementById('optTrim').checked;
+            const collapseSpaces = document.getElementById('optCollapseSpaces').checked;
+            const removeAllSpaces = document.getElementById('optRemoveAllSpaces').checked;
+            const removeTabs = document.getElementById('optRemoveTabs').checked;
+            const removeEmptyLines = document.getElementById('optRemoveEmptyLines').checked;
+            const removeNewlines = document.getElementById('optRemoveNewlines').checked;
+            const removeZeroWidth = document.getElementById('optRemoveZeroWidth').checked;
+            const stripHTML = document.getElementById('optStripHTML').checked;
+
+            // Remove HTML tags first if needed
+            if (stripHTML) {
+                text = text.replace(/<[^>]*>/g, '');
+            }
+
+            // Remove zero-width characters
+            if (removeZeroWidth) {
+                text = text.replace(/[\u200B-\u200D\uFEFF]/g, '');
+            }
+
+            // Remove tabs
+            if (removeTabs) {
+                text = text.replace(/\t/g, ' ');
+            }
+
+            // Remove all spaces (if this option is selected)
+            if (removeAllSpaces) {
+                text = text.replace(/[ ]/g, '');
+            }
+
+            // Collapse multiple spaces
+            if (collapseSpaces && !removeAllSpaces) {
+                text = text.replace(/[ ]+/g, ' ');
+            }
+
+            // Remove newlines
+            if (removeNewlines) {
+                text = text.replace(/[\r\n]+/g, ' ');
+            }
+
+            // Remove empty lines
+            if (removeEmptyLines) {
+                text = text.replace(/^\s*$/gm, '');
+            }
+
+            // Trim leading/trailing spaces
+            if (trim) {
+                text = text.trim();
+            }
+
+            // Clean up multiple empty lines after all operations
+            if (removeEmptyLines || removeNewlines) {
+                text = text.replace(/\n{3,}/g, '\n\n');
+            }
+
+            // Final cleanup of any leftover issues
+            text = text.replace(/\r/g, '');
+
+            // Update output
+            document.getElementById('outputText').value = text;
+
+            // Update stats
+            const cleanedLength = text.length;
+            const removedChars = originalLength - cleanedLength;
+            const cleanedLines = countLines(text);
+            const removedLines = originalLines - cleanedLines;
+
+            document.getElementById('originalLength').textContent = originalLength.toLocaleString();
+            document.getElementById('cleanedLength').textContent = cleanedLength.toLocaleString();
+            document.getElementById('removedChars').textContent = removedChars.toLocaleString();
+            document.getElementById('removedLines').textContent = removedLines.toLocaleString();
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('outputText').value;
+            if (!output) {
+                showToast(currentLang === 'zh' ? '没有内容可复制' : 'Nothing to copy');
+                return;
+            }
+            navigator.clipboard.writeText(output).then(() => {
+                showToast(currentLang === 'zh' ? '已复制到剪贴板！' : 'Copied to clipboard!');
+            });
+        }
+
+        function swapText() {
+            const input = document.getElementById('inputText');
+            const output = document.getElementById('outputText');
+            const temp = input.value;
+            input.value = output.value;
+            output.value = temp;
+            cleanText();
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+            document.getElementById('originalLength').textContent = '0';
+            document.getElementById('cleanedLength').textContent = '0';
+            document.getElementById('removedChars').textContent = '0';
+            document.getElementById('removedLines').textContent = '0';
+        }
+
+        function presetWeb() {
+            document.getElementById('optTrim').checked = true;
+            document.getElementById('optCollapseSpaces').checked = true;
+            document.getElementById('optRemoveAllSpaces').checked = false;
+            document.getElementById('optRemoveTabs').checked = true;
+            document.getElementById('optRemoveEmptyLines').checked = true;
+            document.getElementById('optRemoveNewlines').checked = false;
+            document.getElementById('optRemoveZeroWidth').checked = true;
+            document.getElementById('optStripHTML').checked = false;
+            cleanText();
+        }
+
+        function presetCode() {
+            document.getElementById('optTrim').checked = true;
+            document.getElementById('optCollapseSpaces').checked = true;
+            document.getElementById('optRemoveAllSpaces').checked = false;
+            document.getElementById('optRemoveTabs').checked = true;
+            document.getElementById('optRemoveEmptyLines').checked = true;
+            document.getElementById('optRemoveNewlines').checked = false;
+            document.getElementById('optRemoveZeroWidth').checked = false;
+            document.getElementById('optStripHTML').checked = false;
+            cleanText();
+        }
+
+        function presetMinify() {
+            document.getElementById('optTrim').checked = true;
+            document.getElementById('optCollapseSpaces').checked = true;
+            document.getElementById('optRemoveAllSpaces').checked = false;
+            document.getElementById('optRemoveTabs').checked = true;
+            document.getElementById('optRemoveEmptyLines').checked = true;
+            document.getElementById('optRemoveNewlines').checked = true;
+            document.getElementById('optRemoveZeroWidth').checked = true;
+            document.getElementById('optStripHTML').checked = false;
+            cleanText();
+        }
+
+        // Initialize - set up event listeners
+        document.getElementById('inputText').addEventListener('input', cleanText);
+        
+        // Add listeners to all checkboxes
+        document.querySelectorAll('.option-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', cleanText);
+        });
+
+        // Initial stats
+        cleanText();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="text-diff.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">文本差异对比</div><div class="r-desc">差异高亮</div></a>
+        <a href="word-counter.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">字数统计器</div><div class="r-desc">中英文统计</div></a>
+        <a href="character-counter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">字符计数器</div><div class="r-desc">各类字符统计</div></a>
+        <a href="text-reverser.html" class="related-card"><div class="r-icon">🔃</div><div class="r-title">文本反转器</div><div class="r-desc">反转文本</div></a>
+        <a href="remove-duplicate-lines.html" class="related-card"><div class="r-icon">✂</div><div class="r-title">去除重复行</div><div class="r-desc">智能去重</div></a>
+        <a href="sort-lines.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">文本行排序</div><div class="r-desc">多种排序</div></a>
+        </div>
+    </section>
+</body>
+</html>

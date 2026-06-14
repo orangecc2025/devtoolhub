@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="在线代码美化器，支持JavaScript、CSS、HTML、SQL、XML格式化，支持缩进配置，语法高亮，代码压缩，一键复制。">
+    <meta name="keywords" content="代码美化,代码格式化,JS格式化,CSS格式化,HTML格式化,SQL格式化,代码压缩">
+    <title>代码美化器 | DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #1F2937;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --code-bg: #F3F4F6;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --keyword: #C678DD;
+            --string: #98C379;
+            --number: #D19A66;
+            --comment: #5C6370;
+            --function: #61AFEF;
+            --tag: #E06C75;
+            --attr: #E5C07B;
+        }
+        .dark {
+            --bg: #111827;
+            --card-bg: #1F2937;
+            --text: #F9FAFB;
+            --text-secondary: #9CA3AF;
+            --border: #374151;
+            --code-bg: #282C34;
+            --comment: #7F848E;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+        }
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .lang-switch, .theme-toggle {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        .lang-switch:hover, .theme-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        main {
+            flex: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            width: 100%;
+        }
+        h1 {
+            font-size: 1.875rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .toolbar label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        select, input[type="number"] {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.875rem;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-left: auto;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-success:hover {
+            background: #059669;
+        }
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .editor-box {
+            position: relative;
+        }
+        .editor-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .editor-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .icon-btn {
+            padding: 0.25rem 0.5rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+        .icon-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--code-bg);
+            color: var(--text);
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .preview-box {
+            min-height: 400px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--code-bg);
+            overflow: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .copy-btn {
+            padding: 0.25rem 0.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .copy-btn:hover {
+            background: var(--primary-hover);
+        }
+        .copy-btn.copied {
+            background: var(--success);
+        }
+        .toggle-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        .toggle-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .stats {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        .syntax-keyword { color: var(--keyword); }
+        .syntax-string { color: var(--string); }
+        .syntax-number { color: var(--number); }
+        .syntax-comment { color: var(--comment); font-style: italic; }
+        .syntax-function { color: var(--function); }
+        .syntax-tag { color: var(--tag); }
+        .syntax-attr { color: var(--attr); }
+        @media (max-width: 900px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+            .btn-group {
+                margin-left: 0;
+                width: 100%;
+            }
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toolbar-group {
+                flex-wrap: wrap;
+            }
+        }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: auto;
+        }
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: var(--bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        .toast.show { opacity: 1; }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="controls">
+                <button class="lang-switch" onclick="toggleLang()">EN / 中文</button>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <h1>✨ 代码美化器</h1>
+        <p class="subtitle" data-zh="格式化并高亮代码，支持多种语言，配置缩进，压缩/美化切换" data-en="Format and highlight code, support multiple languages, configure indentation, compress/beautify toggle">格式化并高亮代码，支持多种语言，配置缩进，压缩/美化切换</p>
+
+        <div class="card">
+            <div class="toolbar">
+                <div class="toolbar-group">
+                    <label data-zh="语言:" data-en="Language:">语言:</label>
+                    <select id="language">
+                        <option value="javascript" data-zh="JavaScript" data-en="JavaScript">JavaScript</option>
+                        <option value="css" data-zh="CSS" data-en="CSS">CSS</option>
+                        <option value="html" data-zh="HTML" data-en="HTML">HTML</option>
+                        <option value="sql" data-zh="SQL" data-en="SQL">SQL</option>
+                        <option value="xml" data-zh="XML" data-en="XML">XML</option>
+                    </select>
+                </div>
+                <div class="toolbar-group">
+                    <label data-zh="缩进:" data-en="Indent:">缩进:</label>
+                    <select id="indent-size">
+                        <option value="2">2</option>
+                        <option value="4" selected>4</option>
+                        <option value="8">8</option>
+                    </select>
+                    <div class="toggle-container">
+                        <button class="toggle-btn" id="indent-tab-btn" onclick="setIndentType('tab')" data-zh="Tab" data-en="Tab">Tab</button>
+                        <button class="toggle-btn active" id="indent-space-btn" onclick="setIndentType('space')" data-zh="空格" data-en="Space">空格</button>
+                    </div>
+                </div>
+                <div class="toolbar-group">
+                    <label data-zh="模式:" data-en="Mode:">模式:</label>
+                    <div class="toggle-container">
+                        <button class="toggle-btn active" id="beautify-btn" onclick="setMode('beautify')" data-zh="美化" data-en="Beautify">美化</button>
+                        <button class="toggle-btn" id="minify-btn" onclick="setMode('minify')" data-zh="压缩" data-en="Minify">压缩</button>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="processCode()">
+                        <span data-zh="▶ 处理" data-en="▶ Process">▶ 处理</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearAll()">
+                        <span data-zh="🗑 清空" data-en="🗑 Clear">🗑 清空</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="editor-container">
+                <div class="editor-box">
+                    <div class="editor-label">
+                        <span data-zh="输入代码" data-en="Input Code">输入代码</span>
+                        <div class="editor-actions">
+                            <button class="icon-btn" onclick="pasteSample()" data-zh="示例" data-en="Sample">示例</button>
+                        </div>
+                    </div>
+                    <textarea id="input-code" placeholder="粘贴或输入代码..." data-zh-placeholder="粘贴或输入代码..." data-en-placeholder="Paste or type code here..."></textarea>
+                </div>
+                <div class="editor-box">
+                    <div class="editor-label">
+                        <span data-zh="美化结果" data-en="Formatted Output">美化结果</span>
+                        <button class="copy-btn" id="copy-btn" onclick="copyOutput()" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="preview-box" id="output-preview">
+                        <span style="color: var(--text-secondary);" data-zh="处理后的代码将显示在这里" data-en="Processed code will appear here">处理后的代码将显示在这里</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats" id="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="input-lines">0</div>
+                    <div class="stat-label" data-zh="输入行数" data-en="Input Lines">输入行数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="input-size">0 B</div>
+                    <div class="stat-label" data-zh="输入大小" data-en="Input Size">输入大小</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="output-size">0 B</div>
+                    <div class="stat-label" data-zh="输出大小" data-en="Output Size">输出大小</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="reduction">0%</div>
+                    <div class="stat-label" data-zh="减少" data-en="Reduction">减少</div>
+                </div>
+            </div>
+        </div>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="json-formatter.html" class="related-card"><div class="r-icon">{ }</div><div class="r-title">JSON 格式化工具</div><div class="r-desc">JSON美化校验压缩</div></a>
+        <a href="xml-formatter.html" class="related-card"><div class="r-icon">📄</div><div class="r-title">XML 格式化工具</div><div class="r-desc">XML美化压缩校验</div></a>
+        <a href="sql-formatter.html" class="related-card"><div class="r-icon">🗃</div><div class="r-title">SQL 格式化工具</div><div class="r-desc">SQL美化格式化</div></a>
+        <a href="html-minifier.html" class="related-card"><div class="r-icon">📦</div><div class="r-title">HTML 压缩器</div><div class="r-desc">压缩HTML代码</div></a>
+        <a href="css-minifier.html" class="related-card"><div class="r-icon">🎨</div><div class="r-title">CSS 压缩器</div><div class="r-desc">压缩CSS代码</div></a>
+        <a href="js-minifier.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">JavaScript 压缩器</div><div class="r-desc">压缩JS代码</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentLang = 'zh';
+        let indentType = 'space';
+        let currentMode = 'beautify';
+
+        const samples = {
+            javascript: `function fibonacci(n){if(n<=1)return n;return fibonacci(n-1)+fibonacci(n-2);}const arr=[1,2,3,4,5];console.log(arr.map(x=>x*2));`,
+            css: `.container{display:flex;flex-direction:row;justify-content:center;}.btn{padding:10px 20px;background:#4F46E5;color:white;border-radius:8px;}`,
+            html: `<div class="container"><h1>标题</h1><p>段落内容</p><button onclick="alert()">点击</button></div>`,
+            sql: `SELECT u.name,u.email,o.total FROM users u LEFT JOIN orders o ON u.id=o.user_id WHERE o.total>100 ORDER BY o.total DESC LIMIT 10;`,
+            xml: `<root><user id="1"><name>张三</name><email>zhangsan@example.com</email></user></root>`
+        };
+
+        function init() {
+            const textarea = document.getElementById('input-code');
+            textarea.addEventListener('input', updateStats);
+            textarea.addEventListener('scroll', syncScroll);
+            updateStats();
+        }
+
+        function processCode() {
+            const code = document.getElementById('input-code').value;
+            const lang = document.getElementById('language').value;
+            const indentSize = document.getElementById('indent-size').value;
+            
+            if (!code.trim()) {
+                showToast(currentLang === 'zh' ? '请输入代码' : 'Please enter code');
+                return;
+            }
+
+            let result;
+            if (currentMode === 'minify') {
+                result = minifyCode(code, lang);
+            } else {
+                result = beautifyCode(code, lang, indentSize, indentType);
+            }
+
+            document.getElementById('output-preview').innerHTML = highlightSyntax(result, lang);
+            updateStats();
+            showToast(currentLang === 'zh' ? '处理完成' : 'Processing complete');
+        }
+
+        function beautifyCode(code, lang, indentSize, indentType) {
+            const indent = indentType === 'tab' ? '\t' : ' '.repeat(parseInt(indentSize));
+            
+            if (lang === 'javascript') {
+                return beautifyJS(code, indent);
+            } else if (lang === 'css') {
+                return beautifyCSS(code, indent);
+            } else if (lang === 'html') {
+                return beautifyHTML(code, indent);
+            } else if (lang === 'sql') {
+                return beautifySQL(code, indent);
+            } else if (lang === 'xml') {
+                return beautifyXML(code, indent);
+            }
+            return code;
+        }
+
+        function beautifyJS(code, indent) {
+            let result = code;
+            result = result.replace(/\s*([{};,])\s*/g, '$1');
+            result = result.replace(/\)\{/g, ') {');
+            result = result.replace(/\{/g, ' {\n' + indent);
+            result = result.replace(/\}/g, '\n' + indent + '}');
+            result = result.replace(/;\n/g, ';\n');
+            let lines = result.split('\n');
+            let indentLevel = 0;
+            lines = lines.map(line => {
+                if (line.includes('}')) indentLevel = Math.max(0, indentLevel - 1);
+                let indented = indent.repeat(indentLevel) + line.trim();
+                if (line.includes('{')) indentLevel++;
+                return indented;
+            });
+            return lines.join('\n').trim();
+        }
+
+        function beautifyCSS(code, indent) {
+            let result = code;
+            result = result.replace(/\s*([{};])\s*/g, '$1');
+            result = result.replace(/\{/g, ' {\n' + indent);
+            result = result.replace(/}/g, '\n}');
+            result = result.replace(/;/g, ';\n' + indent);
+            let lines = result.split('\n').filter(l => l.trim());
+            return indent + lines.join('\n' + indent);
+        }
+
+        function beautifyHTML(code, indent) {
+            let result = code;
+            result = result.replace(/>\s+</g, '>\n<');
+            let lines = result.split('\n');
+            let indentLevel = 0;
+            lines = lines.map(line => {
+                line = line.trim();
+                if (line.startsWith('</')) indentLevel = Math.max(0, indentLevel - 1);
+                let indented = indent.repeat(indentLevel) + line;
+                if (line.startsWith('<') && !line.startsWith('</') && !line.startsWith('<?') && !line.startsWith('<!') && !line.endsWith('/>') && !line.includes('</')) {
+                    indentLevel++;
+                }
+                return indented;
+            });
+            return lines.join('\n');
+        }
+
+        function beautifySQL(code, indent) {
+            const keywords = ['SELECT', 'FROM', 'WHERE', 'JOIN', 'LEFT', 'RIGHT', 'INNER', 'OUTER', 'ON', 'AND', 'OR', 'ORDER BY', 'GROUP BY', 'HAVING', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'CREATE', 'TABLE', 'DROP', 'ALTER', 'INDEX', 'UNION', 'DISTINCT', 'AS', 'IN', 'NOT', 'NULL', 'IS', 'LIKE', 'BETWEEN'];
+            let result = code;
+            keywords.forEach(kw => {
+                const regex = new RegExp('\\b' + kw + '\\b', 'gi');
+                result = result.replace(regex, '\n' + indent + kw);
+            });
+            return result.trim().split('\n').filter(l => l.trim()).join('\n');
+        }
+
+        function beautifyXML(code, indent) {
+            return beautifyHTML(code, indent);
+        }
+
+        function minifyCode(code, lang) {
+            let result = code;
+            result = result.replace(/\/\*[\s\S]*?\*\//g, '');
+            result = result.replace(/\/\/.*$/gm, '');
+            result = result.replace(/\s+/g, ' ');
+            result = result.replace(/\s*([{};:,])\s*/g, '$1');
+            result = result.replace(/;\}/g, '}');
+            return result.trim();
+        }
+
+        function highlightSyntax(code, lang) {
+            let highlighted = escapeHtml(code);
+            
+            if (lang === 'javascript') {
+                highlighted = highlighted
+                    .replace(/\b(function|const|let|var|if|else|for|while|return|class|extends|import|export|from|async|await|try|catch|throw|new|this|true|false|null|undefined)\b/g, '<span class="syntax-keyword">$1</span>')
+                    .replace(/('.*?'|".*?"|`[\s\S]*?`)/g, '<span class="syntax-string">$1</span>')
+                    .replace(/\b(\d+\.?\d*)\b/g, '<span class="syntax-number">$1</span>')
+                    .replace(/(\/\/.*$)/gm, '<span class="syntax-comment">$1</span>')
+                    .replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="syntax-comment">$1</span>')
+                    .replace(/\b([a-zA-Z_]\w*)\s*\(/g, '<span class="syntax-function">$1</span>(');
+            } else if (lang === 'css') {
+                highlighted = highlighted
+                    .replace(/([.#]?[a-zA-Z_][\w-]*)\s*\{/g, '<span class="syntax-tag">$1</span> {')
+                    .replace(/([a-zA-Z-]+)\s*:/g, '<span class="syntax-attr">$1</span>:')
+                    .replace(/(#[0-9a-fA-F]{3,8})/g, '<span class="syntax-string">$1</span>')
+                    .replace(/(\d+\.?\d*(px|em|rem|%|vh|vw|s|ms)?)/g, '<span class="syntax-number">$1</span>')
+                    .replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="syntax-comment">$1</span>');
+            } else if (lang === 'html' || lang === 'xml') {
+                highlighted = highlighted
+                    .replace(/(&lt;\/?[a-zA-Z][a-zA-Z0-9]*)/g, '<span class="syntax-tag">$1</span>')
+                    .replace(/([a-zA-Z-]+)=/g, '<span class="syntax-attr">$1</span>=')
+                    .replace(/(".*?"|'.*?')/g, '<span class="syntax-string">$1</span>');
+            } else if (lang === 'sql') {
+                const sqlKeywords = 'SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|ON|AND|OR|ORDER BY|GROUP BY|HAVING|LIMIT|OFFSET|INSERT|INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|DROP|ALTER|INDEX|UNION|DISTINCT|AS|IN|NOT|NULL|IS|LIKE|BETWEEN';
+                highlighted = highlighted
+                    .replace(new RegExp('\\b(' + sqlKeywords + ')\\b', 'gi'), '<span class="syntax-keyword">$1</span>')
+                    .replace(/('.*?')/g, '<span class="syntax-string">$1</span>')
+                    .replace(/\b(\d+\.?\d*)\b/g, '<span class="syntax-number">$1</span>')
+                    .replace(/(--.*$)/gm, '<span class="syntax-comment">$1</span>');
+            }
+            
+            return highlighted;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateStats() {
+            const input = document.getElementById('input-code').value;
+            const output = document.getElementById('output-preview').textContent || input;
+            
+            const inputSize = new Blob([input]).size;
+            const outputSize = new Blob([output]).size;
+            const reduction = inputSize > 0 ? Math.round((1 - outputSize / inputSize) * 100) : 0;
+            
+            document.getElementById('input-lines').textContent = input.split('\n').length;
+            document.getElementById('input-size').textContent = formatSize(inputSize);
+            document.getElementById('output-size').textContent = formatSize(outputSize);
+            document.getElementById('reduction').textContent = (reduction > 0 ? '-' : '') + reduction + '%';
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        function syncScroll(e) {
+            const preview = document.getElementById('output-preview');
+            preview.scrollTop = e.target.scrollTop;
+        }
+
+        function setIndentType(type) {
+            indentType = type;
+            document.getElementById('indent-tab-btn').classList.toggle('active', type === 'tab');
+            document.getElementById('indent-space-btn').classList.toggle('active', type === 'space');
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('beautify-btn').classList.toggle('active', mode === 'beautify');
+            document.getElementById('minify-btn').classList.toggle('active', mode === 'minify');
+        }
+
+        function pasteSample() {
+            const lang = document.getElementById('language').value;
+            document.getElementById('input-code').value = samples[lang] || '';
+            updateStats();
+        }
+
+        function clearAll() {
+            document.getElementById('input-code').value = '';
+            document.getElementById('output-preview').innerHTML = '<span style="color: var(--text-secondary);" data-zh="处理后的代码将显示在这里" data-en="Processed code will appear here">处理后的代码将显示在这里</span>';
+            updateStats();
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output-preview').textContent;
+            if (output && !output.includes('将显示在这里') && !output.includes('will appear here')) {
+                navigator.clipboard.writeText(output).then(() => {
+                    const btn = document.getElementById('copy-btn');
+                    btn.textContent = currentLang === 'zh' ? '已复制!' : 'Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = currentLang === 'zh' ? '复制' : 'Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                });
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const btn = document.querySelector('.theme-toggle');
+            btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            document.querySelectorAll('[data-zh]').forEach(el => {
+                const text = el.getAttribute(`data-${currentLang}`);
+                if (text) el.textContent = text;
+            });
+            document.querySelectorAll('[data-zh-placeholder]').forEach(el => {
+                const text = el.getAttribute(`data-${currentLang}-placeholder`);
+                if (text) el.placeholder = text;
+            });
+            document.querySelectorAll('select option').forEach(opt => {
+                const text = opt.getAttribute(`data-${currentLang}`);
+                if (text) opt.textContent = text;
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        init();
+    </script>
+</body>
+</html>

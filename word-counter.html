@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="Word Counter - 免费在线字数统计工具，支持中英文混合智能统计、阅读时间估算、关键词频率分析和最长句子标注">
+    <meta name="keywords" content="字数统计, 字符统计, 词数统计, 文章分析, 关键词统计, 文本分析">
+    <title>Word Counter - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .lang-toggle {
+            float: right;
+            margin-top: 2px;
+        }
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid #4F46E5;
+            background: #fff;
+            color: #4F46E5;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .lang-btn.active {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        .page-desc {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .input-field::placeholder {
+            color: #999;
+        }
+        textarea.input-field {
+            resize: vertical;
+            min-height: 200px;
+            line-height: 1.8;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-card:nth-child(2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .stat-card:nth-child(3) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .stat-card:nth-child(4) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .stat-card:nth-child(5) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .stat-card:nth-child(6) {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .reading-time {
+            background: linear-gradient(135deg, #4F46E5 0%, #7c3aed 100%);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .reading-time .stat-value {
+            font-size: 28px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 24px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .keyword-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .keyword-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f3f4f6;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        .keyword-rank {
+            background: #4F46E5;
+            color: #fff;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .keyword-text {
+            font-weight: 500;
+            color: #333;
+        }
+        .keyword-count {
+            color: #666;
+            font-size: 12px;
+        }
+        .longest-sentence {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 10px;
+            padding: 16px;
+            position: relative;
+        }
+        .longest-sentence-label {
+            position: absolute;
+            top: -10px;
+            left: 16px;
+            background: #f59e0b;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .longest-sentence-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+            padding-top: 4px;
+        }
+        .longest-sentence-meta {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #666;
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .char-counter {
+            position: relative;
+        }
+        .char-count-display {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            font-size: 12px;
+            color: #999;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 4px solid #4F46E5;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 24px;
+        }
+        .tip-box h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4F46E5;
+            margin-bottom: 8px;
+        }
+        .tip-box p {
+            font-size: 14px;
+            color: #666;
+        }
+        .footer {
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            padding: 24px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer p {
+            font-size: 14px;
+            color: #666;
+        }
+        .footer a {
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+            .page-title {
+                font-size: 24px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stat-card {
+                padding: 16px;
+            }
+            .stat-value {
+                font-size: 24px;
+            }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title" data-zh="字数统计器" data-en="Word Counter">字数统计器</h1>
+        <p class="page-desc" data-zh="智能统计字符数、字数、句子数、段落数，支持中英文混合统计、阅读时间估算和关键词分析" data-en="Smart text analysis with character, word, sentence, paragraph counts, Chinese-English mixed counting, reading time estimation and keyword analysis">智能统计字符数、字数、句子数、段落数，支持中英文混合统计、阅读时间估算和关键词分析</p>
+
+        <div class="card">
+            <div class="input-group">
+                <label class="input-label" data-zh="输入或粘贴文本" data-en="Enter or paste text">输入或粘贴文本</label>
+                <div class="char-counter">
+                    <textarea id="text-input" class="input-field" placeholder="在此输入或粘贴文本进行分析..." data-placeholder-zh="在此输入或粘贴文本进行分析..." data-placeholder-en="Enter or paste text here for analysis..."></textarea>
+                    <span class="char-count-display" id="char-count">0 / 0</span>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" id="analyze-btn" data-zh="分析文本" data-en="Analyze Text">分析文本</button>
+                <button class="btn btn-secondary" id="clear-btn" data-zh="清空" data-en="Clear">清空</button>
+            </div>
+        </div>
+
+        <div id="results-section" style="display: none;">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="char-count-display">0</div>
+                    <div class="stat-label" data-zh="字符数" data-en="Characters">字符数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="word-count-display">0</div>
+                    <div class="stat-label" data-zh="字数" data-en="Words">字数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="sentence-count-display">0</div>
+                    <div class="stat-label" data-zh="句子数" data-en="Sentences">句子数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="paragraph-count-display">0</div>
+                    <div class="stat-label" data-zh="段落数" data-en="Paragraphs">段落数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="line-count-display">0</div>
+                    <div class="stat-label" data-zh="行数" data-en="Lines">行数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="chinese-char-display">0</div>
+                    <div class="stat-label" data-zh="中文字符" data-en="Chinese">中文字符</div>
+                </div>
+            </div>
+
+            <div class="reading-time">
+                <div class="stat-value" id="reading-time-display">0 分钟</div>
+                <div class="stat-label" data-zh="阅读时间估算（中文300字/分钟，英文200词/分钟）" data-en="Estimated reading time (Chinese 300 chars/min, English 200 words/min)">阅读时间估算（中文300字/分钟，英文200词/分钟）</div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title" data-zh="最长句子标注" data-en="Longest Sentence">最长句子标注</h3>
+                <div class="longest-sentence" id="longest-sentence-container" style="display: none;">
+                    <span class="longest-sentence-label" data-zh="最长" data-en="Longest">最长</span>
+                    <div class="longest-sentence-text" id="longest-sentence-text"></div>
+                    <div class="longest-sentence-meta">
+                        <span id="longest-sentence-length"></span>
+                        <span data-zh=" 个字符" data-en=" characters"> 个字符</span>
+                    </div>
+                </div>
+                <p id="no-sentences" data-zh="未检测到句子" data-en="No sentences detected" style="color: #999; text-align: center;">未检测到句子</p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title" data-zh="关键词频率统计 Top 10" data-en="Keyword Frequency Top 10">关键词频率统计 Top 10</h3>
+                <div class="keyword-list" id="keyword-list"></div>
+                <p id="no-keywords" data-zh="暂无足够文本进行分析" data-en="Not enough text to analyze" style="color: #999; text-align: center; margin-top: 16px;">暂无足够文本进行分析</p>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h4 data-zh="💡 使用提示" data-en="💡 Tips">💡 使用提示</h4>
+            <p data-zh="• 中文字数按字符统计，英文按单词统计<br>• 阅读时间自动区分中英文内容并智能计算<br>• 关键词统计自动过滤常见停用词<br>• 支持复制文本到输入框进行分析" data-en="• Chinese characters counted individually, English words by whitespace<br>• Reading time auto-detects and calculates Chinese/English content<br>• Keywords filtered with common stop words<br>• Copy and paste text for instant analysis">• 中文字数按字符统计，英文按单词统计<br>• 阅读时间自动区分中英文内容并智能计算<br>• 关键词统计自动过滤常见停用词<br>• 支持复制文本到输入框进行分析</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentLang = 'zh';
+
+        const stopWords = {
+            zh: ['的', '了', '和', '是', '在', '我', '有', '个', '人', '这', '不', '就', '也', '都', '要', '会', '对', '但', '与', '或', '把', '被', '让', '从', '到', '为', '以', '及', '等', '着', '过', '说', '而', '如', '可', '却', '之', '于', '其', '所', '很', '已', '更', '将', '能', '还', '很', '最', '再', '又', '只', '才', '请', '曾', '仍', '每', '即', '虽', '如果', '因为', '所以', '但是', '而且', '或者', '虽然', '然而', '因此', '所以', '然后', '于是', '不过', '然后', '这个', '那个', '什么', '怎么', '如何', '为何', '哪里', '哪个', '多少', '几'],
+            en: ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'need', 'dare', 'ought', 'used', 'it', 'its', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'we', 'they', 'what', 'which', 'who', 'whom', 'when', 'where', 'why', 'how', 'all', 'each', 'every', 'both', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very']
+        };
+
+        function updateLanguage() {
+            document.querySelectorAll('[data-' + currentLang + ']').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = el.getAttribute('data-placeholder-' + currentLang) || text;
+                } else {
+                    el.textContent = text;
+                }
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === currentLang);
+            });
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentLang = btn.dataset.lang;
+                updateLanguage();
+            });
+        });
+
+        function countChineseChars(text) {
+            const chineseRegex = /[\u4e00-\u9fa5]/g;
+            const matches = text.match(chineseRegex);
+            return matches ? matches.length : 0;
+        }
+
+        function countEnglishWords(text) {
+            const englishWords = text.match(/[a-zA-Z]+/g);
+            return englishWords ? englishWords.length : 0;
+        }
+
+        function splitSentences(text) {
+            const sentenceEndings = /[.!?。！？]+/g;
+            return text.split(sentenceEndings).map(s => s.trim()).filter(s => s.length > 0);
+        }
+
+        function countParagraphs(text) {
+            const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            return Math.max(paragraphs.length, text.trim() ? 1 : 0);
+        }
+
+        function countLines(text) {
+            if (!text.trim()) return 0;
+            return text.split('\n').length;
+        }
+
+        function findLongestSentence(text) {
+            const sentences = splitSentences(text);
+            if (sentences.length === 0) return null;
+            
+            let longest = sentences[0];
+            for (const sentence of sentences) {
+                if (sentence.length > longest.length) {
+                    longest = sentence;
+                }
+            }
+            return longest;
+        }
+
+        function extractKeywords(text, topN = 10) {
+            const words = {};
+            
+            const chineseChars = text.match(/[\u4e00-\u9fa5]+/g) || [];
+            chineseChars.forEach(word => {
+                if (word.length >= 2) {
+                    const stopSet = stopWords.zh;
+                    if (!stopSet.includes(word)) {
+                        words[word] = (words[word] || 0) + 1;
+                    }
+                }
+            });
+
+            const englishWords = text.toLowerCase().match(/[a-zA-Z]{3,}/g) || [];
+            englishWords.forEach(word => {
+                if (!stopWords.en.includes(word)) {
+                    words[word] = (words[word] || 0) + 1;
+                }
+            });
+
+            return Object.entries(words)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, topN);
+        }
+
+        function analyzeText() {
+            const text = document.getElementById('text-input').value;
+            
+            if (!text.trim()) {
+                document.getElementById('results-section').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('results-section').style.display = 'block';
+
+            const totalChars = text.length;
+            const chineseChars = countChineseChars(text);
+            const englishWords = countEnglishWords(text);
+            const sentences = splitSentences(text);
+            const paragraphs = countParagraphs(text);
+            const lines = countLines(text);
+
+            document.getElementById('char-count-display').textContent = totalChars;
+            document.getElementById('word-count-display').textContent = englishWords + chineseChars;
+            document.getElementById('sentence-count-display').textContent = sentences.length;
+            document.getElementById('paragraph-count-display').textContent = paragraphs;
+            document.getElementById('line-count-display').textContent = lines;
+            document.getElementById('chinese-char-display').textContent = chineseChars;
+            document.getElementById('char-count').textContent = `${chineseChars} 中文 / ${englishWords} 词 / ${totalChars} 总`;
+
+            const readingTimeZh = chineseChars / 300;
+            const readingTimeEn = englishWords / 200;
+            const totalReadingTime = Math.max(readingTimeZh + readingTimeEn, 0.1);
+            const minutes = Math.ceil(totalReadingTime);
+            document.getElementById('reading-time-display').textContent = `${minutes} ${currentLang === 'zh' ? '分钟' : 'min'}`;
+
+            const longestSentence = findLongestSentence(text);
+            const longestContainer = document.getElementById('longest-sentence-container');
+            const noSentences = document.getElementById('no-sentences');
+            
+            if (longestSentence && longestSentence.length > 10) {
+                longestContainer.style.display = 'block';
+                noSentences.style.display = 'none';
+                document.getElementById('longest-sentence-text').textContent = longestSentence;
+                document.getElementById('longest-sentence-length').textContent = longestSentence.length;
+            } else {
+                longestContainer.style.display = 'none';
+                noSentences.style.display = 'block';
+            }
+
+            const keywords = extractKeywords(text);
+            const keywordList = document.getElementById('keyword-list');
+            const noKeywords = document.getElementById('no-keywords');
+            
+            if (keywords.length > 0) {
+                keywordList.style.display = 'flex';
+                noKeywords.style.display = 'none';
+                keywordList.innerHTML = keywords.map((kw, i) => `
+                    <div class="keyword-item">
+                        <span class="keyword-rank">${i + 1}</span>
+                        <span class="keyword-text">${kw[0]}</span>
+                        <span class="keyword-count">×${kw[1]}</span>
+                    </div>
+                `).join('');
+            } else {
+                keywordList.style.display = 'none';
+                noKeywords.style.display = 'block';
+            }
+        }
+
+        document.getElementById('text-input').addEventListener('input', () => {
+            analyzeText();
+        });
+
+        document.getElementById('analyze-btn').addEventListener('click', analyzeText);
+
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            document.getElementById('text-input').value = '';
+            document.getElementById('results-section').style.display = 'none';
+            document.getElementById('char-count').textContent = '0 / 0';
+        });
+
+        updateLanguage();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="text-diff.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">文本差异对比</div><div class="r-desc">差异高亮</div></a>
+        <a href="character-counter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">字符计数器</div><div class="r-desc">各类字符统计</div></a>
+        <a href="whitespace-remover.html" class="related-card"><div class="r-icon">🧹</div><div class="r-title">空白字符清理器</div><div class="r-desc">移除空格空行</div></a>
+        <a href="text-reverser.html" class="related-card"><div class="r-icon">🔃</div><div class="r-title">文本反转器</div><div class="r-desc">反转文本</div></a>
+        <a href="remove-duplicate-lines.html" class="related-card"><div class="r-icon">✂</div><div class="r-title">去除重复行</div><div class="r-desc">智能去重</div></a>
+        <a href="sort-lines.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">文本行排序</div><div class="r-desc">多种排序</div></a>
+        </div>
+    </section>
+</body>
+</html>

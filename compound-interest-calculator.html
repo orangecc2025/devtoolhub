@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="复利计算器，计算本金利息，支持定投模拟，显示收益曲线。">
+    <meta name="keywords" content="复利计算器,定投计算,投资收益,复利计算">
+    <title>复利计算器 - 本息计算/定投模拟 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/compound-interest-calculator.html">
+    <meta property="og:title" content="复利计算器 - 本息计算/定投模拟 | DevToolBox">
+    <meta property="og:description" content="复利计算器，计算本金利息，支持定投模拟，显示收益曲线。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/compound-interest-calculator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "复利计算器",
+        "description": "复利计算器，计算本金利息，支持定投模拟，显示收益曲线",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .calc-mode {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .mode-btn:hover {
+            border-color: var(--primary);
+        }
+        .mode-btn.active {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+        .mode-btn h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .mode-btn p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .result-highlight {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--success);
+            text-align: center;
+            padding: 24px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .result-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .result-item-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .result-item-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .result-item-value.savings {
+            color: var(--success);
+        }
+        .chart-container {
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .chart-container h4 {
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        .chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 200px;
+            padding: 10px 0;
+            border-bottom: 2px solid var(--border);
+        }
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--primary), #818CF8);
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .chart-bar:hover {
+            background: linear-gradient(to top, var(--primary-hover), var(--primary));
+        }
+        .chart-bar.principal {
+            background: linear-gradient(to top, #94A3B8, #CBD5E1);
+        }
+        .chart-legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        .legend-color.total {
+            background: var(--primary);
+        }
+        .legend-color.principal {
+            background: #94A3B8;
+        }
+        .legend-color.interest {
+            background: var(--success);
+        }
+        .yearly-table {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .yearly-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .yearly-table th, .yearly-table td {
+            padding: 8px;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+        }
+        .yearly-table th {
+            background: var(--bg);
+            position: sticky;
+            top: 0;
+        }
+        .yearly-table th:first-child,
+        .yearly-table td:first-child {
+            text-align: left;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .result-grid { grid-template-columns: 1fr; }
+            .calc-mode { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>📈 复利计算器</h1>
+            <p>计算复利收益，支持定投模拟，查看收益增长曲线</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="calc-mode">
+                <div class="mode-btn active" onclick="setCalcMode('simple')">
+                    <h4>一次性投资</h4>
+                    <p>本金一次性投入</p>
+                </div>
+                <div class="mode-btn" onclick="setCalcMode('dca')">
+                    <h4>定投模式</h4>
+                    <p>每月追加投资</p>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="principal">初始本金 (元)</label>
+                    <input type="number" id="principal" placeholder="例如：10000" min="0" value="10000">
+                </div>
+                <div class="form-group">
+                    <label for="monthlyAdd" id="monthlyLabel">每月追加 (元)</label>
+                    <input type="number" id="monthlyAdd" placeholder="0" min="0" value="0" disabled>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="annualRate">年利率 (%)</label>
+                    <input type="number" id="annualRate" placeholder="例如：5" step="0.1" min="0" max="100" value="5">
+                </div>
+                <div class="form-group">
+                    <label for="years">投资期限</label>
+                    <select id="years">
+                        <option value="1">1年</option>
+                        <option value="3">3年</option>
+                        <option value="5" selected>5年</option>
+                        <option value="10">10年</option>
+                        <option value="15">15年</option>
+                        <option value="20">20年</option>
+                        <option value="30">30年</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="compoundFreq">复利频率</label>
+                <select id="compoundFreq">
+                    <option value="1">按年复利</option>
+                    <option value="2">按半年复利</option>
+                    <option value="4">按季度复利</option>
+                    <option value="12" selected>按月复利</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="calculateCompound()">
+                计算收益
+            </button>
+
+            <div class="result-box" id="result">
+                <div class="result-title">📊 投资计算结果</div>
+                
+                <div class="result-highlight">
+                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">到期总资产</div>
+                    <div id="totalAmount">¥0.00</div>
+                </div>
+
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-item-label">本金总额</div>
+                        <div class="result-item-value" id="resPrincipal">¥0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">利息收益</div>
+                        <div class="result-item-value savings" id="resInterest">¥0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">收益率</div>
+                        <div class="result-item-value savings" id="resReturn">0%</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h4>📈 收益曲线</h4>
+                    <div class="chart" id="chart"></div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color total"></div>
+                            <span>总资产</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color principal"></div>
+                            <span>本金</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="yearly-table">
+                    <table id="yearlyTable">
+                        <thead>
+                            <tr>
+                                <th>年份</th>
+                                <th>本金</th>
+                                <th>利息</th>
+                                <th>总资产</th>
+                            </tr>
+                        </thead>
+                        <tbody id="yearlyBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    什么是复利？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    复利是指在每经过一个计息期后，将本金和之前累计的利息一起作为下一期的本金来计算利息，俗称"利滚利"。与单利不同，复利会持续产生利息收益。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    复利公式是什么？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    一次性投资：终值 = 本金 × (1 + 年利率/年复利次数)^(年复利次数 × 年数)<br>
+                    定投模式：终值 = Σ 每月投入 × (1 + 月利率)^(剩余月数)
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    定投为什么选择按月复利？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    银行定期存款通常按年计息，但基金、理财产品等可能按日或按月结算净值。复利频率越高，收益增长越快。按月复利是较常见的选择。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    复利计算器适用于哪些场景？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    适用于计算银行存款、理财产品、基金定投、养老保险、教育基金等投资产品的预期收益。注意：本计算不扣除税费和管理费，仅供参考。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="percentage-calculator.html" class="related-card"><div class="r-icon">💯</div><div class="r-title">百分比计算器</div><div class="r-desc">百分比计算</div></a>
+        <a href="ratio-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">比例计算器</div><div class="r-desc">比例求解</div></a>
+        <a href="age-calculator.html" class="related-card"><div class="r-icon">🎂</div><div class="r-title">年龄计算器</div><div class="r-desc">精确年龄</div></a>
+        <a href="bmi-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">BMI 计算器</div><div class="r-desc">体重指数</div></a>
+        <a href="loan-calculator.html" class="related-card"><div class="r-icon">🏠</div><div class="r-title">贷款计算器</div><div class="r-desc">月供计算</div></a>
+        <a href="tip-calculator.html" class="related-card"><div class="r-icon">💰</div><div class="r-title">小费计算器</div><div class="r-desc">AA分账</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentMode = 'simple';
+
+        function setCalcMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.mode-btn').classList.add('active');
+            
+            const monthlyInput = document.getElementById('monthlyAdd');
+            if (mode === 'dca') {
+                monthlyInput.disabled = false;
+                monthlyInput.placeholder = '例如：500';
+                document.getElementById('monthlyLabel').textContent = '每月追加 (元)';
+            } else {
+                monthlyInput.disabled = true;
+                monthlyInput.value = 0;
+                monthlyInput.placeholder = '0';
+                document.getElementById('monthlyLabel').textContent = '每月追加 (元)';
+            }
+        }
+
+        function formatMoney(num) {
+            if (num >= 10000) {
+                return '¥' + (num / 10000).toFixed(2) + '万';
+            }
+            return '¥' + num.toFixed(2);
+        }
+
+        function calculateCompound() {
+            const principal = parseFloat(document.getElementById('principal').value) || 0;
+            const monthlyAdd = parseFloat(document.getElementById('monthlyAdd').value) || 0;
+            const annualRate = parseFloat(document.getElementById('annualRate').value) / 100;
+            const years = parseInt(document.getElementById('years').value);
+            const freq = parseInt(document.getElementById('compoundFreq').value);
+
+            if (principal <= 0) {
+                alert('请输入有效的本金');
+                return;
+            }
+
+            const monthlyRate = annualRate / 12;
+            const totalMonths = years * 12;
+            
+            let totalPrincipal, totalAmount, yearlyData;
+
+            if (currentMode === 'simple') {
+                // 一次性投资复利
+                // 终值 = 本金 × (1 + r/n)^(nt)
+                totalAmount = principal * Math.pow(1 + annualRate / freq, freq * years);
+                totalPrincipal = principal;
+                
+                yearlyData = [];
+                for (let y = 1; y <= years; y++) {
+                    const amount = principal * Math.pow(1 + annualRate / freq, freq * y);
+                    yearlyData.push({
+                        year: y,
+                        principal: principal,
+                        interest: amount - principal,
+                        total: amount
+                    });
+                }
+            } else {
+                // 定投模式
+                totalAmount = 0;
+                totalPrincipal = principal;
+                let currentAmount = principal;
+                yearlyData = [];
+
+                // 第一个月的本金+利息
+                currentAmount = principal * (1 + monthlyRate);
+                let yearEndAmount = currentAmount;
+
+                for (let m = 2; m <= totalMonths; m++) {
+                    // 复利增长
+                    currentAmount = currentAmount * (1 + monthlyRate);
+                    
+                    // 月底追加
+                    if (monthlyAdd > 0) {
+                        currentAmount += monthlyAdd;
+                        totalPrincipal += monthlyAdd;
+                    }
+
+                    // 年末记录
+                    if (m % 12 === 0) {
+                        yearlyData.push({
+                            year: m / 12,
+                            principal: totalPrincipal,
+                            interest: currentAmount - totalPrincipal,
+                            total: currentAmount
+                        });
+                        yearEndAmount = currentAmount;
+                    }
+                }
+
+                totalAmount = currentAmount;
+                
+                // 如果最后不是整年，补齐
+                if (totalMonths % 12 !== 0) {
+                    yearlyData.push({
+                        year: years,
+                        principal: totalPrincipal,
+                        interest: totalAmount - totalPrincipal,
+                        total: totalAmount
+                    });
+                }
+            }
+
+            const totalInterest = totalAmount - totalPrincipal;
+            const returnRate = totalPrincipal > 0 ? (totalInterest / totalPrincipal * 100) : 0;
+
+            // 显示结果
+            document.getElementById('totalAmount').textContent = formatMoney(totalAmount);
+            document.getElementById('resPrincipal').textContent = formatMoney(totalPrincipal);
+            document.getElementById('resInterest').textContent = formatMoney(totalInterest);
+            document.getElementById('resReturn').textContent = returnRate.toFixed(1) + '%';
+
+            // 绘制图表
+            drawChart(yearlyData, totalAmount);
+
+            // 年度明细表
+            const tbody = document.getElementById('yearlyBody');
+            tbody.innerHTML = '';
+            yearlyData.forEach(data => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>第${data.year}年</td>
+                        <td>${formatMoney(data.principal)}</td>
+                        <td>${formatMoney(data.interest)}</td>
+                        <td>${formatMoney(data.total)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('result').classList.add('show');
+        }
+
+        function drawChart(data, maxValue) {
+            const chart = document.getElementById('chart');
+            chart.innerHTML = '';
+
+            const barCount = Math.min(data.length, 20);
+            const step = Math.max(1, Math.floor(data.length / barCount));
+            
+            let max = 0;
+            data.forEach(d => {
+                if (d.total > max) max = d.total;
+            });
+            if (max === 0) max = 1;
+
+            for (let i = 0; i < data.length; i += step) {
+                const d = data[i];
+                const height = (d.total / max * 180) + 10;
+                const principalHeight = (d.principal / max * 180) + 10;
+                
+                chart.innerHTML += `
+                    <div class="chart-bar" style="height: ${height}px;" title="第${d.year}年: ${formatMoney(d.total)}">
+                        <div class="chart-bar principal" style="height: ${principalHeight}px; position: absolute; bottom: 0; width: 100%;"></div>
+                    </div>
+                `;
+            }
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

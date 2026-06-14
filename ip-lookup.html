@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="Free IP lookup tool to check your public IP address, geolocation, ISP, coordinates, timezone, and validate IPv4/IPv6 formats." />
+    <meta name="keywords" content="IP lookup, IP address, geolocation, IPv4, IPv6, IP validator, IP tools" />
+    <title>IP Lookup - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 14px;
+        }
+        .header {
+            background: #4F46E5;
+            padding: 20px 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ip-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4F46E5;
+            text-align: center;
+            padding: 20px;
+            background: #f0f0ff;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .info-item {
+            background: #f9f9f9;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        .info-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .info-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .btn {
+            padding: 14px 28px;
+            background: #4F46E5;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+        .btn:hover {
+            background: #4338ca;
+        }
+        .btn-copy {
+            background: #10b981;
+        }
+        .btn-copy:hover {
+            background: #059669;
+        }
+        .result-box {
+            background: #f0f0ff;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: monospace;
+            word-break: break-all;
+            margin-top: 16px;
+        }
+        .validation-result {
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        .valid {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .invalid {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .cidr-results {
+            margin-top: 16px;
+        }
+        .cidr-item {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .copy-icon {
+            cursor: pointer;
+            padding: 4px 8px;
+            background: #4F46E5;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .copy-icon:hover {
+            background: #4338ca;
+        }
+        .ip-type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .public {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .private {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .footer {
+            background: #1f2937;
+            color: #9ca3af;
+            padding: 30px 0;
+            text-align: center;
+        }
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        .help-text {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #92400e;
+        }
+        [data-lang="en"] { display: none; }
+        body.en [data-lang="zh"] { display: none; }
+        body.en [data-lang="en"] { display: block; }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <button class="lang-toggle" onclick="toggleLang()">
+        <span data-lang="zh">EN</span>
+        <span data-lang="en">中文</span>
+    </button>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 data-lang="zh">🔍 IP地址查询工具</h1>
+        <h1 data-lang="en">🔍 IP Lookup Tool</h1>
+        
+        <p class="subtitle" data-lang="zh">快速查询您的公网IP地址、地理位置、ISP信息及更多</p>
+        <p class="subtitle" data-lang="en">Quickly look up your public IP address, geolocation, ISP info and more</p>
+
+        <div class="help-text" data-lang="zh">
+            💡 提示：本工具会自动检测您的公网IP地址，并显示详细的地理位置信息
+        </div>
+        <div class="help-text" data-lang="en">
+            💡 Tip: This tool automatically detects your public IP and displays detailed geolocation info
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">🌐 当前公网IP</div>
+            <div class="card-title" data-lang="en">🌐 Your Public IP</div>
+            
+            <div id="ipDisplay" class="ip-display">
+                <span class="loading" data-lang="zh">正在检测...</span>
+                <span class="loading" data-lang="en">Detecting...</span>
+            </div>
+
+            <div id="ipInfo" style="display:none;">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label" data-lang="zh">国家/地区</div>
+                        <div class="info-label" data-lang="en">Country</div>
+                        <div class="info-value" id="country"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label" data-lang="zh">城市</div>
+                        <div class="info-label" data-lang="en">City</div>
+                        <div class="info-value" id="city"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">ISP</div>
+                        <div class="info-value" id="isp"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label" data-lang="zh">组织/公司</div>
+                        <div class="info-label" data-lang="en">Organization</div>
+                        <div class="info-value" id="org"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label" data-lang="zh">区域/省份</div>
+                        <div class="info-label" data-lang="en">Region</div>
+                        <div class="info-value" id="region"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label" data-lang="zh">时区</div>
+                        <div class="info-label" data-lang="en">Timezone</div>
+                        <div class="info-value" id="timezone"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label" data-lang="zh">经度</div>
+                        <div class="info-label" data-lang="en">Longitude</div>
+                        <div class="info-value" id="lon"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label" data-lang="zh">纬度</div>
+                        <div class="info-label" data-lang="en">Latitude</div>
+                        <div class="info-value" id="lat"></div>
+                    </div>
+                </div>
+                
+                <div class="result-box" style="margin-top: 20px;">
+                    <strong data-lang="zh">地图坐标：</strong>
+                    <strong data-lang="en">Map Coordinates:</strong>
+                    <span id="coordinates"></span>
+                    <span class="copy-icon" onclick="copyToClipboard(document.getElementById('coordinates').textContent)" data-lang="zh">复制</span>
+                    <span class="copy-icon" onclick="copyToClipboard(document.getElementById('coordinates').textContent)" data-lang="en">Copy</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">🔎 查询任意IP</div>
+            <div class="card-title" data-lang="en">🔎 Query Any IP</div>
+            
+            <div class="input-group">
+                <input type="text" id="queryIp" placeholder="8.8.8.8" data-lang-placeholder-zh="输入IP地址，例如：8.8.8.8" data-lang-placeholder-en="Enter IP address, e.g.: 8.8.8.8">
+                <button class="btn" onclick="queryIP()" data-lang="zh">查询</button>
+                <button class="btn" onclick="queryIP()" data-lang="en">Query</button>
+            </div>
+            <div id="queryResult"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">✅ IP地址格式校验</div>
+            <div class="card-title" data-lang="en">✅ IP Address Validation</div>
+            
+            <div class="input-group">
+                <input type="text" id="validateIp" placeholder="192.168.1.1" data-lang-placeholder-zh="输入IP地址进行校验" data-lang-placeholder-en="Enter IP to validate">
+                <button class="btn" onclick="validateIP()" data-lang="zh">校验</button>
+                <button class="btn" onclick="validateIP()" data-lang="en">Validate</button>
+            </div>
+            <div id="validateResult"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">📊 IP地址段计算 (CIDR)</div>
+            <div class="card-title" data-lang="en">📊 IP Range Calculator (CIDR)</div>
+            
+            <div class="input-group">
+                <input type="text" id="cidrInput" placeholder="192.168.1.0/24" data-lang-placeholder-zh="输入CIDR，例如：192.168.1.0/24" data-lang-placeholder-en="Enter CIDR, e.g.: 192.168.1.0/24">
+                <button class="btn" onclick="calculateCIDR()" data-lang="zh">计算</button>
+                <button class="btn" onclick="calculateCIDR()" data-lang="en">Calculate</button>
+            </div>
+            <div id="cidrResult"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">🏷️ 私有IP vs 公网IP 判断</div>
+            <div class="card-title" data-lang="en">🏷️ Private vs Public IP Detection</div>
+            
+            <div class="input-group">
+                <input type="text" id="typeIp" placeholder="192.168.1.1" data-lang-placeholder-zh="输入IP地址判断类型" data-lang-placeholder-en="Enter IP to check type">
+                <button class="btn" onclick="checkIPType()" data-lang="zh">判断</button>
+                <button class="btn" onclick="checkIPType()" data-lang="en">Check</button>
+            </div>
+            <div id="typeResult"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentLang = 'zh';
+
+        function toggleLang() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            document.body.classList.toggle('en', currentLang === 'en');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(currentLang === 'zh' ? '已复制！' : 'Copied!');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:8px;z-index:1000;';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // Detect current IP on page load
+        async function detectMyIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                const ip = data.ip;
+                
+                document.getElementById('ipDisplay').innerHTML = ip + ' <span class="copy-icon" onclick="copyToClipboard(\'' + ip + '\')">' + (currentLang === 'zh' ? '复制' : 'Copy') + '</span>';
+                
+                // Fetch detailed info
+                const geoResponse = await fetch('https://ip-api.com/json/' + ip);
+                const geoData = await geoResponse.json();
+                
+                if (geoData.status === 'success') {
+                    document.getElementById('country').textContent = geoData.country + ' (' + geoData.countryCode + ')';
+                    document.getElementById('city').textContent = geoData.city;
+                    document.getElementById('isp').textContent = geoData.isp;
+                    document.getElementById('org').textContent = geoData.org || '-';
+                    document.getElementById('region').textContent = geoData.regionName;
+                    document.getElementById('timezone').textContent = geoData.timezone;
+                    document.getElementById('lon').textContent = geoData.lon;
+                    document.getElementById('lat').textContent = geoData.lat;
+                    document.getElementById('coordinates').textContent = geoData.lat + ', ' + geoData.lon;
+                    
+                    document.getElementById('ipInfo').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('ipDisplay').innerHTML = currentLang === 'zh' ? '检测失败，请刷新重试' : 'Detection failed, please refresh';
+            }
+        }
+
+        async function queryIP() {
+            const ip = document.getElementById('queryIp').value.trim();
+            if (!ip) {
+                document.getElementById('queryResult').innerHTML = currentLang === 'zh' ? '<div class="validation-result invalid">请输入IP地址</div>' : '<div class="validation-result invalid">Please enter an IP address</div>';
+                return;
+            }
+
+            document.getElementById('queryResult').innerHTML = '<div class="loading">' + (currentLang === 'zh' ? '查询中...' : 'Querying...') + '</div>';
+
+            try {
+                const response = await fetch('https://ip-api.com/json/' + ip);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    document.getElementById('queryResult').innerHTML = `
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">IP</div>
+                                <div class="info-value">${data.query}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label" data-lang="zh">国家</div>
+                                <div class="info-label" data-lang="en">Country</div>
+                                <div class="info-value">${data.country} (${data.countryCode})</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label" data-lang="zh">城市</div>
+                                <div class="info-label" data-lang="en">City</div>
+                                <div class="info-value">${data.city}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">ISP</div>
+                                <div class="info-value">${data.isp}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label" data-lang="zh">区域</div>
+                                <div class="info-label" data-lang="en">Region</div>
+                                <div class="info-value">${data.regionName}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label" data-lang="zh">时区</div>
+                                <div class="info-label" data-lang="en">Timezone</div>
+                                <div class="info-value">${data.timezone}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label" data-lang="zh">经纬度</div>
+                                <div class="info-label" data-lang="en">Coordinates</div>
+                                <div class="info-value">${data.lat}, ${data.lon}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('queryResult').innerHTML = '<div class="validation-result invalid">' + (currentLang === 'zh' ? '查询失败，请检查IP地址格式' : 'Query failed, please check IP format') + '</div>';
+                }
+            } catch (error) {
+                document.getElementById('queryResult').innerHTML = '<div class="validation-result invalid">' + (currentLang === 'zh' ? '查询出错，请稍后重试' : 'Error, please try again') + '</div>';
+            }
+        }
+
+        function validateIPv4(ip) {
+            const parts = ip.split('.');
+            if (parts.length !== 4) return false;
+            return parts.every(part => {
+                const num = parseInt(part, 10);
+                return num >= 0 && num <= 255 && part === String(num) && (part.length === 1 || part[0] !== '0');
+            });
+        }
+
+        function validateIPv6(ip) {
+            const ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+|::(ffff(:0{1,4})?:)?((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9]))$/;
+            return ipv6Regex.test(ip);
+        }
+
+        function validateIP() {
+            const ip = document.getElementById('validateIp').value.trim();
+            if (!ip) {
+                document.getElementById('validateResult').innerHTML = currentLang === 'zh' ? '<div class="validation-result invalid">请输入IP地址</div>' : '<div class="validation-result invalid">Please enter an IP address</div>';
+                return;
+            }
+
+            const isIPv4 = validateIPv4(ip);
+            const isIPv6 = validateIPv6(ip);
+
+            let result = '<div class="validation-result ' + (isIPv4 || isIPv6 ? 'valid' : 'invalid') + '">';
+            result += '<strong>' + ip + '</strong><br>';
+            
+            if (isIPv4) {
+                result += '✅ IPv4 ' + (currentLang === 'zh' ? '格式有效' : 'format valid');
+            } else if (isIPv6) {
+                result += '✅ IPv6 ' + (currentLang === 'zh' ? '格式有效' : 'format valid');
+            } else {
+                result += '❌ ' + (currentLang === 'zh' ? '格式无效' : 'Invalid format');
+            }
+            result += '</div>';
+
+            // Additional info for IPv4
+            if (isIPv4) {
+                const parts = ip.split('.');
+                result += '<div class="result-box" style="margin-top:12px;">';
+                result += '<strong>' + (currentLang === 'zh' ? '二进制表示：' : 'Binary:') + '</strong> ' + parts.map(p => parseInt(p).toString(2).padStart(8, '0')).join('.');
+                result += '<br><strong>' + (currentLang === 'zh' ? '十六进制：' : 'Hex:') + '</strong> ' + parts.map(p => parseInt(p).toString(16).padStart(2, '0').toUpperCase()).join('.');
+                result += '</div>';
+            }
+
+            document.getElementById('validateResult').innerHTML = result;
+        }
+
+        function calculateCIDR() {
+            const input = document.getElementById('cidrInput').value.trim();
+            if (!input) {
+                document.getElementById('cidrResult').innerHTML = currentLang === 'zh' ? '<div class="validation-result invalid">请输入CIDR，例如：192.168.1.0/24</div>' : '<div class="validation-result invalid">Please enter CIDR notation, e.g.: 192.168.1.0/24</div>';
+                return;
+            }
+
+            const parts = input.split('/');
+            if (parts.length !== 2) {
+                document.getElementById('cidrResult').innerHTML = '<div class="validation-result invalid">' + (currentLang === 'zh' ? 'CIDR格式错误' : 'Invalid CIDR format') + '</div>';
+                return;
+            }
+
+            const ip = parts[0];
+            const prefix = parseInt(parts[1]);
+
+            if (!validateIPv4(ip) || isNaN(prefix) || prefix < 0 || prefix > 32) {
+                document.getElementById('cidrResult').innerHTML = '<div class="validation-result invalid">' + (currentLang === 'zh' ? '无效的IP地址或前缀长度' : 'Invalid IP or prefix length') + '</div>';
+                return;
+            }
+
+            const ipParts = ip.split('.').map(p => parseInt(p));
+            const ipInt = (ipParts[0] << 24) + (ipParts[1] << 16) + (ipParts[2] << 8) + ipParts[3];
+            
+            const mask = prefix === 0 ? 0 : (~0 << (32 - prefix)) >>> 0;
+            const network = (ipInt & mask) >>> 0;
+            const broadcast = (network | ~mask) >>> 0;
+            const totalHosts = Math.pow(2, 32 - prefix);
+            const usableHosts = totalHosts > 2 ? totalHosts - 2 : totalHosts;
+
+            const numToIP = (num) => [
+                (num >>> 24) & 255,
+                (num >>> 16) & 255,
+                (num >>> 8) & 255,
+                num & 255
+            ].join('.');
+
+            document.getElementById('cidrResult').innerHTML = `
+                <div class="cidr-results">
+                    <div class="cidr-item">
+                        <span><strong>${currentLang === 'zh' ? '网络地址：' : 'Network:'}</strong></span>
+                        <span>${numToIP(network)}/${prefix} <span class="copy-icon" onclick="copyToClipboard('${numToIP(network)}/${prefix}')">${currentLang === 'zh' ? '复制' : 'Copy'}</span></span>
+                    </div>
+                    <div class="cidr-item">
+                        <span><strong>${currentLang === 'zh' ? '首个可用IP：' : 'First Host:'}</strong></span>
+                        <span>${numToIP(network + 1)} <span class="copy-icon" onclick="copyToClipboard('${numToIP(network + 1)}')">${currentLang === 'zh' ? '复制' : 'Copy'}</span></span>
+                    </div>
+                    <div class="cidr-item">
+                        <span><strong>${currentLang === 'zh' ? '最后可用IP：' : 'Last Host:'}</strong></span>
+                        <span>${numToIP(broadcast - 1)} <span class="copy-icon" onclick="copyToClipboard('${numToIP(broadcast - 1)}')">${currentLang === 'zh' ? '复制' : 'Copy'}</span></span>
+                    </div>
+                    <div class="cidr-item">
+                        <span><strong>${currentLang === 'zh' ? '广播地址：' : 'Broadcast:'}</strong></span>
+                        <span>${numToIP(broadcast)} <span class="copy-icon" onclick="copyToClipboard('${numToIP(broadcast)}')">${currentLang === 'zh' ? '复制' : 'Copy'}</span></span>
+                    </div>
+                    <div class="cidr-item">
+                        <span><strong>${currentLang === 'zh' ? '子网掩码：' : 'Subnet Mask:'}</strong></span>
+                        <span>${numToIP(mask)} <span class="copy-icon" onclick="copyToClipboard('${numToIP(mask)}')">${currentLang === 'zh' ? '复制' : 'Copy'}</span></span>
+                    </div>
+                    <div class="cidr-item">
+                        <span><strong>${currentLang === 'zh' ? '可用主机数：' : 'Usable Hosts:'}</strong></span>
+                        <span>${usableHosts.toLocaleString()}</span>
+                    </div>
+                    <div class="cidr-item">
+                        <span><strong>${currentLang === 'zh' ? '总地址数：' : 'Total Addresses:'}</strong></span>
+                        <span>${totalHosts.toLocaleString()}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function isPrivateIP(ip) {
+            if (!validateIPv4(ip)) return null;
+            
+            const parts = ip.split('.').map(p => parseInt(p));
+            
+            // 10.0.0.0/8
+            if (parts[0] === 10) return true;
+            
+            // 172.16.0.0/12
+            if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
+            
+            // 192.168.0.0/16
+            if (parts[0] === 192 && parts[1] === 168) return true;
+            
+            // 127.0.0.0/8 (loopback)
+            if (parts[0] === 127) return true;
+            
+            // 169.254.0.0/16 (link-local)
+            if (parts[0] === 169 && parts[1] === 254) return true;
+            
+            return false;
+        }
+
+        function checkIPType() {
+            const ip = document.getElementById('typeIp').value.trim();
+            if (!ip) {
+                document.getElementById('typeResult').innerHTML = currentLang === 'zh' ? '<div class="validation-result invalid">请输入IP地址</div>' : '<div class="validation-result invalid">Please enter an IP address</div>';
+                return;
+            }
+
+            const isPrivate = isPrivateIP(ip);
+            
+            if (isPrivate === null) {
+                document.getElementById('typeResult').innerHTML = '<div class="validation-result invalid">' + (currentLang === 'zh' ? '无效的IPv4地址' : 'Invalid IPv4 address') + '</div>';
+                return;
+            }
+
+            const result = `
+                <div class="validation-result ${isPrivate ? 'private' : 'public'}" style="display:flex;align-items:center;gap:16px;">
+                    <span class="ip-type-badge ${isPrivate ? 'private' : 'public'}">${isPrivate ? '🏠 ' + (currentLang === 'zh' ? '私有IP' : 'Private IP') : '🌐 ' + (currentLang === 'zh' ? '公网IP' : 'Public IP')}</span>
+                    <span><strong>${ip}</strong></span>
+                </div>
+            `;
+            
+            let description = '';
+            if (isPrivate) {
+                if (ip.startsWith('10.')) {
+                    description = currentLang === 'zh' ? '10.0.0.0/8 私有地址段，适用于大型企业内网' : '10.0.0.0/8 private range, for large enterprise networks';
+                } else if (ip.startsWith('172.')) {
+                    description = currentLang === 'zh' ? '172.16.0.0/12 私有地址段，适用于中型网络' : '172.16.0.0/12 private range, for medium networks';
+                } else if (ip.startsWith('192.168.')) {
+                    description = currentLang === 'zh' ? '192.168.0.0/16 私有地址段，最常见的家庭/办公网络' : '192.168.0.0/16 private range, most common for home/office networks';
+                } else if (ip.startsWith('127.')) {
+                    description = currentLang === 'zh' ? '127.0.0.0/8 环回地址，指向本机自身' : '127.0.0.0/8 loopback address, points to this machine';
+                } else if (ip.startsWith('169.254.')) {
+                    description = currentLang === 'zh' ? '169.254.0.0/16 链路本地地址，DHCP失败时自动分配' : '169.254.0.0/16 link-local, auto-assigned when DHCP fails';
+                }
+            } else {
+                description = currentLang === 'zh' ? '该地址可在互联网上路由，全球唯一' : 'This address is routable on the internet, globally unique';
+            }
+            
+            document.getElementById('typeResult').innerHTML = result + '<div class="result-box" style="margin-top:12px;">' + description + '</div>';
+        }
+
+        // Initialize
+        detectMyIP();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="user-agent-parser.html" class="related-card"><div class="r-icon">🧑‍💻</div><div class="r-title">User Agent 解析器</div><div class="r-desc">UA解析</div></a>
+        <a href="screen-resolution.html" class="related-card"><div class="r-icon">📺</div><div class="r-title">屏幕分辨率检测</div><div class="r-desc">分辨率检测</div></a>
+        <a href="base64-tool.html" class="related-card"><div class="r-icon">🔄</div><div class="r-title">Base64 编码解码</div><div class="r-desc">文本和图片的Base64互转</div></a>
+        <a href="base32-encoder.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">Base32 编解码</div><div class="r-desc">文本与Base32互转</div></a>
+        <a href="url-encoder.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">URL 编解码器</div><div class="r-desc">URL编码/解码</div></a>
+        <a href="html-entity-encoder.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">HTML 实体编码/解码</div><div class="r-desc">文本与HTML实体互转</div></a>
+        </div>
+    </section>
+</body>
+</html>

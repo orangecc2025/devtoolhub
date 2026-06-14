@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <meta name="description" content="免费的在线二维码生成器工具，支持文本、URL批量生成二维码，自定义颜色大小，下载PNG图片，中英文界面">
+    <meta name="keywords" content="二维码生成器, QR Code, 二维码制作, 条码生成, 批量二维码, URL二维码">
+    <title>二维码生成器 - QR Code Generator | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/qrcode-generator.html">
+    <meta property="og:title" content="二维码生成器 - QR Code Generator">
+    <meta property="og:description" content="免费的在线二维码生成器工具，支持文本、URL批量生成二维码，自定义颜色大小">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/qrcode-generator.html">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.19.0/js/md5.min.js"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 8px;
+        }
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .color-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .color-input-wrapper input[type="color"] {
+            width: 50px;
+            height: 40px;
+            padding: 2px;
+            cursor: pointer;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .qr-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+        .qr-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        .qr-item canvas {
+            margin-bottom: 8px;
+        }
+        .qr-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            word-break: break-all;
+            text-align: center;
+            max-width: 200px;
+        }
+        .qr-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+        }
+        .qr-actions button {
+            padding: 6px 12px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .qr-actions button:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .batch-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+            .qr-display { gap: 16px; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1 data-zh="二维码生成器" data-en="QR Code Generator">二维码生成器</h1>
+            <p data-zh="免费在线生成二维码，支持批量制作、自定义颜色和大小，一键下载PNG图片" data-en="Free online QR code generator with batch support, custom colors and sizes, PNG download">免费在线生成二维码，支持批量制作、自定义颜色和大小，一键下载PNG图片</p>
+        </section>
+
+        <div class="ad-slot">Advertisement Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label data-zh="输入文本或URL（批量用逗号分隔）" data-en="Enter text or URL (comma separated for batch)">输入文本或URL（批量用逗号分隔）</label>
+                <textarea id="qrInput" rows="4" placeholder="https://example.com"></textarea>
+                <p class="batch-hint" data-zh="提示：输入多个文本用英文逗号,分隔可批量生成" data-en="Tip: Separate multiple texts with commas for batch generation">提示：输入多个文本用英文逗号,分隔可批量生成</p>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label data-zh="二维码大小 (px)" data-en="QR Code Size (px)">二维码大小 (px)</label>
+                    <select id="qrSize">
+                        <option value="128">128px</option>
+                        <option value="256" selected>256px</option>
+                        <option value="384">384px</option>
+                        <option value="512">512px</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-zh="容错级别" data-en="Error Correction Level">容错级别</label>
+                    <select id="qrECL">
+                        <option value="L">L - 7%</option>
+                        <option value="M" selected>M - 15%</option>
+                        <option value="Q">Q - 25%</option>
+                        <option value="H">H - 30%</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label data-zh="前景色" data-en="Foreground Color">前景色</label>
+                    <div class="color-input-wrapper">
+                        <input type="color" id="qrColor" value="#000000">
+                        <input type="text" id="qrColorText" value="#000000" style="flex:1;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label data-zh="背景色" data-en="Background Color">背景色</label>
+                    <div class="color-input-wrapper">
+                        <input type="color" id="qrBgColor" value="#FFFFFF">
+                        <input type="text" id="qrBgColorText" value="#FFFFFF" style="flex:1;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" id="generateBtn" data-zh="生成二维码" data-en="Generate QR Code">生成二维码</button>
+                <button class="btn btn-secondary" id="downloadAllBtn" data-zh="下载全部" data-en="Download All">下载全部</button>
+                <button class="btn btn-secondary" id="clearBtn" data-zh="清空" data-en="Clear">清空</button>
+            </div>
+
+            <div id="qrDisplay" class="qr-display"></div>
+        </section>
+
+        <div class="ad-slot">Advertisement Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2 data-zh="常见问题" data-en="FAQ">常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span data-zh="二维码容错级别有什么区别？" data-en="What's the difference between error correction levels?">二维码容错级别有什么区别？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a" data-zh="L级容错7%，适合二维码被部分遮挡的情况；M级15%是默认选项；Q级25%和H级30%适合需要高可靠性的场景，但二维码会更密集。">L级容错7%，适合二维码被部分遮挡的情况；M级15%是默认选项；Q级25%和H级30%适合需要高可靠性的场景，但二维码会更密集。</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span data-zh="批量生成有什么限制？" data-en="Are there limits on batch generation?">批量生成有什么限制？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a" data-zh="批量生成时请用英文逗号分隔，建议单次不超过20个。生成的二维码可以一键全部下载。">批量生成时请用英文逗号分隔，建议单次不超过20个。生成的二维码可以一键全部下载。</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span data-zh="下载的二维码是什么格式？" data-en="What format are the downloaded QR codes?">下载的二维码是什么格式？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a" data-zh="下载的文件为PNG无损格式，可以在任何设备和软件中使用，包括打印。">下载的文件为PNG无损格式，可以在任何设备和软件中使用，包括打印。</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span data-zh="二维码支持哪些内容类型？" data-en="What content types are supported?">二维码支持哪些内容类型？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a" data-zh="支持文本、网址URL、电话号码、邮箱地址、WiFi配置、短信等多种内容。输入什么内容，扫描后就会显示什么。">支持文本、网址URL、电话号码、邮箱地址、WiFi配置、短信等多种内容。输入什么内容，扫描后就会显示什么。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="password-generator.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">安全密码生成器</div><div class="r-desc">高强度密码</div></a>
+        <a href="uuid-generator.html" class="related-card"><div class="r-icon">🔑</div><div class="r-title">UUID 生成器</div><div class="r-desc">批量UUID</div></a>
+        <a href="fake-data-generator.html" class="related-card"><div class="r-icon">🎭</div><div class="r-title">假数据生成器</div><div class="r-desc">批量假数据</div></a>
+        <a href="barcode-generator.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">条形码生成器</div><div class="r-desc">Code128/EAN</div></a>
+        <a href="random-number-generator.html" class="related-card"><div class="r-icon">🎲</div><div class="r-title">随机数生成器</div><div class="r-desc">随机数批量生成</div></a>
+        <a href="ascii-art-generator.html" class="related-card"><div class="r-icon">✏</div><div class="r-title">ASCII 艺术生成器</div><div class="r-desc">ASCII艺术</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>
+            <a href="/about.html">关于我们</a> | 
+            <a href="/privacy.html">隐私政策</a> | 
+            <a href="/terms.html">使用条款</a> | 
+            <a href="/contact.html">联系我们</a>
+        </p>
+        <p style="margin-top:8px;">&copy; 2025 DevToolBox. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let qrInstances = [];
+        let currentLang = 'zh';
+
+        // Language toggle
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLang = btn.dataset.lang;
+                document.querySelectorAll('[data-zh]').forEach(el => {
+                    el.textContent = el.getAttribute(`data-${currentLang}`);
+                });
+            });
+        });
+
+        // Sync color inputs
+        document.getElementById('qrColor').addEventListener('input', e => {
+            document.getElementById('qrColorText').value = e.target.value;
+        });
+        document.getElementById('qrColorText').addEventListener('input', e => {
+            if(/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+                document.getElementById('qrColor').value = e.target.value;
+            }
+        });
+        document.getElementById('qrBgColor').addEventListener('input', e => {
+            document.getElementById('qrBgColorText').value = e.target.value;
+        });
+        document.getElementById('qrBgColorText').addEventListener('input', e => {
+            if(/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+                document.getElementById('qrBgColor').value = e.target.value;
+            }
+        });
+
+        // Generate QR codes
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const input = document.getElementById('qrInput').value.trim();
+            if (!input) {
+                alert(currentLang === 'zh' ? '请输入内容' : 'Please enter content');
+                return;
+            }
+
+            const texts = input.split(',').map(t => t.trim()).filter(t => t);
+            if (texts.length === 0) {
+                alert(currentLang === 'zh' ? '请输入有效内容' : 'Please enter valid content');
+                return;
+            }
+
+            const size = parseInt(document.getElementById('qrSize').value);
+            const ecl = document.getElementById('qrECL').value;
+            const color = document.getElementById('qrColor').value;
+            const bgColor = document.getElementById('qrBgColor').value;
+
+            const display = document.getElementById('qrDisplay');
+            display.innerHTML = '';
+            qrInstances = [];
+
+            texts.forEach((text, index) => {
+                const item = document.createElement('div');
+                item.className = 'qr-item';
+                item.innerHTML = `
+                    <div id="qr-${index}"></div>
+                    <div class="qr-text">${text.substring(0, 50)}${text.length > 50 ? '...' : ''}</div>
+                    <div class="qr-actions">
+                        <button onclick="downloadSingle(${index}, '${text.replace(/'/g, "\\'")}')">${currentLang === 'zh' ? '下载' : 'Download'}</button>
+                    </div>
+                `;
+                display.appendChild(item);
+
+                const qr = new QRCode(document.getElementById(`qr-${index}`), {
+                    text: text,
+                    width: size,
+                    height: size,
+                    colorDark: color,
+                    colorLight: bgColor,
+                    correctLevel: QRCode.CorrectLevel[ecl]
+                });
+                qrInstances.push({ qr, text, index });
+            });
+        });
+
+        function downloadSingle(index, text) {
+            const canvas = document.querySelector(`#qr-${index} canvas`);
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = `qrcode-${index + 1}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }
+        }
+
+        document.getElementById('downloadAllBtn').addEventListener('click', () => {
+            qrInstances.forEach((item, index) => {
+                setTimeout(() => downloadSingle(item.index, item.text), index * 300);
+            });
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            document.getElementById('qrInput').value = '';
+            document.getElementById('qrDisplay').innerHTML = '';
+            qrInstances = [];
+        });
+
+        // FAQ toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

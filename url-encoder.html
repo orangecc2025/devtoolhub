@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="在线URL编解码工具，支持encodeURIComponent/ decodeURIComponent，提供URL组件编码、批量编解码和特殊字符对照表功能。">
+    <meta name="keywords" content="URL编码, URL解码, URLEncode, URLDecode, URL组件编码, 特殊字符编码, 在线工具">
+    <title>URL编解码器 - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            flex: 1;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #0f172a;
+        }
+        .page-desc {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            border-color: #4F46E5;
+            background: #4F46E5;
+            color: #fff;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .mode-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .mode-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .mode-btn.active {
+            border-color: #4F46E5;
+            background: #4F46E5;
+            color: #fff;
+        }
+        .textarea-wrapper {
+            position: relative;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .action-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        .btn-success {
+            background: #10b981;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #059669;
+        }
+        .result-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            word-break: break-all;
+            min-height: 80px;
+        }
+        .result-box.success {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+        .copy-feedback {
+            color: #10b981;
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .copy-feedback.show {
+            opacity: 1;
+        }
+        .batch-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 768px) {
+            .batch-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        .batch-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.8rem;
+        }
+        .batch-item .char {
+            font-weight: 600;
+            color: #4F46E5;
+            min-width: 40px;
+        }
+        .char-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .char-table th, .char-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .char-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+        }
+        .char-table tr:hover {
+            background: #f8fafc;
+        }
+        .char-code {
+            font-family: 'Monaco', 'Menlo', monospace;
+            color: #4F46E5;
+            font-weight: 600;
+        }
+        .char-desc {
+            color: #64748b;
+        }
+        .char-safe {
+            color: #10b981;
+            font-size: 0.75rem;
+        }
+        .char-unsafe {
+            color: #ef4444;
+            font-size: 0.75rem;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 4px solid #4F46E5;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+        }
+        .tip-box p {
+            color: #3b82f6;
+            font-size: 0.875rem;
+        }
+        .footer {
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 0;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        .footer a {
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .output-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        .output-label {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title" data-en="URL Encoder/Decoder">URL编解码器</h1>
+        <p class="page-desc" data-en="Encode and decode URL strings with full support for encodeURIComponent and decodeURIComponent">对URL字符串进行编码和解码，全面支持encodeURIComponent和decodeURIComponent方法</p>
+
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+            <button class="lang-btn" onclick="setLang('en')">English</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-en="🎯 Mode Selection">🎯 模式选择</div>
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('component')" data-en="Component Encoding (encodeURIComponent)">组件编码 (encodeURIComponent)</button>
+                <button class="mode-btn" onclick="setMode('full')" data-en="Full URL Encoding (encodeURI)">完整URL编码 (encodeURI)</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-en="📝 Input">📝 输入</div>
+            <textarea id="input" placeholder="输入要编码或解码的URL或字符串..." oninput="convert()"></textarea>
+            <div class="action-bar">
+                <button class="btn btn-primary" onclick="encode()" data-en="🔒 Encode">🔒 编码</button>
+                <button class="btn btn-secondary" onclick="decode()" data-en="🔓 Decode">🔓 解码</button>
+                <button class="btn btn-secondary" onclick="swap()" data-en="⇄ Swap Input/Output">⇄ 交换输入/输出</button>
+                <button class="btn btn-secondary" onclick="clearAll()" data-en="🗑 Clear All">🗑 清除</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-en="✨ Output">✨ 输出</div>
+            <div class="output-actions">
+                <span class="output-label" data-en="Result:">结果：</span>
+            </div>
+            <div class="textarea-wrapper">
+                <div id="output" class="result-box"></div>
+            </div>
+            <div class="action-bar">
+                <button class="btn btn-success" onclick="copyResult()" data-en="📋 Copy Result">📋 复制结果</button>
+                <span id="copyFeedback" class="copy-feedback" data-en="Copied!">已复制!</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-en="📚 Special Characters Reference">📚 特殊字符对照表</div>
+            <table class="char-table">
+                <thead>
+                    <tr>
+                        <th data-en="Character">字符</th>
+                        <th data-en="Encoded">编码后</th>
+                        <th data-en="Description">说明</th>
+                        <th data-en="Component Safe">组件安全</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>!</code></td>
+                        <td class="char-code">%21</td>
+                        <td class="char-desc" data-en="Exclamation mark">感叹号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>#</code></td>
+                        <td class="char-code">%23</td>
+                        <td class="char-desc" data-en="Hash/Pound">井号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>$</code></td>
+                        <td class="char-code">%24</td>
+                        <td class="char-desc" data-en="Dollar sign">美元符号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>&</code></td>
+                        <td class="char-code">%26</td>
+                        <td class="char-desc" data-en="Ampersand">和号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>+</code></td>
+                        <td class="char-code">%2B</td>
+                        <td class="char-desc" data-en="Plus sign">加号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>,</code></td>
+                        <td class="char-code">%2C</td>
+                        <td class="char-desc" data-en="Comma">逗号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>/</code></td>
+                        <td class="char-code">%2F</td>
+                        <td class="char-desc" data-en="Slash">斜杠</td>
+                        <td><span class="char-safe">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>:</code></td>
+                        <td class="char-code">%3A</td>
+                        <td class="char-desc" data-en="Colon">冒号</td>
+                        <td><span class="char-safe">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>;</code></td>
+                        <td class="char-code">%3B</td>
+                        <td class="char-desc" data-en="Semicolon">分号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>=</code></td>
+                        <td class="char-code">%3D</td>
+                        <td class="char-desc" data-en="Equals sign">等号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>@</code></td>
+                        <td class="char-code">%40</td>
+                        <td class="char-desc" data-en="At sign">@符号</td>
+                        <td><span class="char-safe">✓</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>space</code></td>
+                        <td class="char-code">%20</td>
+                        <td class="char-desc" data-en="Space">空格</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>?</code></td>
+                        <td class="char-code">%3F</td>
+                        <td class="char-desc" data-en="Question mark">问号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>[</code> <code>]</code></td>
+                        <td class="char-code">%5B %5D</td>
+                        <td class="char-desc" data-en="Square brackets">方括号</td>
+                        <td><span class="char-unsafe">✗</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="tip-box">
+                <p data-en="💡 Tip: Use Component Encoding (encodeURIComponent) when encoding query parameter values. Use Full URL Encoding (encodeURI) when encoding a complete URL path.">💡 提示：编码查询参数值时使用组件编码(encodeURIComponent)；编码完整URL路径时使用完整URL编码(encodeURI)。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-en="📋 Batch Encode/Decode">📋 批量编解码</div>
+            <div class="batch-section">
+                <div>
+                    <h4 data-en="Commonly Encoded Characters">常见编码字符</h4>
+                    <div class="batch-item"><span class="char">&</span><span>%26</span></div>
+                    <div class="batch-item"><span class="char">=</span><span>%3D</span></div>
+                    <div class="batch-item"><span class="char">+</span><span>%2B</span></div>
+                    <div class="batch-item"><span class="char">%</span><span>%25</span></div>
+                    <div class="batch-item"><span class="char">#</span><span>%23</span></div>
+                    <div class="batch-item"><span class="char">?</span><span>%3F</span></div>
+                    <div class="batch-item"><span class="char">/</span><span>%2F</span></div>
+                    <div class="batch-item"><span class="char">:</span><span>%3A</span></div>
+                </div>
+                <div>
+                    <h4 data-en="Common URL Encoded">常见URL编码</h4>
+                    <div class="batch-item"><span class="char">中文</span><span>%E4%B8%AD%E6%96%87</span></div>
+                    <div class="batch-item"><span class="char">空格</span><span>%20</span></div>
+                    <div class="batch-item"><span class="char">换行</span><span>%0A</span></div>
+                    <div class="batch-item"><span class="char">"</span><span>%22</span></div>
+                    <div class="batch-item"><span class="char">'</span><span>%27</span></div>
+                    <div class="batch-item"><span class="char">&lt;</span><span>%3C</span></div>
+                    <div class="batch-item"><span class="char">&gt;</span><span>%3E</span></div>
+                    <div class="batch-item"><span class="char">{</span><span>%7B</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentMode = 'component';
+        let currentLang = 'zh';
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            convert();
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const enText = el.getAttribute('data-en');
+                if (lang === 'en') {
+                    el.textContent = enText;
+                } else {
+                    el.textContent = el.getAttribute('data-zh') || enText;
+                }
+            });
+        }
+
+        function encode() {
+            const input = document.getElementById('input').value;
+            if (!input) return;
+            
+            let result;
+            if (currentMode === 'component') {
+                result = encodeURIComponent(input);
+            } else {
+                result = encodeURI(input);
+            }
+            
+            document.getElementById('output').textContent = result;
+            document.getElementById('output').classList.add('success');
+        }
+
+        function decode() {
+            const input = document.getElementById('input').value;
+            if (!input) return;
+            
+            try {
+                let result;
+                if (currentMode === 'component') {
+                    result = decodeURIComponent(input);
+                } else {
+                    result = decodeURI(input);
+                }
+                document.getElementById('output').textContent = result;
+                document.getElementById('output').classList.add('success');
+            } catch (e) {
+                document.getElementById('output').textContent = '解码错误: ' + e.message;
+                document.getElementById('output').classList.remove('success');
+            }
+        }
+
+        function convert() {
+            const input = document.getElementById('input').value;
+            if (!input) {
+                document.getElementById('output').textContent = '';
+                document.getElementById('output').classList.remove('success');
+                return;
+            }
+            
+            try {
+                // 自动检测是否为编码字符串
+                if (input.includes('%') && /%[0-9A-Fa-f]{2}/.test(input)) {
+                    decode();
+                } else {
+                    encode();
+                }
+            } catch (e) {
+                document.getElementById('output').textContent = '处理错误: ' + e.message;
+            }
+        }
+
+        function swap() {
+            const input = document.getElementById('input');
+            const output = document.getElementById('output');
+            const temp = input.value;
+            input.value = output.textContent;
+            output.textContent = temp;
+        }
+
+        function clearAll() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').textContent = '';
+            document.getElementById('output').classList.remove('success');
+        }
+
+        function copyResult() {
+            const output = document.getElementById('output').textContent;
+            if (!output) return;
+            
+            navigator.clipboard.writeText(output).then(() => {
+                const feedback = document.getElementById('copyFeedback');
+                feedback.classList.add('show');
+                setTimeout(() => feedback.classList.remove('show'), 2000);
+            });
+        }
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="base64-tool.html" class="related-card"><div class="r-icon">🔄</div><div class="r-title">Base64 编码解码</div><div class="r-desc">文本和图片的Base64互转</div></a>
+        <a href="base32-encoder.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">Base32 编解码</div><div class="r-desc">文本与Base32互转</div></a>
+        <a href="html-entity-encoder.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">HTML 实体编码/解码</div><div class="r-desc">文本与HTML实体互转</div></a>
+        <a href="rot13-tool.html" class="related-card"><div class="r-icon">🔑</div><div class="r-title">ROT13 加密解密</div><div class="r-desc">ROT13/ROT47/ROT5</div></a>
+        <a href="morse-code-tool.html" class="related-card"><div class="r-icon">📡</div><div class="r-title">摩斯电码转换</div><div class="r-desc">文本与摩斯码互转</div></a>
+        <a href="caesar-cipher.html" class="related-card"><div class="r-icon">🏛</div><div class="r-title">凯撒密码</div><div class="r-desc">加密/解密/暴力破解</div></a>
+        </div>
+    </section>
+</body>
+</html>

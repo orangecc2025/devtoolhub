@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IBAN验证器 - 国际银行账号格式校验，校验位验证，国家代码识别">
+    <meta name="keywords" content="IBAN验证,国际银行账号验证,IBAN格式校验,银行账号验证,SWIFT">
+    <title>IBAN验证器 - 国际银行账号格式校验 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/iban-validator.html">
+    <meta property="og:title" content="IBAN验证器 - 国际银行账号格式校验">
+    <meta property="og:description" content="国际银行账号格式校验，校验位验证，国家代码识别">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/iban-validator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "IBAN验证器",
+        "description": "国际银行账号格式校验，校验位验证，国家代码识别",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .result-box {
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-valid {
+            background: #ECFDF5;
+            border: 2px solid #10B981;
+        }
+        .result-invalid {
+            background: #FEF2F2;
+            border: 2px solid #EF4444;
+        }
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .result-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        .result-valid .result-icon {
+            background: #10B981;
+            color: white;
+        }
+        .result-invalid .result-icon {
+            background: #EF4444;
+            color: white;
+        }
+        .result-title {
+            font-size: 24px;
+            font-weight: 800;
+        }
+        .result-valid .result-title {
+            color: #065F46;
+        }
+        .result-invalid .result-title {
+            color: #991B1B;
+        }
+        .result-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .iban-display {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 20px;
+            word-break: break-all;
+        }
+        .iban-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .detail-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        .detail-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .detail-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .detail-value.success { color: var(--success); }
+        .detail-value.error { color: var(--error); }
+        .detail-value.warning { color: var(--warning); }
+        .country-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+        .country-info h4 {
+            margin-bottom: 8px;
+        }
+        .country-flag {
+            font-size: 32px;
+            margin-right: 8px;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover { color: var(--primary); }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .iban-details { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🏦 IBAN验证器</h1>
+            <p>国际银行账号格式校验，支持90+国家，自动验证校验位</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label for="ibanInput">输入IBAN</label>
+                <input type="text" id="ibanInput" placeholder="DE89 3704 0044 0532 0130 00" maxlength="34">
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="validateIBAN()">✅ 验证IBAN</button>
+                <button class="btn btn-secondary" onclick="clearIBAN()">🗑️ 清除</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-header">
+                    <div class="result-icon" id="resultIcon">✓</div>
+                    <div>
+                        <div class="result-title" id="resultTitle">验证结果</div>
+                        <div class="result-subtitle" id="resultSubtitle"></div>
+                    </div>
+                </div>
+                <div class="iban-display" id="ibanDisplay"></div>
+                <div class="country-info" id="countryInfo" style="display: none;">
+                    <h4><span class="country-flag" id="countryFlag"></span><span id="countryName"></span></h4>
+                    <div id="countryDetails"></div>
+                </div>
+                <div class="iban-details">
+                    <div class="detail-item">
+                        <div class="detail-label">国家代码</div>
+                        <div class="detail-value" id="countryCode">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">校验位</div>
+                        <div class="detail-value" id="checkDigits">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">BBAN长度</div>
+                        <div class="detail-value" id="bbanLength">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">总长度</div>
+                        <div class="detail-value" id="totalLength">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">格式校验</div>
+                        <div class="detail-value" id="formatCheck">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">校验位校验</div>
+                        <div class="detail-value" id="checksumCheck">-</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">🏦 什么是IBAN？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">IBAN（International Bank Account Number）是国际银行账号，用于简化跨境支付。目前已被90多个国家采用，格式为：国家代码（2位）+ 校验位（2位）+ BBAN（各国不同的银行账号）。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">🔢 校验位是如何验证的？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">IBAN校验使用ISO 7064 MOD-97-10算法。将国家代码和BBAN视为一个大整数，对97取模，结果应为1。验证过程：1）移动前4位到末尾，2）将字母转换为数字（AA=10, BB=11...），3）对97取模应等于1。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">🌍 支持哪些国家？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">支持所有使用IBAN的国家，包括：德国(DE)、法国(FR)、英国(GB)、西班牙(ES)、意大利(IT)、瑞士(CH)、荷兰(NL)、比利时(BE)、奥地利(AT)、瑞典(SE)、波兰(PL)等90多个国家。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">💰 IBAN验证能保证转账成功吗？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">不能。IBAN验证只能检查格式是否正确和校验位是否有效，无法确认账号是否真实存在或属于指定的所有者。真正的转账验证需要银行系统的在线核查。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="json-validator.html" class="related-card"><div class="r-icon">✓</div><div class="r-title">JSON 校验器</div><div class="r-desc">语法检查</div></a>
+        <a href="xml-validator.html" class="related-card"><div class="r-icon">📋</div><div class="r-title">XML 校验器</div><div class="r-desc">格式检查</div></a>
+        <a href="html-validator.html" class="related-card"><div class="r-icon">🔍</div><div class="r-title">HTML 校验器</div><div class="r-desc">标签检查</div></a>
+        <a href="css-validator.html" class="related-card"><div class="r-icon">🎯</div><div class="r-title">CSS 校验器</div><div class="r-desc">语法验证</div></a>
+        <a href="regex-tester.html" class="related-card"><div class="r-icon">📝</div><div class="r-title">正则表达式测试器</div><div class="r-desc">实时匹配</div></a>
+        <a href="credit-card-validator.html" class="related-card"><div class="r-icon">💳</div><div class="r-title">信用卡号验证器</div><div class="r-desc">Luhn验证</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        const countryData = {
+            'AD': { name: '安道尔', flag: '🇦🇩', length: 24, format: 'ADkk BBBB SSSS CCCC CCCC' },
+            'AE': { name: '阿联酋', flag: '🇦🇪', length: 23, format: 'AEkk BBBB CCCC CCCC CCCC' },
+            'AL': { name: '阿尔巴尼亚', flag: '🇦🇱', length: 28, format: 'ALkk BBBB SSSS CCCC CCCC CCCC' },
+            'AT': { name: '奥地利', flag: '🇦🇹', length: 20, format: 'ATkk BBBB SSSS CCCC CCCC' },
+            'AZ': { name: '阿塞拜疆', flag: '🇦🇿', length: 28, format: 'AZkk BBBB CCCC CCCC CCCC CCCC' },
+            'BA': { name: '波黑', flag: '🇧🇦', length: 20, format: 'BAkk BBBB SSSS CCCC CCCC' },
+            'BE': { name: '比利时', flag: '🇧🇪', length: 16, format: 'BEkk BBBB CCCC CCCC' },
+            'BG': { name: '保加利亚', flag: '🇧🇬', length: 22, format: 'BGkk BBBB SSSS SSCC CCCC CC' },
+            'BH': { name: '巴林', flag: '🇧🇭', length: 22, format: 'BHkk BBBB CCCC CCCC CCCC CC' },
+            'BR': { name: '巴西', flag: '🇧🇷', length: 29, format: 'BRkk BBBB SSSS CCCC CCCC CCCC k' },
+            'BY': { name: '白俄罗斯', flag: '🇧🇾', length: 28, format: 'BYkk BBBB CCCC CCCC CCCC CCCC' },
+            'CH': { name: '瑞士', flag: '🇨🇭', length: 21, format: 'CHkk BBBB SSSS CCCC CCCC' },
+            'CR': { name: '哥斯达黎加', flag: '🇨🇷', length: 22, format: 'CRkk BBBB CCCC CCCC CCCC' },
+            'CY': { name: '塞浦路斯', flag: '🇨🇾', length: 28, format: 'CYkk BBBB SSSS CCCC CCCC CCCC' },
+            'CZ': { name: '捷克', flag: '🇨🇿', length: 24, format: 'CZkk BBBB SSSS SSCC CCCC CCCC' },
+            'DE': { name: '德国', flag: '🇩🇪', length: 22, format: 'DEkk BBBB SSSS CCCC CCCC CC' },
+            'DK': { name: '丹麦', flag: '🇩🇰', length: 18, format: 'DKkk BBBB CCCC CCCC' },
+            'DO': { name: '多米尼加', flag: '🇩🇴', length: 28, format: 'DOkk BBBB CCCC CCCC CCCC CCCC' },
+            'EE': { name: '爱沙尼亚', flag: '🇪🇪', length: 20, format: 'EEkk SSSS CCCC CCCC CCC' },
+            'EG': { name: '埃及', flag: '🇪🇬', length: 29, format: 'EGkk BBBB SSSS CCCC CCCC CCCC CCCC' },
+            'ES': { name: '西班牙', flag: '🇪🇸', length: 24, format: 'ESkk SSSS BBBB CCCC CCCC CC' },
+            'FI': { name: '芬兰', flag: '🇫🇮', length: 18, format: 'FIkk BBBB BBCC CCCC C' },
+            'FO': { name: '法罗群岛', flag: '🇫🇴', length: 18, format: 'FOkk BBBB CCCC CCCC' },
+            'FR': { name: '法国', flag: '🇫🇷', length: 27, format: 'FRkk BBBB SSSS CCCC CCCC CCCC' },
+            'GB': { name: '英国', flag: '🇬🇧', length: 22, format: 'GBkk BBBB SSSS SSCC CCCC CC' },
+            'GE': { name: '格鲁吉亚', flag: '🇬🇪', length: 22, format: 'GEkk BBCC CCCC CCCC CCCC' },
+            'GI': { name: '直布罗陀', flag: '🇬🇮', length: 23, format: 'GIkk BBBB CCCC CCCC CCCC' },
+            'GL': { name: '格陵兰', flag: '🇬🇱', length: 18, format: 'GLkk BBBB CCCC CCCC' },
+            'GR': { name: '希腊', flag: '🇬🇷', length: 27, format: 'GRkk SSSS BBBB CCCC CCCC CCCC' },
+            'GT': { name: '危地马拉', flag: '🇬🇹', length: 28, format: 'GTkk BBBB CCCC CCCC CCCC CCCC' },
+            'HR': { name: '克罗地亚', flag: '🇭🇷', length: 21, format: 'HRkk BBBB BBBC CCCC CCCC' },
+            'HU': { name: '匈牙利', flag: '🇭🇺', length: 28, format: 'HUkk BBBB SSSS SSCC CCCC CCCC CCC' },
+            'IE': { name: '爱尔兰', flag: '🇮🇪', length: 22, format: 'IEkk BBBB SSSS SSCC CCCC CC' },
+            'IL': { name: '以色列', flag: '🇮🇱', length: 23, format: 'ILkk BBBB SSCC CCCC CCCC CCCC' },
+            'IQ': { name: '伊拉克', flag: '🇮🇶', length: 23, format: 'IQkk BBBB SSSS CCCC CCCC CCCC' },
+            'IS': { name: '冰岛', flag: '🇮🇸', length: 26, format: 'ISkk BBBB SSSS CCCC CCCC CCCC' },
+            'IT': { name: '意大利', flag: '🇮🇹', length: 27, format: 'ITkk BBBB SSSS CCCC CCCC CCCC' },
+            'JO': { name: '约旦', flag: '🇯🇴', length: 30, format: 'JOkk BBBB SSSS CCCC CCCC CCCC CCCC' },
+            'KW': { name: '科威特', flag: '🇰🇼', length: 30, format: 'KWkk BBBB CCCC CCCC CCCC CCCC CC' },
+            'KZ': { name: '哈萨克斯坦', flag: '🇰🇿', length: 20, format: 'KZkk BBCC CCCC CCCC' },
+            'LB': { name: '黎巴嫩', flag: '🇱🇧', length: 28, format: 'LBkk BBBB CCCC CCCC CCCC CCCC' },
+            'LC': { name: '圣卢西亚', flag: '🇱🇨', length: 32, format: 'LCkk BBBB CCCC CCCC CCCC CCCC CCCC' },
+            'LI': { name: '列支敦士登', flag: '🇱🇮', length: 21, format: 'LIkk BBBB SSSS CCCC CCCC' },
+            'LT': { name: '立陶宛', flag: '🇱🇹', length: 20, format: 'LTkk BBBB CCCC CCCC CCCC' },
+            'LU': { name: '卢森堡', flag: '🇱🇺', length: 20, format: 'LUkk BBCC CCCC CCCC CCCC' },
+            'LV': { name: '拉脱维亚', flag: '🇱🇻', length: 21, format: 'LVkk BBBB CCCC CCCC CCCC C' },
+            'MC': { name: '摩纳哥', flag: '🇲🇨', length: 27, format: 'MCkk BBBB SSSS CCCC CCCC CCCC' },
+            'MD': { name: '摩尔多瓦', flag: '🇲🇩', length: 24, format: 'MDkk BBCC CCCC CCCC CCCC CCCC' },
+            'ME': { name: '黑山', flag: '🇲🇪', length: 22, format: 'MEkk BBBB CCCC CCCC CCCC' },
+            'MK': { name: '北马其顿', flag: '🇲🇰', length: 19, format: 'MKkk BBBB CCCC CCCC CC' },
+            'MR': { name: '毛里塔尼亚', flag: '🇲🇷', length: 27, format: 'MRkk BBBB SSSS CCCC CCCC CCCC' },
+            'MT': { name: '马耳他', flag: '🇲🇹', length: 31, format: 'MTkk BBBB SSSS CCCC CCCC CCCC CCCC C' },
+            'MU': { name: '毛里求斯', flag: '🇲🇺', length: 30, format: 'MUkk BBBB SSSS CCCC CCCC CCCC CCCC' },
+            'NL': { name: '荷兰', flag: '🇳🇱', length: 18, format: 'NLkk BBBB CCCC CCCC CC' },
+            'NO': { name: '挪威', flag: '🇳🇴', length: 15, format: 'NOkk BBBB CCCC CC' },
+            'PK': { name: '巴基斯坦', flag: '🇵🇰', length: 24, format: 'PKkk BBBB CCCC CCCC CCCC CCCC' },
+            'PL': { name: '波兰', flag: '🇵🇱', length: 28, format: 'PLkk BBBB SSSS CCCC CCCC CCCC CCCC' },
+            'PS': { name: '巴勒斯坦', flag: '🇵🇸', length: 29, format: 'PSkk BBBB SSSS CCCC CCCC CCCC CCCC' },
+            'PT': { name: '葡萄牙', flag: '🇵🇹', length: 25, format: 'PTkk BBBB SSSS CCCC CCCC CCC' },
+            'QA': { name: '卡塔尔', flag: '🇶🇦', length: 29, format: 'QAkk BBBB CCCC CCCC CCCC CCCC CCCC' },
+            'RO': { name: '罗马尼亚', flag: '🇷🇴', length: 24, format: 'ROkk BBBB CCCC CCCC CCCC CCCC' },
+            'RS': { name: '塞尔维亚', flag: '🇷🇸', length: 22, format: 'RSkk BBBB CCCC CCCC CCCC' },
+            'SA': { name: '沙特阿拉伯', flag: '🇸🇦', length: 24, format: 'SAkk BBCC CCCC CCCC CCCC' },
+            'SC': { name: '塞舌尔', flag: '🇸🇨', length: 31, format: 'SCkk BBBB SSSS CCCC CCCC CCCC CCCC C' },
+            'SE': { name: '瑞典', flag: '🇸🇪', length: 24, format: 'SEkk BBBB CCCC CCCC CCCC' },
+            'SI': { name: '斯洛文尼亚', flag: '🇸🇮', length: 19, format: 'SIkk BBBB SCCC CCCC CCC' },
+            'SK': { name: '斯洛伐克', flag: '🇸🇰', length: 24, format: 'SKkk BBBB SSSS CCCC CCCC CCCC' },
+            'SM': { name: '圣马力诺', flag: '🇸🇲', length: 27, format: 'SMkk BBBB SSSS CCCC CCCC CCCC' },
+            'ST': { name: '圣多美和普林西比', flag: '🇸🇹', length: 25, format: 'STkk BBBB CCCC CCCC CCCC CCCC' },
+            'SV': { name: '萨尔瓦多', flag: '🇸🇻', length: 28, format: 'SVkk BBBB CCCC CCCC CCCC CCCC' },
+            'TL': { name: '东帝汶', flag: '🇹🇱', length: 23, format: 'TLkk BBBB CCCC CCCC CCCC' },
+            'TN': { name: '突尼斯', flag: '🇹🇳', length: 24, format: 'TNkk BBBB SSSS CCCC CCCC CCCC' },
+            'TR': { name: '土耳其', flag: '🇹🇷', length: 26, format: 'TRkk BBBB SSSS CCCC CCCC CCCC' },
+            'UA': { name: '乌克兰', flag: '🇺🇦', length: 29, format: 'UAkk BBBB CCCC CCCC CCCC CCCC CCCC' },
+            'VA': { name: '梵蒂冈', flag: '🇻🇦', length: 22, format: 'VAkk BBBB CCCC CCCC CCCC' },
+            'VG': { name: '英属维尔京群岛', flag: '🇻🇬', length: 24, format: 'VGkk BBBB CCCC CCCC CCCC CCCC' },
+            'XK': { name: '科索沃', flag: '🇽🇰', length: 20, format: 'XKkk BBBB CCCC CCCC' }
+        };
+
+        function validateIBAN() {
+            let iban = document.getElementById('ibanInput').value.trim().toUpperCase();
+            iban = iban.replace(/\s/g, '');
+
+            if (!iban) {
+                alert('请输入IBAN');
+                return;
+            }
+
+            const errors = [];
+            
+            // 验证基本格式
+            if (!/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(iban)) {
+                errors.push('IBAN格式不正确（应为：国家代码+校验位+账号）');
+            }
+
+            // 提取国家代码
+            const countryCode = iban.substring(0, 2);
+            const checkDigits = iban.substring(2, 4);
+            const countryInfo = countryData[countryCode];
+
+            if (!countryInfo) {
+                errors.push(`不支持的国家代码: ${countryCode}`);
+            } else if (iban.length !== countryInfo.length) {
+                errors.push(`${countryCode} IBAN长度应为${countryInfo.length}位，当前${iban.length}位`);
+            }
+
+            // 计算校验位
+            let isChecksumValid = false;
+            if (countryInfo && iban.length === countryInfo.length) {
+                const rearranged = iban.substring(4) + iban.substring(0, 4);
+                let numericString = '';
+                for (const char of rearranged) {
+                    if (/[A-Z]/.test(char)) {
+                        numericString += (char.charCodeAt(0) - 55).toString();
+                    } else {
+                        numericString += char;
+                    }
+                }
+                
+                // 大数取模
+                let remainder = 0;
+                for (const digit of numericString) {
+                    remainder = (remainder * 10 + parseInt(digit)) % 97;
+                }
+                isChecksumValid = remainder === 1;
+            }
+
+            const isValid = errors.length === 0 && isChecksumValid;
+
+            // 显示结果
+            const resultBox = document.getElementById('resultBox');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultSubtitle = document.getElementById('resultSubtitle');
+
+            resultBox.className = 'result-box show ' + (isValid ? 'result-valid' : 'result-invalid');
+            resultIcon.textContent = isValid ? '✓' : '✗';
+            resultTitle.textContent = isValid ? 'IBAN有效 ✓' : 'IBAN无效 ✗';
+            resultSubtitle.textContent = isValid ? '校验位验证通过' : errors[0] || '校验位验证失败';
+
+            // 格式化显示
+            const formatted = iban.match(/.{1,4}/g)?.join(' ') || iban;
+            document.getElementById('ibanDisplay').textContent = formatted;
+
+            // 国家信息
+            const countryInfoDiv = document.getElementById('countryInfo');
+            if (countryInfo) {
+                countryInfoDiv.style.display = 'block';
+                document.getElementById('countryFlag').textContent = countryInfo.flag;
+                document.getElementById('countryName').textContent = countryInfo.name;
+                document.getElementById('countryDetails').textContent = `标准格式: ${countryInfo.format}`;
+            } else {
+                countryInfoDiv.style.display = 'none';
+            }
+
+            // 详细信息
+            document.getElementById('countryCode').textContent = countryCode;
+            document.getElementById('checkDigits').textContent = checkDigits;
+            
+            if (countryInfo) {
+                document.getElementById('bbanLength').textContent = (countryInfo.length - 4) + ' 位';
+                document.getElementById('totalLength').textContent = countryInfo.length + ' 位';
+                document.getElementById('formatCheck').textContent = '正确 ✓';
+                document.getElementById('formatCheck').className = 'detail-value success';
+            } else {
+                document.getElementById('bbanLength').textContent = '-';
+                document.getElementById('totalLength').textContent = iban.length + ' 位';
+                document.getElementById('formatCheck').textContent = '未知';
+                document.getElementById('formatCheck').className = 'detail-value warning';
+            }
+
+            document.getElementById('checksumCheck').textContent = isChecksumValid ? '通过 ✓' : '失败 ✗';
+            document.getElementById('checksumCheck').className = 'detail-value ' + (isChecksumValid ? 'success' : 'error');
+        }
+
+        function clearIBAN() {
+            document.getElementById('ibanInput').value = '';
+            document.getElementById('resultBox').classList.remove('show');
+        }
+
+        document.getElementById('ibanInput').addEventListener('input', function(e) {
+            let value = e.target.value.toUpperCase();
+            value = value.replace(/[^A-Z0-9]/g, '');
+            e.target.value = value;
+        });
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

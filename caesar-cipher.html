@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的在线凯撒密码工具，支持加密解密和暴力破解，显示所有25种偏移结果。偏移量滑块调整。">
+    <meta name="keywords" content="凯撒密码,Caesar Cipher,加密解密,暴力破解,在线密码工具">
+    <title>凯撒密码 - 在线Caesar Cipher加密解密与暴力破解工具 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/caesar-cipher.html">
+    <meta property="og:title" content="凯撒密码 - 在线Caesar Cipher加密解密与暴力破解工具">
+    <meta property="og:description" content="免费的在线凯撒密码工具，支持加密解密和暴力破解，显示所有25种偏移结果。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/caesar-cipher.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "凯撒密码",
+        "description": "免费的在线凯撒密码工具，支持加密解密和暴力破解，显示所有25种偏移结果。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .tool-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+            min-height: 100px;
+            resize: vertical;
+        }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--bg);
+            cursor: pointer;
+        }
+        .slider-group {
+            background: #F3F4F6;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .slider-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 60px;
+            text-align: center;
+        }
+        .slider-input {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border);
+            outline: none;
+            cursor: pointer;
+        }
+        .slider-input::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        .slider-input::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+        }
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #D97706;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .output-area {
+            background: #1E293B;
+            color: #E2E8F0;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 16px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 60px;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 16px;
+        }
+        .brute-force-results {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .brute-result {
+            display: flex;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .brute-result:hover {
+            background: #ECFDF5;
+        }
+        .brute-result.highlight {
+            background: #DCFCE7;
+            border: 2px solid var(--success);
+        }
+        .brute-shift {
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 80px;
+        }
+        .brute-text {
+            flex: 1;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .copy-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        .alphabet-wheel {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        .wheel-row {
+            display: flex;
+            gap: 4px;
+            margin: 4px 0;
+        }
+        .wheel-char {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            background: #F3F4F6;
+        }
+        .wheel-char.upper { background: #DBEAFE; }
+        .wheel-char.lower { background: #FEF3C7; }
+        .wheel-char.active {
+            background: var(--primary);
+            color: white;
+        }
+        .wheel-connector {
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover { color: var(--primary); }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+            .brute-result { flex-direction: column; gap: 4px; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🏛 凯撒密码</h1>
+            <p>凯撒密码加密解密，偏移量滑块调整，暴力破解显示所有25种结果。</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="tool-icon">🏛</div>
+            
+            <div class="form-group">
+                <label for="inputText">输入文本</label>
+                <textarea id="inputText" placeholder="在此输入要加密或解密的文本..."></textarea>
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-header">
+                    <label>偏移量 (Shift)</label>
+                    <div class="slider-value" id="shiftValue">3</div>
+                </div>
+                <input type="range" class="slider-input" id="shiftSlider" min="1" max="25" value="3">
+                <div class="slider-labels">
+                    <span>1</span>
+                    <span>5</span>
+                    <span>10</span>
+                    <span>15</span>
+                    <span>20</span>
+                    <span>25</span>
+                </div>
+            </div>
+
+            <!-- 字母轮盘 -->
+            <div class="alphabet-wheel" id="alphabetWheel">
+                <div>
+                    <div class="wheel-connector">A-Z 偏移对照表</div>
+                    <div class="wheel-row" id="upperRow"></div>
+                    <div class="wheel-connector">↓ 偏移</div>
+                    <div class="wheel-row" id="lowerRow"></div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="encrypt()">🔐 加密</button>
+                <button class="btn btn-primary" onclick="decrypt()">🔓 解密</button>
+                <button class="btn btn-warning" onclick="bruteForce()">💥 暴力破解</button>
+                <button class="btn btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+            </div>
+
+            <div class="form-group" style="margin-top: 24px;">
+                <label for="outputText">结果</label>
+                <div class="output-area" id="outputText">结果将显示在这里...</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="copyResult()">📋 复制结果</button>
+            </div>
+
+            <!-- 暴力破解结果 -->
+            <div class="result-box" id="bruteForceBox" style="display: none;">
+                <div class="result-title">💥 暴力破解 - 所有25种偏移结果</div>
+                <div class="brute-force-results" id="bruteForceResults"></div>
+                <div class="copy-hint">💡 点击任意结果可复制</div>
+            </div>
+
+            <!-- 原理说明 -->
+            <div style="margin-top: 24px; padding: 16px; background: #F3F4F6; border-radius: 8px;">
+                <h4 style="margin-bottom: 12px;">📖 凯撒密码原理</h4>
+                <div style="font-size: 14px; color: var(--text-secondary); line-height: 2;">
+                    <div><strong>加密：</strong>将每个字母向后移动指定的位数</div>
+                    <div><strong>解密：</strong>将每个字母向前移动指定的位数</div>
+                    <div style="margin-top: 8px;">
+                        <strong>示例 (偏移=3)：</strong><br>
+                        原文：A B C D E ... X Y Z<br>
+                        密文：D E F G H ... A B C
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    什么是凯撒密码？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    凯撒密码是一种古老且简单的替换密码，据传由罗马皇帝尤利乌斯·凯撒发明。它将字母表中的每个字母替换为固定偏移位置的字母。例如，偏移量为3时，A变成D，B变成E，以此类推。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    凯撒密码安全吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    凯撒密码安全性很低，只是一种入门级的加密练习。它只有25种可能的偏移（排除偏移0），通过暴力破解可以在瞬间测试所有可能的结果，因此不适合保护重要信息。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    暴力破解是什么意思？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    暴力破解会尝试所有25种可能的偏移（1-25），显示每种偏移的解密结果。因为凯撒密码只有25种可能，人工分析所有结果很快就能找到正确答案。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    为什么只有25种偏移？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    英文字母表有26个字符。偏移26相当于不偏移（回到原位），所以有效的偏移只有1-25。偏移0和26的结果相同。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    支持中文和其他字符吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    凯撒密码只处理英文字母A-Z（不区分大小写）。数字和标点符号保持不变，中文字符和其他非英文字符会被保留不转换。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="base64-tool.html" class="related-card"><div class="r-icon">🔄</div><div class="r-title">Base64 编码解码</div><div class="r-desc">文本和图片的Base64互转</div></a>
+        <a href="base32-encoder.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">Base32 编解码</div><div class="r-desc">文本与Base32互转</div></a>
+        <a href="url-encoder.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">URL 编解码器</div><div class="r-desc">URL编码/解码</div></a>
+        <a href="html-entity-encoder.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">HTML 实体编码/解码</div><div class="r-desc">文本与HTML实体互转</div></a>
+        <a href="rot13-tool.html" class="related-card"><div class="r-icon">🔑</div><div class="r-title">ROT13 加密解密</div><div class="r-desc">ROT13/ROT47/ROT5</div></a>
+        <a href="morse-code-tool.html" class="related-card"><div class="r-icon">📡</div><div class="r-title">摩斯电码转换</div><div class="r-desc">文本与摩斯码互转</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentShift = 3;
+
+        // 初始化字母轮盘
+        function initAlphabetWheel() {
+            const upperRow = document.getElementById('upperRow');
+            const lowerRow = document.getElementById('lowerRow');
+            
+            upperRow.innerHTML = '';
+            lowerRow.innerHTML = '';
+            
+            for (let i = 0; i < 26; i++) {
+                const upperChar = String.fromCharCode(65 + i);
+                const lowerChar = String.fromCharCode(97 + i);
+                const shiftedChar = String.fromCharCode(65 + ((i + currentShift) % 26));
+                
+                const upperDiv = document.createElement('div');
+                upperDiv.className = 'wheel-char upper';
+                upperDiv.textContent = upperChar;
+                upperDiv.id = `upper-${i}`;
+                upperRow.appendChild(upperDiv);
+                
+                const lowerDiv = document.createElement('div');
+                lowerDiv.className = 'wheel-char';
+                lowerDiv.textContent = shiftedChar;
+                lowerDiv.id = `lower-${i}`;
+                lowerRow.appendChild(lowerDiv);
+            }
+        }
+
+        // 更新字母轮盘
+        function updateAlphabetWheel(shift) {
+            currentShift = shift;
+            document.getElementById('shiftValue').textContent = shift;
+            
+            const upperChars = document.querySelectorAll('#upperRow .wheel-char');
+            const lowerChars = document.querySelectorAll('#lowerRow .wheel-char');
+            
+            upperChars.forEach((el, i) => {
+                el.classList.remove('active');
+                if (i === 0 || i === 25) el.classList.add('active');
+            });
+            
+            lowerChars.forEach((el, i) => {
+                const shiftedChar = String.fromCharCode(65 + ((i + shift) % 26));
+                el.textContent = shiftedChar;
+            });
+        }
+
+        // 加密函数
+        function caesarShift(text, shift, encrypt = true) {
+            const direction = encrypt ? 1 : -1;
+            let result = '';
+            
+            for (const char of text) {
+                const code = char.charCodeAt(0);
+                
+                // 大写字母 A-Z: 65-90
+                if (code >= 65 && code <= 90) {
+                    result += String.fromCharCode(((code - 65 + direction * shift + 26) % 26) + 65);
+                }
+                // 小写字母 a-z: 97-122
+                else if (code >= 97 && code <= 122) {
+                    result += String.fromCharCode(((code - 97 + direction * shift + 26) % 26) + 97);
+                }
+                // 其他字符保持不变
+                else {
+                    result += char;
+                }
+            }
+            
+            return result;
+        }
+
+        function encrypt() {
+            const input = document.getElementById('inputText').value;
+            if (!input) {
+                document.getElementById('outputText').textContent = '请输入要加密的文本';
+                return;
+            }
+            
+            const shift = parseInt(document.getElementById('shiftSlider').value);
+            const result = caesarShift(input, shift, true);
+            document.getElementById('outputText').textContent = result;
+            document.getElementById('bruteForceBox').style.display = 'none';
+        }
+
+        function decrypt() {
+            const input = document.getElementById('inputText').value;
+            if (!input) {
+                document.getElementById('outputText').textContent = '请输入要解密的文本';
+                return;
+            }
+            
+            const shift = parseInt(document.getElementById('shiftSlider').value);
+            const result = caesarShift(input, shift, false);
+            document.getElementById('outputText').textContent = result;
+            document.getElementById('bruteForceBox').style.display = 'none';
+        }
+
+        function bruteForce() {
+            const input = document.getElementById('inputText').value;
+            if (!input) {
+                document.getElementById('outputText').textContent = '请输入要破解的文本';
+                return;
+            }
+            
+            const results = [];
+            for (let shift = 1; shift <= 25; shift++) {
+                const decrypted = caesarShift(input, shift, false);
+                results.push({ shift, text: decrypted });
+            }
+            
+            // 显示结果
+            const resultsContainer = document.getElementById('bruteForceResults');
+            resultsContainer.innerHTML = results.map(r => `
+                <div class="brute-result" onclick="selectResult(${r.shift})">
+                    <div class="brute-shift">偏移 ${r.shift}</div>
+                    <div class="brute-text">${escapeHtml(r.text)}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('bruteForceBox').style.display = 'block';
+            document.getElementById('outputText').textContent = '暴力破解结果已显示在上方，请查看所有25种可能';
+        }
+
+        function selectResult(shift) {
+            // 更新滑块
+            document.getElementById('shiftSlider').value = shift;
+            updateAlphabetWheel(shift);
+            
+            // 设置结果
+            const input = document.getElementById('inputText').value;
+            const decrypted = caesarShift(input, shift, false);
+            document.getElementById('outputText').textContent = decrypted;
+            
+            // 高亮选中项
+            document.querySelectorAll('.brute-result').forEach(el => el.classList.remove('highlight'));
+            event.target.closest('.brute-result').classList.add('highlight');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').textContent = '结果将显示在这里...';
+            document.getElementById('bruteForceBox').style.display = 'none';
+        }
+
+        function copyResult() {
+            const text = document.getElementById('outputText').textContent;
+            if (text && text !== '结果将显示在这里...' && !text.startsWith('暴力破解')) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('已复制到剪贴板！');
+                });
+            }
+        }
+
+        // 滑块事件
+        document.getElementById('shiftSlider').addEventListener('input', function() {
+            updateAlphabetWheel(parseInt(this.value));
+        });
+
+        // 初始化
+        initAlphabetWheel();
+        updateAlphabetWheel(3);
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

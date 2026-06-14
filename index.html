@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="免费在线开发者工具箱：100+工具覆盖编码解码、格式转换、文本处理、计算器、单位转换、SEO工具、图片工具——纯前端运行，数据不离开浏览器。">
+    <meta name="keywords" content="在线工具,开发者工具,编码解码,格式转换,文本处理,计算器,单位转换,SEO工具,图片工具,JSON格式化,Base64,密码生成器">
+    <title>DevToolBox - 免费在线开发者工具箱 | 100+工具</title>
+    <link rel="canonical" href="https://devtoolhub.cc/">
+    <meta property="og:title" content="DevToolBox - 免费在线开发者工具箱 | 100+工具">
+    <meta property="og:description" content="100+免费在线开发者工具：编码解码、格式转换、文本处理、计算器、SEO工具——纯前端运行，数据不离开浏览器">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "DevToolBox",
+        "description": "免费在线开发者工具箱，100+工具",
+        "url": "https://devtoolhub.cc/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <style>
+        :root{--primary:#4F46E5;--primary-hover:#4338CA;--primary-light:#EEF2FF;--bg:#F9FAFB;--card-bg:#FFF;--text:#111827;--text-secondary:#6B7280;--border:#E5E7EB;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,.1);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.1)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+        .header{background:var(--card-bg);border-bottom:1px solid var(--border);padding:16px 0;position:sticky;top:0;z-index:100}
+        .header-inner{max-width:960px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center}
+        .logo{font-size:22px;font-weight:800;color:var(--primary);text-decoration:none}
+        .nav-links{display:flex;gap:16px}
+        .nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}
+        .nav-links a:hover{color:var(--primary)}
+        .hero{text-align:center;padding:56px 20px 36px}
+        .hero h1{font-size:36px;font-weight:800;margin-bottom:12px;background:linear-gradient(135deg,#4F46E5,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero p{font-size:18px;color:var(--text-secondary);max-width:600px;margin:0 auto 20px}
+        .privacy-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);border:1px solid #C7D2FE;border-radius:20px;padding:6px 16px;font-size:14px;color:var(--primary);font-weight:500}
+        .cat-bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:960px;margin:0 auto 32px;padding:0 20px}
+        .cat-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;text-decoration:none;color:var(--text);background:var(--card-bg);border:1px solid var(--border);transition:all .2s;white-space:nowrap}
+        .cat-chip:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
+        .container{max-width:960px;margin:0 auto;padding:0 20px 40px}
+        .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+        .tool-card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px;text-decoration:none;color:var(--text);transition:all .2s;border:1px solid transparent;display:flex;flex-direction:column}
+        .tool-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);border-color:var(--primary)}
+        .tool-icon{font-size:36px;margin-bottom:14px}
+        .tool-card h2{font-size:18px;font-weight:700;margin-bottom:8px}
+        .tool-card p{font-size:14px;color:var(--text-secondary);flex:1}
+        .tool-card .arrow{color:var(--primary);font-weight:600;font-size:14px;margin-top:12px}
+        .why-section{margin-top:56px;padding:48px 20px;background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow)}
+        .why-section h2{font-size:24px;font-weight:700;text-align:center;margin-bottom:32px}
+        .why-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px;max-width:960px;margin:0 auto}
+        .why-item{text-align:center;padding:20px}
+        .why-icon{font-size:36px;margin-bottom:10px}
+        .why-item h3{font-size:16px;font-weight:700;margin-bottom:6px}
+        .why-item p{font-size:14px;color:var(--text-secondary);line-height:1.6}
+        .footer{background:var(--card-bg);border-top:1px solid var(--border);padding:24px 0;text-align:center;color:var(--text-secondary);font-size:13px}
+        .footer a{color:var(--primary);text-decoration:none}
+        @media(max-width:640px){.hero h1{font-size:26px}.hero p{font-size:16px}.tools-grid{grid-template-columns:1fr}.why-grid{grid-template-columns:1fr 1fr}}
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="/tools.html">分类浏览</a>
+                <a href="/about.html">关于</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>免费在线开发者工具箱</h1>
+        <p>100+工具覆盖编码解码、格式转换、文本处理、计算器、单位转换、SEO工具——所有工具纯前端运行</p>
+        <div class="privacy-badge">🔒 数据本地处理，不上传服务器</div>
+    </section>
+
+    <div class="cat-bar">
+<a href="/tools.html#编码解码" class="cat-chip">🔐 编码解码</a>
+<a href="/tools.html#格式化" class="cat-chip">📋 格式化</a>
+<a href="/tools.html#文本处理" class="cat-chip">📝 文本处理</a>
+<a href="/tools.html#生成器" class="cat-chip">⚡ 生成器</a>
+<a href="/tools.html#校验工具" class="cat-chip">✅ 校验工具</a>
+<a href="/tools.html#计算器" class="cat-chip">🧮 计算器</a>
+<a href="/tools.html#转换器" class="cat-chip">🔄 转换器</a>
+<a href="/tools.html#seo-开发" class="cat-chip">🚀 SEO/开发</a>
+<a href="/tools.html#图片-css" class="cat-chip">🎨 图片/CSS</a>
+<a href="/tools.html#网络工具" class="cat-chip">🌐 网络工具</a>
+
+    </div>
+
+    <main class="container">
+        <div class="tools-grid">
+
+            <a href="base64-tool.html" class="tool-card">
+                <div class="tool-icon">🔄</div>
+                <h2>Base64 编码解码</h2>
+                <p>文本和图片的Base64互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="base32-encoder.html" class="tool-card">
+                <div class="tool-icon">🔐</div>
+                <h2>Base32 编解码</h2>
+                <p>文本与Base32互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="url-encoder.html" class="tool-card">
+                <div class="tool-icon">🌐</div>
+                <h2>URL 编解码器</h2>
+                <p>URL编码/解码</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="html-entity-encoder.html" class="tool-card">
+                <div class="tool-icon">🏷</div>
+                <h2>HTML 实体编码/解码</h2>
+                <p>文本与HTML实体互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="rot13-tool.html" class="tool-card">
+                <div class="tool-icon">🔑</div>
+                <h2>ROT13 加密解密</h2>
+                <p>ROT13/ROT47/ROT5加密解密</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="morse-code-tool.html" class="tool-card">
+                <div class="tool-icon">📡</div>
+                <h2>摩斯电码转换</h2>
+                <p>文本与摩斯码互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="caesar-cipher.html" class="tool-card">
+                <div class="tool-icon">🏛</div>
+                <h2>凯撒密码</h2>
+                <p>加密/解密/暴力破解</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="text-to-binary.html" class="tool-card">
+                <div class="tool-icon">💾</div>
+                <h2>文本/二进制转换</h2>
+                <p>文本与二进制互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="jwt-decoder.html" class="tool-card">
+                <div class="tool-icon">🛡</div>
+                <h2>JWT 解码器</h2>
+                <p>解析JWT Token</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="hash-tool.html" class="tool-card">
+                <div class="tool-icon">🔏</div>
+                <h2>哈希/加密工具</h2>
+                <p>MD5/SHA哈希计算</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="number-base-converter.html" class="tool-card">
+                <div class="tool-icon">🔢</div>
+                <h2>进制转换器</h2>
+                <p>二/八/十/十六进制互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="json-formatter.html" class="tool-card">
+                <div class="tool-icon">{ }</div>
+                <h2>JSON 格式化工具</h2>
+                <p>JSON美化、校验、压缩</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="xml-formatter.html" class="tool-card">
+                <div class="tool-icon">📄</div>
+                <h2>XML 格式化工具</h2>
+                <p>XML美化/压缩/校验</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="sql-formatter.html" class="tool-card">
+                <div class="tool-icon">🗃</div>
+                <h2>SQL 格式化工具</h2>
+                <p>SQL美化格式化</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="html-minifier.html" class="tool-card">
+                <div class="tool-icon">📦</div>
+                <h2>HTML 压缩器</h2>
+                <p>压缩HTML代码</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="css-minifier.html" class="tool-card">
+                <div class="tool-icon">🎨</div>
+                <h2>CSS 压缩器</h2>
+                <p>压缩CSS代码</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="js-minifier.html" class="tool-card">
+                <div class="tool-icon">⚡</div>
+                <h2>JavaScript 压缩器</h2>
+                <p>压缩JS代码</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="code-beautifier.html" class="tool-card">
+                <div class="tool-icon">✨</div>
+                <h2>代码美化器</h2>
+                <p>JS/CSS/HTML/SQL格式化</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="csv-to-json.html" class="tool-card">
+                <div class="tool-icon">🔀</div>
+                <h2>CSV/JSON 转换器</h2>
+                <p>CSV与JSON双向转换</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="markdown-to-html.html" class="tool-card">
+                <div class="tool-icon">📝</div>
+                <h2>Markdown 转 HTML</h2>
+                <p>实时渲染Markdown为HTML</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="yaml-json-converter.html" class="tool-card">
+                <div class="tool-icon">🔄</div>
+                <h2>YAML/JSON 互转</h2>
+                <p>YAML与JSON双向转换</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="markdown-preview.html" class="tool-card">
+                <div class="tool-icon">📋</div>
+                <h2>Markdown 预览器</h2>
+                <p>左右分栏实时预览</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="text-diff.html" class="tool-card">
+                <div class="tool-icon">⚡</div>
+                <h2>文本差异对比</h2>
+                <p>行级/字符级差异高亮</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="word-counter.html" class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h2>字数统计器</h2>
+                <p>中英文混合统计</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="character-counter.html" class="tool-card">
+                <div class="tool-icon">🔢</div>
+                <h2>字符计数器</h2>
+                <p>各类字符统计</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="whitespace-remover.html" class="tool-card">
+                <div class="tool-icon">🧹</div>
+                <h2>空白字符清理器</h2>
+                <p>移除空格/Tab/空行</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="text-reverser.html" class="tool-card">
+                <div class="tool-icon">🔃</div>
+                <h2>文本反转器</h2>
+                <p>整体/逐行/逐词反转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="remove-duplicate-lines.html" class="tool-card">
+                <div class="tool-icon">✂</div>
+                <h2>去除重复行</h2>
+                <p>智能去重</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="sort-lines.html" class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h2>文本行排序</h2>
+                <p>升序/降序/自然排序</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="find-replace.html" class="tool-card">
+                <div class="tool-icon">🔎</div>
+                <h2>查找替换</h2>
+                <p>正则支持，批量替换</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="line-numbering.html" class="tool-card">
+                <div class="tool-icon">🔢</div>
+                <h2>行号添加器</h2>
+                <p>添加/移除行号</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="text-column-extractor.html" class="tool-card">
+                <div class="tool-icon">📋</div>
+                <h2>文本列提取器</h2>
+                <p>按分隔符提取指定列</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="text-statistics.html" class="tool-card">
+                <div class="tool-icon">📈</div>
+                <h2>文本统计分析</h2>
+                <p>字频/词频/可读性指标</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="text-repeater.html" class="tool-card">
+                <div class="tool-icon">🔄</div>
+                <h2>文本重复器</h2>
+                <p>重复文本N次</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="string-case-converter.html" class="tool-card">
+                <div class="tool-icon">🔤</div>
+                <h2>字符串大小写转换</h2>
+                <p>8种格式实时转换</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="lorem-ipsum-generator.html" class="tool-card">
+                <div class="tool-icon">📄</div>
+                <h2>占位文本生成器</h2>
+                <p>中/英/日三语占位文本</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="password-generator.html" class="tool-card">
+                <div class="tool-icon">🔐</div>
+                <h2>安全密码生成器</h2>
+                <p>生成高强度随机密码</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="uuid-generator.html" class="tool-card">
+                <div class="tool-icon">🔑</div>
+                <h2>UUID 生成器</h2>
+                <p>批量生成UUID v4/v1</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="qrcode-generator.html" class="tool-card">
+                <div class="tool-icon">📱</div>
+                <h2>二维码生成器</h2>
+                <p>在线生成二维码</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="fake-data-generator.html" class="tool-card">
+                <div class="tool-icon">🎭</div>
+                <h2>假数据生成器</h2>
+                <p>姓名/地址/邮箱批量生成</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="barcode-generator.html" class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h2>条形码生成器</h2>
+                <p>Code128/EAN-13生成</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="random-number-generator.html" class="tool-card">
+                <div class="tool-icon">🎲</div>
+                <h2>随机数生成器</h2>
+                <p>整数/小数/UUID批量生成</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="ascii-art-generator.html" class="tool-card">
+                <div class="tool-icon">✏</div>
+                <h2>ASCII 艺术生成器</h2>
+                <p>文本转ASCII艺术字</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="timestamp-converter.html" class="tool-card">
+                <div class="tool-icon">⏱</div>
+                <h2>时间戳转换器</h2>
+                <p>Unix时间戳与日期互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="json-validator.html" class="tool-card">
+                <div class="tool-icon">✓</div>
+                <h2>JSON 校验器</h2>
+                <p>语法检查，错误行定位</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="xml-validator.html" class="tool-card">
+                <div class="tool-icon">📋</div>
+                <h2>XML 校验器</h2>
+                <p>Well-formed检查</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="html-validator.html" class="tool-card">
+                <div class="tool-icon">🔍</div>
+                <h2>HTML 校验器</h2>
+                <p>标签闭合/嵌套检查</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="css-validator.html" class="tool-card">
+                <div class="tool-icon">🎯</div>
+                <h2>CSS 校验器</h2>
+                <p>语法检查，属性验证</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="regex-tester.html" class="tool-card">
+                <div class="tool-icon">📝</div>
+                <h2>正则表达式测试器</h2>
+                <p>实时匹配高亮</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="credit-card-validator.html" class="tool-card">
+                <div class="tool-icon">💳</div>
+                <h2>信用卡号验证器</h2>
+                <p>Luhn算法验证</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="email-validator.html" class="tool-card">
+                <div class="tool-icon">✉</div>
+                <h2>邮箱格式验证</h2>
+                <p>RFC语法验证</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="iban-validator.html" class="tool-card">
+                <div class="tool-icon">🏦</div>
+                <h2>IBAN 验证器</h2>
+                <p>国际银行账号校验</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="percentage-calculator.html" class="tool-card">
+                <div class="tool-icon">💯</div>
+                <h2>百分比计算器</h2>
+                <p>6种计算类型</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="ratio-calculator.html" class="tool-card">
+                <div class="tool-icon">⚖</div>
+                <h2>比例计算器</h2>
+                <p>A:B=C:D求解</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="age-calculator.html" class="tool-card">
+                <div class="tool-icon">🎂</div>
+                <h2>年龄计算器</h2>
+                <p>精确到天</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="bmi-calculator.html" class="tool-card">
+                <div class="tool-icon">⚖</div>
+                <h2>BMI 计算器</h2>
+                <p>体重指数计算</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="loan-calculator.html" class="tool-card">
+                <div class="tool-icon">🏠</div>
+                <h2>贷款计算器</h2>
+                <p>等额本息/等额本金</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="tip-calculator.html" class="tool-card">
+                <div class="tool-icon">💰</div>
+                <h2>小费计算器</h2>
+                <p>多种比例，AA分账</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="discount-calculator.html" class="tool-card">
+                <div class="tool-icon">🏷</div>
+                <h2>折扣计算器</h2>
+                <p>多重折扣叠加计算</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="date-difference-calculator.html" class="tool-card">
+                <div class="tool-icon">📅</div>
+                <h2>日期差计算器</h2>
+                <p>日期间隔天数计算</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="fuel-cost-calculator.html" class="tool-card">
+                <div class="tool-icon">⛽</div>
+                <h2>油费计算器</h2>
+                <p>油耗/距离/油价计算</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="compound-interest-calculator.html" class="tool-card">
+                <div class="tool-icon">📈</div>
+                <h2>复利计算器</h2>
+                <p>本息计算，定投模拟</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="chmod-calculator.html" class="tool-card">
+                <div class="tool-icon">🔒</div>
+                <h2>Chmod 权限计算器</h2>
+                <p>数字/符号双向转换</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="css-unit-converter.html" class="tool-card">
+                <div class="tool-icon">📐</div>
+                <h2>CSS 单位转换器</h2>
+                <p>px/rem/em等9种单位互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="pixel-to-rem-converter.html" class="tool-card">
+                <div class="tool-icon">🔢</div>
+                <h2>px/rem 转换器</h2>
+                <p>px↔rem互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="timezone-converter.html" class="tool-card">
+                <div class="tool-icon">🌍</div>
+                <h2>时区转换器</h2>
+                <p>全球20+城市时区对比</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="temperature-converter.html" class="tool-card">
+                <div class="tool-icon">🌡</div>
+                <h2>温度转换器</h2>
+                <p>℃/℉/K互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="data-size-converter.html" class="tool-card">
+                <div class="tool-icon">💿</div>
+                <h2>数据大小转换器</h2>
+                <p>B/KB/MB/GB/TB互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="speed-converter.html" class="tool-card">
+                <div class="tool-icon">🚀</div>
+                <h2>速度转换器</h2>
+                <p>km/h/mph/m/s互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="area-converter.html" class="tool-card">
+                <div class="tool-icon">📐</div>
+                <h2>面积转换器</h2>
+                <p>m²/ft²/acre互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="length-converter.html" class="tool-card">
+                <div class="tool-icon">📏</div>
+                <h2>长度转换器</h2>
+                <p>m/ft/in/cm互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="weight-converter.html" class="tool-card">
+                <div class="tool-icon">⚖</div>
+                <h2>重量转换器</h2>
+                <p>kg/lb/oz/g互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="volume-converter.html" class="tool-card">
+                <div class="tool-icon">🧪</div>
+                <h2>体积转换器</h2>
+                <p>L/mL/gal/cup互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="number-to-words.html" class="tool-card">
+                <div class="tool-icon">🔤</div>
+                <h2>数字转文字</h2>
+                <p>数字转中文大写/英文</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="meta-tag-generator.html" class="tool-card">
+                <div class="tool-icon">🏷</div>
+                <h2>Meta 标签生成器</h2>
+                <p>SEO/OG标签生成</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="open-graph-generator.html" class="tool-card">
+                <div class="tool-icon">🌐</div>
+                <h2>OG 标签生成器</h2>
+                <p>Facebook分享标签</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="twitter-card-generator.html" class="tool-card">
+                <div class="tool-icon">🐦</div>
+                <h2>Twitter Card 生成器</h2>
+                <p>卡片标签生成</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="robots-txt-generator.html" class="tool-card">
+                <div class="tool-icon">🤖</div>
+                <h2>robots.txt 生成器</h2>
+                <p>可视化生成规则</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="url-slug-generator.html" class="tool-card">
+                <div class="tool-icon">🔗</div>
+                <h2>URL Slug 生成器</h2>
+                <p>SEO友好的URL生成</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="url-parser.html" class="tool-card">
+                <div class="tool-icon">🔍</div>
+                <h2>URL 解析器</h2>
+                <p>自动解析URL组件</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="http-status-codes.html" class="tool-card">
+                <div class="tool-icon">📡</div>
+                <h2>HTTP 状态码查询</h2>
+                <p>完整1xx-5xx状态码</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="mime-type-lookup.html" class="tool-card">
+                <div class="tool-icon">📎</div>
+                <h2>MIME 类型查询</h2>
+                <p>200+MIME类型数据库</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="cron-expression.html" class="tool-card">
+                <div class="tool-icon">⏰</div>
+                <h2>Cron 表达式生成器</h2>
+                <p>可视化构建Cron</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="git-cheatsheet.html" class="tool-card">
+                <div class="tool-icon">📦</div>
+                <h2>Git 命令速查</h2>
+                <p>50+命令9大分类</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="image-compressor.html" class="tool-card">
+                <div class="tool-icon">🖼</div>
+                <h2>图片压缩器</h2>
+                <p>PNG/JPG/WebP压缩</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="svg-viewer.html" class="tool-card">
+                <div class="tool-icon">🎨</div>
+                <h2>SVG 查看器/优化器</h2>
+                <p>代码编辑+实时预览</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="image-to-base64.html" class="tool-card">
+                <div class="tool-icon">🖼</div>
+                <h2>图片转 Base64</h2>
+                <p>图片自动转Base64</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="base64-to-image.html" class="tool-card">
+                <div class="tool-icon">🖼</div>
+                <h2>Base64 转图片</h2>
+                <p>Base64编码还原图片</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="image-resizer.html" class="tool-card">
+                <div class="tool-icon">📐</div>
+                <h2>图片缩放工具</h2>
+                <p>纯前端Canvas缩放</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="favicon-generator.html" class="tool-card">
+                <div class="tool-icon">⭐</div>
+                <h2>Favicon 生成器</h2>
+                <p>文字/图片转图标</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="placeholder-image.html" class="tool-card">
+                <div class="tool-icon">🖼</div>
+                <h2>占位图生成器</h2>
+                <p>自定义尺寸占位图</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="css-gradient-generator.html" class="tool-card">
+                <div class="tool-icon">🎨</div>
+                <h2>CSS 渐变生成器</h2>
+                <p>可视化拖拽生成渐变</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="css-shadow-generator.html" class="tool-card">
+                <div class="tool-icon">🌙</div>
+                <h2>CSS 阴影生成器</h2>
+                <p>box-shadow可视化</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="css-border-radius-generator.html" class="tool-card">
+                <div class="tool-icon">🔘</div>
+                <h2>CSS 圆角生成器</h2>
+                <p>四角独立控制圆角</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="color-picker.html" class="tool-card">
+                <div class="tool-icon">🎯</div>
+                <h2>颜色选择器</h2>
+                <p>HEX/RGB/HSL互转</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="color-palette-generator.html" class="tool-card">
+                <div class="tool-icon">🎨</div>
+                <h2>配色方案生成器</h2>
+                <p>多种配色方案</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="font-previewer.html" class="tool-card">
+                <div class="tool-icon">🔤</div>
+                <h2>字体预览器</h2>
+                <p>Web安全字体预览对比</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="ip-lookup.html" class="tool-card">
+                <div class="tool-icon">🖥</div>
+                <h2>IP 地址查询</h2>
+                <p>公网IP检测+地理查询</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="user-agent-parser.html" class="tool-card">
+                <div class="tool-icon">🧑‍💻</div>
+                <h2>User Agent 解析器</h2>
+                <p>解析浏览器/OS/设备</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+            <a href="screen-resolution.html" class="tool-card">
+                <div class="tool-icon">📺</div>
+                <h2>屏幕分辨率检测</h2>
+                <p>实时检测屏幕参数</p>
+                <div class="arrow">使用工具 →</div>
+            </a>
+        </div>
+
+        <section class="why-section">
+            <h2>为什么选择 DevToolBox？</h2>
+            <div class="why-grid">
+                <div class="why-item">
+                    <div class="why-icon">🚀</div>
+                    <h3>零延迟</h3>
+                    <p>纯前端计算，无需网络请求，打开即用</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">🔒</div>
+                    <h3>隐私安全</h3>
+                    <p>数据不离开浏览器，断网也能用</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">📱</div>
+                    <h3>移动友好</h3>
+                    <p>响应式设计，手机平板都能用</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">💰</div>
+                    <h3>完全免费</h3>
+                    <p>无注册、无限制、无隐藏收费</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">🇨🇳</div>
+                    <h3>中文优先</h3>
+                    <p>全中文界面和文档，更适合国内开发者</p>
+                </div>
+                <div class="why-item">
+                    <div class="why-icon">🔧</div>
+                    <h3>100+工具</h3>
+                    <p>覆盖开发全场景，一个站点全搞定</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. Free online developer tools. All processing happens locally in your browser. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+</body>
+</html>

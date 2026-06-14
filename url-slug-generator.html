@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <meta name="description" content="免费在线URL Slug生成器，将标题转换为SEO友好的URL格式，支持中文转拼音，自动移除停用词">
+    <meta name="keywords" content="URL Slug生成器, SEO URL, 伪静态URL, 中文转拼音, URL美化, 永久链接生成">
+    <title>URL Slug生成器 - URL Slug Generator | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/url-slug-generator.html">
+    <meta property="og:title" content="URL Slug生成器 - URL Slug Generator">
+    <meta property="og:description" content="免费在线URL Slug生成器，将标题转换为SEO友好的URL格式">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/url-slug-generator.html">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 8px;
+        }
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .result-value {
+            background: white;
+            border: 1px solid #D1FAE5;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            word-break: break-all;
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 8px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .copy-btn.copied {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        .slug-preview {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 6px;
+            border: 1px dashed var(--border);
+        }
+        .slug-preview-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .slug-preview-url {
+            font-size: 14px;
+            color: var(--primary);
+            word-break: break-all;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .slug-history {
+            margin-top: 20px;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--bg);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .history-item span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 12px;
+        }
+        .history-item button {
+            padding: 4px 8px;
+            font-size: 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .history-item button:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1 data-zh="URL Slug生成器" data-en="URL Slug Generator">URL Slug生成器</h1>
+            <p data-zh="将标题转换为SEO友好的URL格式，支持中文转拼音，自动移除停用词" data-en="Convert titles to SEO-friendly URLs, Chinese to Pinyin, auto-remove stop words">将标题转换为SEO友好的URL格式，支持中文转拼音，自动移除停用词</p>
+        </section>
+
+        <div class="ad-slot">Advertisement Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label data-zh="输入标题" data-en="Enter Title">输入标题</label>
+                <input type="text" id="titleInput" placeholder="2024年最受欢迎的10款笔记本电脑推荐" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label data-zh="分隔符" data-en="Separator">分隔符</label>
+                    <select id="separatorSelect">
+                        <option value="-" data-zh="连字符 (-)" data-en="Hyphen (-)">连字符 (-)</option>
+                        <option value="_" data-zh="下划线 (_)" data-en="Underscore (_)">下划线 (_)</option>
+                        <option value="+" data-zh="加号 (+)" data-en="Plus (+)">加号 (+)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-zh="最大长度" data-en="Max Length">最大长度</label>
+                    <select id="maxLengthSelect">
+                        <option value="50">50</option>
+                        <option value="75" selected>75</option>
+                        <option value="100">100</option>
+                        <option value="0" data-zh="无限制" data-en="No Limit">无限制</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-group">
+                    <input type="checkbox" id="removeStopWords" checked>
+                    <span data-zh="移除停用词（the, a, an, 的, 了, 是等）" data-en="Remove stop words (the, a, an, etc.)">移除停用词（the, a, an, 的, 了, 是等）</span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-group">
+                    <input type="checkbox" id="toLowerCase" checked>
+                    <span data-zh="转换为小写" data-en="Convert to lowercase">转换为小写</span>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-group">
+                    <input type="checkbox" id="chineseToPinyin" checked>
+                    <span data-zh="中文转拼音" data-en="Convert Chinese to Pinyin">中文转拼音</span>
+                </label>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" id="generateBtn" data-zh="生成Slug" data-en="Generate Slug">生成Slug</button>
+                <button class="btn btn-secondary" id="clearBtn" data-zh="清空" data-en="Clear">清空</button>
+            </div>
+
+            <div id="resultBox" class="result-box">
+                <div class="result-label" data-zh="生成的URL Slug：" data-en="Generated URL Slug:">生成的URL Slug：</div>
+                <div class="result-value">
+                    <span id="slugResult"></span>
+                    <button class="copy-btn" id="copyBtn" data-zh="复制" data-en="Copy">复制</button>
+                </div>
+                <div class="slug-preview">
+                    <div class="slug-preview-label" data-zh="URL预览：" data-en="URL Preview:">URL Preview:</div>
+                    <div class="slug-preview-url" id="slugPreview"></div>
+                </div>
+            </div>
+
+            <div id="historyBox" class="slug-history" style="display:none;">
+                <h3 data-zh="历史记录" data-en="History">历史记录</h3>
+                <div id="historyList"></div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Advertisement Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2 data-zh="常见问题" data-en="FAQ">常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span data-zh="什么是URL Slug？" data-en="What is a URL Slug?">什么是URL Slug？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a" data-zh="URL Slug是URL中用于标识网页的可读性字符串。例如：news/2024-best-laptops。好的Slug有助于SEO和用户体验。">URL Slug是URL中用于标识网页的可读性字符串。例如：news/2024-best-laptops。好的Slug有助于SEO和用户体验。</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span data-zh="为什么需要中文转拼音？" data-en="Why convert Chinese to Pinyin?">为什么需要中文转拼音？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a" data-zh="英文搜索引擎无法直接识别中文，中文转拼音可以让外国用户也能理解URL含义，提升国际SEO效果。">英文搜索引擎无法直接识别中文，中文转拼音可以让外国用户也能理解URL含义，提升国际SEO效果。</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span data-zh="停用词有哪些？" data-en="What are stop words?">停用词有哪些？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a" data-zh="停用词是对搜索意义不大的常见词，如英文的the、a、is，中文的的、了、是、在等。移除后可让Slug更简洁。">停用词是对搜索意义不大的常见词，如英文的the、a、is，中文的的、了、是、在等。移除后可让Slug更简洁。</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span data-zh="最大长度限制有什么作用？" data-en="What is the max length limit for?">最大长度限制有什么作用？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a" data-zh="Google建议URL slug不超过75个字符。超长的slug会被截断，影响可读性和SEO效果。">Google建议URL slug不超过75个字符。超长的slug会被截断，影响可读性和SEO效果。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="meta-tag-generator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">Meta 标签生成器</div><div class="r-desc">SEO标签</div></a>
+        <a href="open-graph-generator.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">OG 标签生成器</div><div class="r-desc">社交分享标签</div></a>
+        <a href="twitter-card-generator.html" class="related-card"><div class="r-icon">🐦</div><div class="r-title">Twitter Card 生成器</div><div class="r-desc">卡片标签</div></a>
+        <a href="robots-txt-generator.html" class="related-card"><div class="r-icon">🤖</div><div class="r-title">robots.txt 生成器</div><div class="r-desc">生成规则</div></a>
+        <a href="url-parser.html" class="related-card"><div class="r-icon">🔍</div><div class="r-title">URL 解析器</div><div class="r-desc">URL组件解析</div></a>
+        <a href="http-status-codes.html" class="related-card"><div class="r-icon">📡</div><div class="r-title">HTTP 状态码查询</div><div class="r-desc">状态码查询</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>
+            <a href="/about.html">关于我们</a> | 
+            <a href="/privacy.html">隐私政策</a> | 
+            <a href="/terms.html">使用条款</a> | 
+            <a href="/contact.html">联系我们</a>
+        </p>
+        <p style="margin-top:8px;">&copy; 2025 DevToolBox. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentLang = 'zh';
+        let history = [];
+
+        // Chinese to Pinyin mapping (simplified)
+        const pinyinMap = {
+            '啊': 'a', '阿': 'a', '埃': 'ai', '挨': 'ai', '哎': 'ai', '唉': 'ai', '哀': 'ai', '皑': 'ai', '癌': 'ai', '矮': 'ai', '艾': 'ai', '爱': 'ai', '碍': 'ai', '安': 'an', '暗': 'an', '岸': 'an', '按': 'an', '案': 'an', '昂': 'ang', '昂': 'ang', '凹': 'ao', '敖': 'ao', '熬': 'ao', '翱': 'ao', '袄': 'ao', '傲': 'ao', '奥': 'ao', '懊': 'ao', '澳': 'ao',
+            '芭': 'ba', '八': 'ba', '扒': 'ba', '巴': 'ba', '跋': 'ba', '茇': 'ba', '靶': 'ba', '坝': 'ba', '爸': 'ba', '霸': 'ba', '罢': 'ba', '吧': 'ba', '拔': 'ba', '跋': 'ba', '把': 'ba', '耙': 'ba', '坝': 'ba', '霸': 'ba', '罢': 'ba',
+            '才': 'cai', '材': 'cai', '财': 'cai', '裁': 'cai', '彩': 'cai', '菜': 'cai', '蔡': 'cai', '操': 'cao', '糙': 'cao', '曹': 'cao', '槽': 'cao', '草': 'cao', '册': 'ce', '厕': 'ce', '侧': 'ce', '册': 'ce', '测': 'ce', '策': 'ce',
+            '搭': 'da', '答': 'da', '达': 'da', '打': 'da', '大': 'da', '呆': 'dai', '歹': 'dai', '大': 'dai', '代': 'dai', '带': 'dai', '待': 'dai', '怠': 'dai', '袋': 'dai', '逮': 'dai', '戴': 'dai', '丹': 'dan', '单': 'dan', '担': 'dan', '胆': 'dan', '旦': 'dan', '氮': 'dan', '但': 'dan', '蛋': 'dan', '弹': 'dan', '当': 'dang', '挡': 'dang', '党': 'dang', '刀': 'dao', '导': 'dao', '岛': 'dao', '倒': 'dao', '蹈': 'dao', '到': 'dao', '悼': 'dao', '道': 'dao', '盗': 'dao', '稻': 'dao', '得': 'de', '德': 'de', '的': 'de',
+            '额': 'e', '俄': 'e', '恶': 'e', '饿': 'e', '鄂': 'e', '饿': 'e', '儿': 'er', '而': 'er', '尔': 'er', '耳': 'er', '二': 'er',
+            '发': 'fa', '罚': 'fa', '乏': 'fa', '伐': 'fa', '阀': 'fa', '法': 'fa', '珐': 'fa', '番': 'fan', '翻': 'fan', '凡': 'fan', '矾': 'fan', '钒': 'fan', '烦': 'fan', '饭': 'fan', '范': 'fan', '贩': 'fan', '方': 'fang', '坊': 'fang', '芳': 'fang', '防': 'fang', '妨': 'fang', '房': 'fang', '仿': 'fang', '访': 'fang', '纺': 'fang', '放': 'fang', '非': 'fei', '菲': 'fei', '飞': 'fei', '肥': 'fei', '匪': 'fei', '诽': 'fei', '吠': 'fei', '肺': 'fei', '费': 'fei', '分': 'fen', '份': 'fen', '纷': 'fen', '芬': 'fen', '酚': 'fen', '氛': 'fen', '坟': 'fen', '焚': 'fen', '粉': 'fen', '份': 'fen', '丰': 'feng', '风': 'feng', '枫': 'feng', '疯': 'feng', '封': 'feng', '烽': 'feng', '峰': 'feng', '锋': 'feng', '蜂': 'feng', '冯': 'feng', '缝': 'feng', '凤': 'feng', '奉': 'feng', '佛': 'fo', '否': 'fou',
+            '嘎': 'ga', '噶': 'ga', '该': 'gai', '改': 'gai', '钙': 'gai', '盖': 'gai', '概': 'gai', '干': 'gan', '杆': 'gan', '竿': 'gan', '肝': 'gan', '赶': 'gan', '感': 'gan', '敢': 'gan', '赣': 'gan', '刚': 'gang', '纲': 'gang', '港': 'gang', '岗': 'gang', '高': 'gao', '膏': 'gao', '羔': 'gao', '糕': 'gao', '搞': 'gao', '稿': 'gao', '告': 'gao', '哥': 'ge', '歌': 'ge', '阁': 'ge', '革': 'ge', '格': 'ge', '葛': 'ge', '个': 'ge', '各': 'ge', '给': 'gei', '根': 'gen', '跟': 'gen', '耕': 'geng', '更': 'geng', '工': 'gong', '弓': 'gong', '公': 'gong', '功': 'gong', '攻': 'gong', '供': 'gong', '宫': 'gong', '恭': 'gong', '躬': 'gong', '龚': 'gong', '永': 'yong', '泳': 'yong', '勇': 'yong', '涌': 'yong', '用': 'yong', '优': 'you', '忧': 'you', '尤': 'you', '由': 'you', '油': 'you', '游': 'you', '友': 'you', '有': 'you', '又': 'you', '右': 'you', '幼': 'you', '予': 'yu', '与': 'yu', '予': 'yu', '宇': 'yu', '羽': 'yu', '雨': 'yu', '语': 'yu', '玉': 'yu', '域': 'yu', '芋': 'yu', '育': 'yu', '欲': 'yu', '遇': 'yu', '御': 'yu', '元': 'yuan', '园': 'yuan', '原': 'yuan', '圆': 'yuan', '援': 'yuan', '源': 'yuan', '远': 'yuan', '院': 'yuan', '愿': 'yuan', '月': 'yue', '约': 'yue', '阅': 'yue', '跃': 'yue', '越': 'yue', '云': 'yun', '匀': 'yun', '允': 'yun', '孕': 'yun', '运': 'yun', '蕴': 'yun', '在': 'zai', '再': 'zai', '载': 'zai', '咱': 'zan', '暂': 'zan', '赞': 'zan', '脏': 'zang', '葬': 'zang', '遭': 'zao', '糟': 'zao', '早': 'zao', '枣': 'zao', '蚤': 'zao', '澡': 'zao', '皂': 'zao', '灶': 'zao', '造': 'zao', '噪': 'zao', '燥': 'zao', '则': 'ze', '择': 'ze', '泽': 'ze', '责': 'ze', '怎': 'zen', '增': 'zeng', '曾': 'zeng', '赠': 'zeng', '扎': 'zha', '喳': 'zha', '渣': 'zha', '闸': 'zha', '眨': 'zha', '乍': 'zha', '炸': 'zha', '诈': 'zha', '榨': 'zha', '栅': 'zha', '宅': 'zhai', '窄': 'zhai', '债': 'zhai', '寨': 'zhai', '沾': 'zhan', '毡': 'zhan', '粘': 'zhan', '瞻': 'zhan', '站': 'zhan', '湛': 'zhan', '绽': 'zhan', '张': 'zhang', '掌': 'zhang', '涨': 'zhang', '杖': 'zhang', '丈': 'zhang', '帐': 'zhang', '账': 'zhang', '障': 'zhang', '招': 'zhao', '昭': 'zhao', '找': 'zhao', '照': 'zhao', '罩': 'zhao', '兆': 'zhao', '赵': 'zhao', '召': 'zhao', '折': 'zhe', '哲': 'zhe', '者': 'zhe', '这': 'zhe', '浙': 'zhe', '珍': 'zhen', '真': 'zhen', '诊': 'zhen', '枕': 'zhen', '阵': 'zhen', '振': 'zhen', '震': 'zhen', '镇': 'zhen', '正': 'zheng', '证': 'zheng', '郑': 'zheng', '政': 'zheng', '之': 'zhi', '支': 'zhi', '只': 'zhi', '汁': 'zhi', '芝': 'zhi', '吱': 'zhi', '知': 'zhi', '肢': 'zhi', '脂': 'zhi', '之': 'zhi', '织': 'zhi', '职': 'zhi', '直': 'zhi', '植': 'zhi', '执': 'zhi', '值': 'zhi', '址': 'zhi', '止': 'zhi', '只': 'zhi', '旨': 'zhi', '指': 'zhi', '至': 'zhi', '志': 'zhi', '治': 'zhi', '质': 'zhi', '致': 'zhi', '中': 'zhong', '忠': 'zhong', '终': 'zhong', '钟': 'zhong', '肿': 'zhong', '种': 'zhong', '重': 'zhong', 'zhou': 'zhou', '舟': 'zhou', '周': 'zhou', '州': 'zhou', '粥': 'zhou', '轴': 'zhou', '肘': 'zhou', '帚': 'zhou', '咒': 'zhou', '宙': 'zhou', '昼': 'zhou', '皱': 'zhou', '骤': 'zhou', '朱': 'zhu', '珠': 'zhu', '株': 'zhu', '蛛': 'zhu', '诸': 'zhu', '猪': 'zhu', '逐': 'zhu', '竹': 'zhu', '烛': 'zhu', '主': 'zhu', '柱': 'zhu', '助': 'zhu', '注': 'zhu', '贮': 'zhu', '驻': 'zhu', '著': 'zhu', '筑': 'zhu', '专': 'zhuan', '砖': 'zhuan', '转': 'zhuan', '赚': 'zhuan', '撰': 'zhuan', '妆': 'zhuang', '庄': 'zhuang', '桩': 'zhuang', '装': 'zhuang', '撞': 'zhuang', '壮': 'zhuang', '状': 'zhuang', '追': 'zhui', '椎': 'zhui', '锥': 'zhui', '坠': 'zhui', '缀': 'zhui', '准': 'zhun', '捉': 'zhuo', '拙': 'zhuo', '卓': 'zhuo', '桌': 'zhuo', '灼': 'zhuo', '浊': 'zhuo', '酌': 'zhuo', '啄': 'zhuo', '咨': 'zi', '资': 'zi', '姿': 'zi', '滋': 'zi', '子': 'zi', '紫': 'zi', '字': 'zi', '自': 'zi', '渍': 'zi', '宗': 'zong', '综': 'zong', '棕': 'zong', '踪': 'zong', '总': 'zong', '纵': 'zong', '走': 'zou', '奏': 'zou', '揍': 'zou', '租': 'zu', '足': 'zu', '卒': 'zu', '族': 'zu', '组': 'zu', '祖': 'zu', '阻': 'zu', '钻': 'zuan', '纂': 'zuan', '嘴': 'zui', '最': 'zui', '罪': 'zui', '醉': 'zui', '尊': 'zun', '遵': 'zun', '昨': 'zuo', '左': 'zuo', '佐': 'zuo', '作': 'zuo', '坐': 'zuo', '座': 'zuo', '做': 'zuo',
+            '一': 'yi', '二': 'er', '三': 'san', '四': 'si', '五': 'wu', '六': 'liu', '七': 'qi', '八': 'ba', '九': 'jiu', '十': 'shi', '百': 'bai', '千': 'qian', '万': 'wan', '亿': 'yi', '年': 'nian', '月': 'yue', '日': 'ri', '时': 'shi', '分': 'fen', '秒': 'miao', '电': 'dian', '脑': 'nao', '笔': 'bi', '本': 'ben', '书': 'shu', '公': 'gong', '司': 'si', '公': 'gong', '最': 'zui', '好': 'hao', '的': 'de', '是': 'shi', '中': 'zhong', '国': 'guo', '人': 'ren', '我': 'wo', '你': 'ni', '他': 'ta', '她': 'ta', '它': 'ta', '们': 'men', '个': 'ge', '这': 'zhe', '那': 'na', '有': 'you', '没': 'mei', '什': 'shen', '么': 'me', '为': 'wei', '和': 'he', '与': 'yu', '或': 'huo', '但': 'dan', '却': 'que', '很': 'hen', '也': 'ye', '就': 'jiu', '都': 'du', '还': 'hai', '会': 'hui', '能': 'neng', '可': 'ke', '以': 'yi', '要': 'yao', '不': 'bu', '知': 'zhi', '道': 'dao', '说': 'shuo', '看': 'kan', '来': 'lai', '去': 'qu', '做': 'zuo', '成': 'cheng', '为': 'wei', '想': 'xiang', '觉': 'jue', '得': 'de', '意': 'yi', '思': 'si', '好': 'hao', '很': 'hen', '大': 'da', '小': 'xiao', '多': 'duo', '少': 'shao', '新': 'xin', '旧': 'jiu', '前': 'qian', '后': 'hou', '里': 'li', '外': 'wai', '上': 'shang', '下': 'xia', '左': 'zuo', '右': 'you', '东': 'dong', '西': 'xi', '南': 'nan', '北': 'bei', '天': 'tian', '地': 'di', '风': 'feng', '雨': 'yu', '云': 'yun', '山': 'shan', '水': 'shui', '火': 'huo', '土': 'tu', '金': 'jin', '木': 'mu', '海': 'hai', '河': 'he', '湖': 'hu', '林': 'lin', '森': 'sen', '花': 'hua', '草': 'cao', '树': 'shu', '叶': 'ye', '果': 'guo', '根': 'gen', '国': 'guo', '家': 'jia', '校': 'xiao', '厂': 'chang', '店': 'dian', '厂': 'chang', '市': 'shi', '城': 'cheng', '村': 'cun', '路': 'lu', '桥': 'qiao', '车': 'che', '船': 'chuan', '飞': 'fei', '机': 'ji', '铁': 'tie', '路': 'lu', '高': 'gao', '速': 'su', '铁': 'tie', '推': 'tui', '荐': 'jian', '评': 'ping', '测': 'ce', '评': 'ping', '排': 'pai', '名': 'ming', '榜': 'bang', '首': 'shou', '选': 'xuan', '优': 'you', '惠': 'hui', '价': 'jia', '格': 'ge', '热': 're', '销': 'xiao', '货': 'huo', '物': 'wu', '商': 'shang', '品': 'pin', '卖': 'mai', '购': 'gou', '买': 'mai', '卖': 'mai', '收': 'shou', '支': 'zhi', '付': 'fu', '款': 'kuan', '银': 'yin', '行': 'xing', '卡': 'ka', '号': 'hao', '码': 'ma', '微': 'wei', '信': 'xin', '码': 'ma', '支': 'zhi', '宝': 'bao', '红': 'hong', '包': 'bao', '现': 'xian', '金': 'jin', '礼': 'li', '卡': 'ka', '优': 'you', '惠': 'hui', '券': 'quan', '团': 'tuan', '购': 'gou', '秒': 'miao', '杀': 'sha', '限': 'xian', '时': 'shi', '抢': 'qiang', '购': 'gou', '预': 'yu', '订': 'ding', '售': 'shou', '货': 'huo', '免': 'mian', '费': 'fei', '领': 'ling', '域': 'yu', '名': 'ming', '空': 'kong', '间': 'jian', '主': 'zhu', '机': 'ji', '云': 'yun', '服': 'fu', '务': 'wu', '器': 'qi', '数': 'shu', '据': 'ju', '存': 'cun', '储': 'chu', '备': 'bei', '份': 'fen', '恢': 'hui', '复': 'fu', '迁': 'qian', '移': 'yi', '升': 'sheng', '级': 'ji', '更': 'geng', '新': 'xin', '安': 'an', '装': 'zhuang', '卸': 'xie', '载': 'zai', '解': 'jie', '压': 'ya', '输': 'shu', '入': 'ru', '出': 'chu', '开': 'kai', '关': 'guan', '设': 'she', '置': 'zhi', '修': 'xiu', '复': 'fu', '改': 'gai', '变': 'bian', '化': 'hua', '转': 'zhuan', '换': 'huan', '代': 'dai', '码': 'ma', '编': 'bian', '程': 'cheng', '开': 'kai', '发': 'fa', '设': 'she', '计': 'ji', '图': 'tu', '片': 'pian', '音': 'yin', '乐': 'yue', '视': 'shi', '频': 'pin', '游': 'you', '戏': 'xi', '动': 'dong', '漫': 'man', '动': 'dong', '画': 'hua', '包': 'bao', '含': 'han', '多': 'duo', '种': 'zhong', '类': 'lei', '型': 'xing', '文': 'wen', '字': 'zi', '图': 'tu', '形': 'xing', '颜': 'yan', '色': 'se', '大': 'da', '小': 'xiao', '尺': 'chi', '寸': 'cun', '重': 'zhong', '量': 'liang', '密': 'mi', '度': 'du', '温': 'wen', '度': 'du', '湿': 'shi', '度': 'du', '压': 'ya', '力': 'li', '电': 'dian', '压': 'ya', '电': 'dian', '流': 'liu', '功': 'gong', '率': 'lv', '能': 'neng', '源': 'yuan', '材': 'cai', '料': 'liao', '机': 'ji', '械': 'xie', '设': 'she', '备': 'bei', '仪': 'yi', '表': 'biao', '工': 'gong', '具': 'ju', '办': 'ban', '公': 'gong', '桌': 'zhuo', '椅': 'yi', '纸': 'zhi', '笔': 'bi', '胶': 'jiao', '水': 'shui', '杯': 'bei', '灯': 'deng', '窗': 'chuang', '门': 'men', '墙': 'qiang', '地': 'di', '板': 'ban', '瓷': 'ci', '砖': 'zhuan', '家': 'jia', '具': 'ju', '床': 'chuang', '沙': 'sha', '发': 'fa', '柜': 'gui', '桌': 'zhuo', '椅': 'yi', '灯': 'deng', '具': 'ju', '装': 'zhuang', '饰': 'shi', '品': 'pin', '窗': 'chuang', '帘': 'lian', '地': 'di', '毯': 'tan', '挂': 'gua', '画': 'hua', '镜': 'jing', '子': 'zi', '钟': 'zhong', '表': 'biao', '玩': 'wan', '具': 'ju', '游': 'you', '戏': 'xi', '模': 'mo', '型': 'xing', '图': 'tu', '书': 'shu', '杂': 'za', '志': 'zhi', '报': 'bao', '纸': 'zhi', '笔': 'bi', '记': 'ji', '本': 'ben', '卡': 'ka', '通': 'tong', '片': 'pian', '礼': 'li', '品': 'pin', '纪': 'ji', '念': 'nian', '品': 'pin', '邮': 'you', '票': 'piao', '硬': 'ying', '币': 'bi', '纸': 'zhi', '币': 'bi', '珠': 'zhu', '宝': 'bao', '钻': 'zuan', '戒': 'jie', '手': 'shou', '表': 'biao', '眼': 'yan', '镜': 'jing', '包': 'bao', '服': 'fu', '装': 'zhuang', '鞋': 'xie', '帽': 'mao', '袜': 'wa', '子': 'zi', '领': 'ling', '带': 'dai', '围': 'wei', '巾': 'jin', '手': 'shou', '套': 'tao', '伞': 'san', '帽': 'mao', '子': 'zi', '配': 'pei', '饰': 'shi'
+        };
+
+        // Stop words list
+        const stopWords = new Set([
+            'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by',
+            'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
+            'will', 'would', 'could', 'should', 'may', 'might', 'must', 'shall', 'can', 'this', 'that',
+            'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them',
+            '的', '了', '是', '在', '我', '有', '和', '就', '不', '人', '都', '一', '一个', '上', '也', '很',
+            '到', '说', '要', '去', '你', '会', '着', '没有', '看', '好', '自己', '这', '那', '什么', '怎么',
+            '为', '之', '与', '或', '但', '却', '很', '也', '就', '都', '还', '能', '可', '以', '要', '不',
+            '的', '了', '是', '中', '和', '与', '及', '等', '被', '把', '给', '让', '从', '向', '对', '于'
+        ]);
+
+        // Language toggle
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLang = btn.dataset.lang;
+                document.querySelectorAll('[data-zh]').forEach(el => {
+                    el.textContent = el.getAttribute(`data-${currentLang}`);
+                });
+            });
+        });
+
+        function convertToPinyin(text) {
+            let result = '';
+            for (let char of text) {
+                if (pinyinMap[char]) {
+                    result += pinyinMap[char];
+                } else if (/[\u4e00-\u9fa5]/.test(char)) {
+                    // Unknown Chinese character, keep it
+                    result += char;
+                } else {
+                    result += char;
+                }
+            }
+            return result;
+        }
+
+        function generateSlug(title) {
+            let slug = title;
+            
+            // Chinese to Pinyin
+            if (document.getElementById('chineseToPinyin').checked) {
+                slug = convertToPinyin(slug);
+            }
+            
+            // Convert to lowercase
+            if (document.getElementById('toLowerCase').checked) {
+                slug = slug.toLowerCase();
+            }
+            
+            // Remove special characters, keep alphanumeric, spaces, and Chinese
+            slug = slug.replace(/[^\w\s\u4e00-\u9fa5-]/g, ' ');
+            
+            // Remove stop words
+            if (document.getElementById('removeStopWords').checked) {
+                const words = slug.split(/\s+/);
+                slug = words.filter(word => !stopWords.has(word.toLowerCase())).join(' ');
+            }
+            
+            // Replace spaces with separator
+            const separator = document.getElementById('separatorSelect').value;
+            slug = slug.replace(/\s+/g, separator);
+            
+            // Remove consecutive separators
+            slug = slug.replace(new RegExp(`${separator}+`, 'g'), separator);
+            
+            // Remove leading/trailing separators
+            slug = slug.replace(new RegExp(`^${separator}|${separator}$`, 'g'), '');
+            
+            // Apply max length
+            const maxLength = parseInt(document.getElementById('maxLengthSelect').value);
+            if (maxLength > 0 && slug.length > maxLength) {
+                slug = slug.substring(0, maxLength);
+                // Remove trailing separator
+                slug = slug.replace(new RegExp(`${separator}$`, 'g'), '');
+            }
+            
+            return slug;
+        }
+
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const title = document.getElementById('titleInput').value.trim();
+            if (!title) {
+                alert(currentLang === 'zh' ? '请输入标题' : 'Please enter a title');
+                return;
+            }
+
+            const slug = generateSlug(title);
+            document.getElementById('slugResult').textContent = slug;
+            document.getElementById('slugPreview').textContent = `https://example.com/${slug}`;
+            document.getElementById('resultBox').classList.add('show');
+
+            // Add to history
+            history.unshift({ title, slug });
+            if (history.length > 10) history.pop();
+            updateHistory();
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const slug = document.getElementById('slugResult').textContent;
+            navigator.clipboard.writeText(slug).then(() => {
+                this.textContent = currentLang === 'zh' ? '已复制!' : 'Copied!';
+                this.classList.add('copied');
+                setTimeout(() => {
+                    this.textContent = currentLang === 'zh' ? '复制' : 'Copy';
+                    this.classList.remove('copied');
+                }, 2000);
+            });
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            document.getElementById('titleInput').value = '';
+            document.getElementById('resultBox').classList.remove('show');
+        });
+
+        function updateHistory() {
+            const historyBox = document.getElementById('historyBox');
+            const historyList = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                historyBox.style.display = 'none';
+                return;
+            }
+            
+            historyBox.style.display = 'block';
+            historyList.innerHTML = history.map((item, index) => `
+                <div class="history-item">
+                    <span>${item.slug}</span>
+                    <button onclick="copyHistory(${index})">${currentLang === 'zh' ? '复制' : 'Copy'}</button>
+                </div>
+            `).join('');
+        }
+
+        function copyHistory(index) {
+            navigator.clipboard.writeText(history[index].slug);
+        }
+
+        // Real-time update
+        document.getElementById('titleInput').addEventListener('input', () => {
+            const title = document.getElementById('titleInput').value.trim();
+            if (title) {
+                const slug = generateSlug(title);
+                document.getElementById('slugResult').textContent = slug;
+                document.getElementById('slugPreview').textContent = `https://example.com/${slug}`;
+                document.getElementById('resultBox').classList.add('show');
+            } else {
+                document.getElementById('resultBox').classList.remove('show');
+            }
+        });
+
+        // FAQ toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

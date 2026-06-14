@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="CSS Shadow Generator - Create beautiful box-shadow and text-shadow with visual editor. Support for multiple shadow layers, live preview, and export CSS code.">
+    <meta name="keywords" content="CSS shadow generator, box-shadow, text-shadow, CSS generator, shadow effects">
+    <title>CSS Shadow Generator - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #1F2937;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --radius: 12px;
+            --success: #10B981;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .page-title {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .page-desc {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .lang-btn {
+            padding: 6px 16px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        input[type="range"], input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: var(--primary-hover); }
+        .btn-secondary {
+            background: var(--text-secondary);
+        }
+        .btn-secondary:hover { background: #4B5563; }
+        .result-box {
+            background: #1F2937;
+            color: #E5E7EB;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: #F3F4F6;
+            padding: 4px;
+            border-radius: 8px;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 24px;
+        }
+        @media (max-width: 968px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Shadow Controls */
+        .shadow-layer {
+            background: #F9FAFB;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .shadow-layer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .shadow-layer-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .remove-layer-btn {
+            background: #FEE2E2;
+            color: #DC2626;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .remove-layer-btn:hover {
+            background: #FECACA;
+        }
+        .slider-group {
+            margin-bottom: 16px;
+        }
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .slider-value {
+            background: var(--primary);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            min-width: 60px;
+            text-align: center;
+        }
+        input[type="range"] {
+            padding: 0;
+            height: 8px;
+            border-radius: 4px;
+            background: #E5E7EB;
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+        .color-picker-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        input[type="color"] {
+            width: 50px;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 2px;
+        }
+        .alpha-slider {
+            flex: 1;
+        }
+        /* Preview Area */
+        .preview-area {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 300px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .preview-box {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+        .preview-bg-options {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .bg-option {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .bg-option.active {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+        /* Presets */
+        .presets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+        .preset-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .preset-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .preset-box {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 8px;
+            margin: 0 auto 8px;
+        }
+        .preset-name {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        /* Output Actions */
+        .output-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        /* Text Shadow Preview */
+        .text-shadow-preview {
+            font-size: 32px;
+            font-weight: 700;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .footer a:hover { text-decoration: underline; }
+        .tip {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+        .add-layer-btn {
+            width: 100%;
+            padding: 16px;
+            background: #F3F4F6;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+        .add-layer-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #EEF2FF;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 20px 16px; }
+            .page-title { font-size: 22px; }
+        }
+        [data-lang] { display: none; }
+        body.zh [data-lang="zh"] { display: block; }
+        body.zh [data-lang="en"] { display: none; }
+        body.en [data-lang="en"] { display: block; }
+        body.en [data-lang="zh"] { display: none; }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body class="zh">
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title" data-lang="zh">CSS阴影生成器</h1>
+        <h1 class="page-title" data-lang="en">CSS Shadow Generator</h1>
+
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+            <button class="lang-btn" onclick="setLang('en')">English</button>
+        </div>
+
+        <p class="page-desc" data-lang="zh">可视化编辑CSS阴影效果，支持多层阴影和实时预览</p>
+        <p class="page-desc" data-lang="en">Visually edit CSS shadow effects with multi-layer support and live preview</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('box')">
+                <span data-lang="zh">📦 Box Shadow</span>
+                <span data-lang="en">📦 Box Shadow</span>
+            </button>
+            <button class="tab" onclick="switchTab('text')">
+                <span data-lang="zh">🔤 Text Shadow</span>
+                <span data-lang="en">🔤 Text Shadow</span>
+            </button>
+            <button class="tab" onclick="switchTab('presets')">
+                <span data-lang="zh">🎨 预设模板</span>
+                <span data-lang="en">🎨 Presets</span>
+            </button>
+        </div>
+
+        <!-- Box Shadow Tab -->
+        <div class="tab-content active" id="boxTab">
+            <div class="main-layout">
+                <!-- Controls -->
+                <div class="controls">
+                    <div class="card">
+                        <h2 class="card-title" data-lang="zh">⚙️ 阴影参数</h2>
+                        <h2 class="card-title" data-lang="en">⚙️ Shadow Parameters</h2>
+
+                        <div id="shadowLayers">
+                            <!-- Shadow layers will be added here -->
+                        </div>
+
+                        <button class="add-layer-btn" onclick="addShadowLayer()" id="addLayerBtn">
+                            <span data-lang="zh">➕ 添加阴影层</span>
+                            <span data-lang="en">➕ Add Shadow Layer</span>
+                        </button>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="insetShadow" onchange="updatePreview()">
+                                <label for="insetShadow" data-lang="zh">内阴影</label>
+                                <label for="insetShadow" data-lang="en">Inset Shadow</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title" data-lang="zh">📋 生成的CSS代码</h2>
+                        <h2 class="card-title" data-lang="en">📋 Generated CSS Code</h2>
+
+                        <div class="result-box" id="cssCode">/* Your CSS code will appear here */</div>
+
+                        <div class="output-actions">
+                            <button class="btn btn-secondary" onclick="copyCSS()">
+                                <span data-lang="zh">📋 复制代码</span>
+                                <span data-lang="en">📋 Copy Code</span>
+                            </button>
+                            <button class="btn btn-secondary" onclick="downloadCSS()">
+                                <span data-lang="zh">💾 下载CSS文件</span>
+                                <span data-lang="en">💾 Download CSS</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview -->
+                <div class="preview">
+                    <div class="card">
+                        <h2 class="card-title" data-lang="zh">👁 实时预览</h2>
+                        <h2 class="card-title" data-lang="en">👁 Live Preview</h2>
+
+                        <div class="preview-bg-options">
+                            <div class="bg-option active" onclick="setPreviewBg('gradient', this)" data-lang="zh">渐变</div>
+                            <div class="bg-option" onclick="setPreviewBg('gradient', this)">Gradient</div>
+                            <div class="bg-option" onclick="setPreviewBg('white', this)" data-lang="en">White</div>
+                            <div class="bg-option" onclick="setPreviewBg('white', this)">White</div>
+                            <div class="bg-option" onclick="setPreviewBg('checker', this)" data-lang="en">Checker</div>
+                            <div class="bg-option" onclick="setPreviewBg('checker', this)">Checker</div>
+                        </div>
+
+                        <div class="preview-area" id="previewArea">
+                            <div class="preview-box" id="previewBox">
+                                Preview
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label data-lang="zh">预览框大小</label>
+                            <label data-lang="en">Preview Box Size</label>
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                <input type="range" id="boxSize" min="100" max="300" value="200" oninput="updateBoxSize()">
+                                <span id="boxSizeValue">200px</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Shadow Tab -->
+        <div class="tab-content" id="textTab">
+            <div class="main-layout">
+                <div class="controls">
+                    <div class="card">
+                        <h2 class="card-title" data-lang="zh">⚙️ 文字阴影参数</h2>
+                        <h name="textShadowParameters"></h>
+
+                        <div class="shadow-layer">
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <label data-lang="zh">水平偏移</label>
+                                    <label data-lang="en">Horizontal Offset</label>
+                                    <span class="slider-value" id="textXVal">5px</span>
+                                </div>
+                                <input type="range" id="textX" min="-50" max="50" value="5" oninput="updateTextShadow()">
+                            </div>
+
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <label data-lang="zh">垂直偏移</label>
+                                    <label data-lang="en">Vertical Offset</label>
+                                    <span class="slider-value" id="textYVal">5px</span>
+                                </div>
+                                <input type="range" id="textY" min="-50" max="50" value="5" oninput="updateTextShadow()">
+                            </div>
+
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <label data-lang="zh">模糊半径</label>
+                                    <label data-lang="en">Blur Radius</label>
+                                    <span class="slider-value" id="textBlurVal">0px</span>
+                                </div>
+                                <input type="range" id="textBlur" min="0" max="50" value="0" oninput="updateTextShadow()">
+                            </div>
+
+                            <div class="form-group">
+                                <label data-lang="zh">阴影颜色</label>
+                                <label data-lang="en">Shadow Color</label>
+                                <div class="color-picker-group">
+                                    <input type="color" id="textShadowColor" value="#000000" oninput="updateTextShadow()">
+                                    <input type="text" id="textShadowColorHex" value="#000000" style="flex: 1;" oninput="updateTextColorHex()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title" data-lang="zh">📋 生成的CSS代码</h2>
+                        <h2 class="card-title" data-lang="en">📋 Generated CSS Code</h2>
+
+                        <div class="result-box" id="textCssCode">/* Your CSS code will appear here */</div>
+
+                        <div class="output-actions">
+                            <button class="btn btn-secondary" onclick="copyTextCSS()">
+                                <span data-lang="zh">📋 复制代码</span>
+                                <span data-lang="en">📋 Copy Code</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview">
+                    <div class="card">
+                        <h2 class="card-title" data-lang="zh">👁 实时预览</h2>
+                        <h2 class="card-title" data-lang="en">👁 Live Preview</h2>
+
+                        <div class="preview-bg-options">
+                            <div class="bg-option active" onclick="setTextBg('gradient', this)" data-lang="zh">渐变</div>
+                            <div class="bg-option" onclick="setTextBg('gradient', this)">Gradient</div>
+                            <div class="bg-option" onclick="setTextBg('dark', this)">Dark</div>
+                            <div class="bg-option" onclick="setTextBg('image', this)">Image</div>
+                        </div>
+
+                        <div class="preview-area" id="textPreviewArea">
+                            <div class="text-shadow-preview" id="textShadowPreview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                                Shadow Text
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 16px;">
+                            <label data-lang="zh">预览文字</label>
+                            <label data-lang="en">Preview Text</label>
+                            <input type="text" id="previewText" value="Shadow Text" oninput="updatePreviewText()">
+                        </div>
+
+                        <div class="form-group">
+                            <label data-lang="zh">文字颜色</label>
+                            <label data-lang="en">Text Color</label>
+                            <div class="color-picker-group">
+                                <input type="color" id="previewTextColor" value="#4F46E5" oninput="updatePreviewText()">
+                                <input type="text" id="previewTextColorHex" value="#4F46E5" style="flex: 1;" oninput="updatePreviewTextHex()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Presets Tab -->
+        <div class="tab-content" id="presetsTab">
+            <div class="card">
+                <h2 class="card-title" data-lang="zh">🎨 阴影预设模板</h2>
+                <h2 class="card-title" data-lang="en">🎨 Shadow Preset Templates</h2>
+
+                <div class="presets-grid" id="presetsGrid">
+                    <!-- Presets will be loaded here -->
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title" data-lang="zh">🎨 文字阴影预设</h2>
+                <h2 class="card-title" data-lang="en">🎨 Text Shadow Presets</h2>
+
+                <div class="presets-grid" id="textPresetsGrid">
+                    <!-- Text presets will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="tip" data-lang="zh">
+            💡 提示：支持添加最多5层阴影，可以创建复杂的光晕、浮雕等效果。调整颜色时请注意RGBa的使用。
+        </div>
+        <div class="tip" data-lang="en">
+            💡 Tip: Add up to 5 shadow layers to create complex effects like glow, emboss, and more.
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let shadowLayers = [];
+        let layerCounter = 0;
+        const MAX_LAYERS = 5;
+
+        // Presets data
+        const boxShadowPresets = [
+            { name: 'subtle', shadow: '0 1px 3px rgba(0,0,0,0.12)' },
+            { name: 'elevated', shadow: '0 4px 6px rgba(0,0,0,0.1)' },
+            { name: 'elevated-lg', shadow: '0 10px 15px rgba(0,0,0,0.1)' },
+            { name: 'float', shadow: '0 20px 25px -5px rgba(0,0,0,0.1)' },
+            { name: 'glow-blue', shadow: '0 0 20px rgba(79,70,229,0.5)' },
+            { name: 'glow-purple', shadow: '0 0 40px rgba(139,92,246,0.5)' },
+            { name: 'inner-light', shadow: 'inset 0 2px 4px rgba(0,0,0,0.1)' },
+            { name: 'soft', shadow: '0 2px 8px rgba(0,0,0,0.08)' },
+            { name: 'hard', shadow: '4px 4px 0 rgba(0,0,0,0.2)' },
+            { name: 'double', shadow: '0 1px 2px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.1)' },
+            { name: 'layered', shadow: '0 2px 4px rgba(0,0,0,0.05), 0 4px 6px rgba(0,0,0,0.1), 0 8px 12px rgba(0,0,0,0.05)' },
+            { name: 'neon', shadow: '0 0 5px #fff, 0 0 10px #4F46E5, 0 0 20px #4F46E5, 0 0 40px #4F46E5' },
+        ];
+
+        const textShadowPresets = [
+            { name: 'subtle', shadow: '1px 1px 2px rgba(0,0,0,0.2)' },
+            { name: 'elevated', shadow: '2px 2px 4px rgba(0,0,0,0.3)' },
+            { name: 'glow', shadow: '0 0 10px rgba(79,70,229,0.8)' },
+            { name: 'glow-strong', shadow: '0 0 20px rgba(79,70,229,1), 0 0 40px rgba(79,70,229,0.5)' },
+            { name: 'outline', shadow: '1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000' },
+            { name: 'neon-blue', shadow: '0 0 5px #3B82F6, 0 0 10px #3B82F6, 0 0 20px #3B82F6' },
+            { name: 'neon-pink', shadow: '0 0 5px #EC4899, 0 0 10px #EC4899, 0 0 20px #EC4899' },
+            { name: 'long-shadow', shadow: '3px 3px 0 rgba(0,0,0,0.2)' },
+            { name: 'deep', shadow: '4px 4px 0 #000' },
+            { name: 'retro', shadow: '2px 2px 0 #FF6B6B, 4px 4px 0 #4ECDC4' },
+        ];
+
+        function setLang(lang) {
+            document.body.className = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(lang === 'zh' ? '中文' : 'English'));
+            });
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            const tabs = ['box', 'text', 'presets'];
+            const tabEl = document.querySelector(`.tab:nth-child(${tabs.indexOf(tab) + 1})`);
+            if (tabEl) tabEl.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+        }
+
+        function createShadowLayer(id, x = 5, y = 5, blur = 10, spread = 0, color = '#000000', alpha = 0.25) {
+            return `
+                <div class="shadow-layer" id="layer-${id}">
+                    <div class="shadow-layer-header">
+                        <span class="shadow-layer-title">
+                            <span data-lang="zh">阴影层</span>
+                            <span data-lang="en">Shadow Layer</span>
+                            ${id + 1}
+                        </span>
+                        ${shadowLayers.length > 1 ? `<button class="remove-layer-btn" onclick="removeShadowLayer(${id})">
+                            <span data-lang="zh">删除</span>
+                            <span data-lang="en">Remove</span>
+                        </button>` : ''}
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label data-lang="zh">水平偏移</label>
+                            <label data-lang="en">X Offset</label>
+                            <span class="slider-value" id="xVal-${id}">${x}px</span>
+                        </div>
+                        <input type="range" id="x-${id}" min="-50" max="50" value="${x}" oninput="updateShadow(${id}, 'x')">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label data-lang="zh">垂直偏移</label>
+                            <label data-lang="en">Y Offset</label>
+                            <span class="slider-value" id="yVal-${id}">${y}px</span>
+                        </div>
+                        <input type="range" id="y-${id}" min="-50" max="50" value="${y}" oninput="updateShadow(${id}, 'y')">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label data-lang="zh">模糊半径</label>
+                            <label data-lang="en">Blur</label>
+                            <span class="slider-value" id="blurVal-${id}">${blur}px</span>
+                        </div>
+                        <input type="range" id="blur-${id}" min="0" max="100" value="${blur}" oninput="updateShadow(${id}, 'blur')">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label data-lang="zh">扩展半径</label>
+                            <label data-lang="en">Spread</label>
+                            <span class="slider-value" id="spreadVal-${id}">${spread}px</span>
+                        </div>
+                        <input type="range" id="spread-${id}" min="-20" max="50" value="${spread}" oninput="updateShadow(${id}, 'spread')">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="slider-header">
+                            <label data-lang="zh">不透明度</label>
+                            <label data-lang="en">Opacity</label>
+                            <span class="slider-value" id="alphaVal-${id}">${Math.round(alpha * 100)}%</span>
+                        </div>
+                        <input type="range" id="alpha-${id}" min="0" max="100" value="${Math.round(alpha * 100)}" oninput="updateShadow(${id}, 'alpha')">
+                    </div>
+
+                    <div class="form-group">
+                        <label data-lang="zh">阴影颜色</label>
+                        <label data-lang="en">Shadow Color</label>
+                        <div class="color-picker-group">
+                            <input type="color" id="color-${id}" value="${color}" oninput="updateShadow(${id}, 'color')">
+                            <input type="text" id="hex-${id}" value="${color}" style="flex: 1;" oninput="updateShadowHex(${id})">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addShadowLayer() {
+            if (shadowLayers.length >= MAX_LAYERS) {
+                alert(document.body.classList.contains('zh') ? '最多只能添加5层阴影！' : 'Maximum 5 layers allowed!');
+                return;
+            }
+
+            const layer = {
+                x: 5,
+                y: 5,
+                blur: 10,
+                spread: 0,
+                color: '#000000',
+                alpha: 0.25
+            };
+
+            shadowLayers.push(layer);
+            renderShadowLayers();
+            updatePreview();
+        }
+
+        function removeShadowLayer(index) {
+            shadowLayers.splice(index, 1);
+            renderShadowLayers();
+            updatePreview();
+        }
+
+        function renderShadowLayers() {
+            const container = document.getElementById('shadowLayers');
+            container.innerHTML = shadowLayers.map((layer, i) => createShadowLayer(i, layer.x, layer.y, layer.blur, layer.spread, layer.color, layer.alpha)).join('');
+            
+            // Update add button visibility
+            document.getElementById('addLayerBtn').style.display = shadowLayers.length >= MAX_LAYERS ? 'none' : 'block';
+        }
+
+        function updateShadow(index, prop) {
+            const layer = shadowLayers[index];
+            
+            switch(prop) {
+                case 'x':
+                    layer.x = parseInt(document.getElementById(`x-${index}`).value);
+                    document.getElementById(`xVal-${index}`).textContent = `${layer.x}px`;
+                    break;
+                case 'y':
+                    layer.y = parseInt(document.getElementById(`y-${index}`).value);
+                    document.getElementById(`yVal-${index}`).textContent = `${layer.y}px`;
+                    break;
+                case 'blur':
+                    layer.blur = parseInt(document.getElementById(`blur-${index}`).value);
+                    document.getElementById(`blurVal-${index}`).textContent = `${layer.blur}px`;
+                    break;
+                case 'spread':
+                    layer.spread = parseInt(document.getElementById(`spread-${index}`).value);
+                    document.getElementById(`spreadVal-${index}`).textContent = `${layer.spread}px`;
+                    break;
+                case 'alpha':
+                    layer.alpha = parseInt(document.getElementById(`alpha-${index}`).value) / 100;
+                    document.getElementById(`alphaVal-${index}`).textContent = `${Math.round(layer.alpha * 100)}%`;
+                    break;
+                case 'color':
+                    layer.color = document.getElementById(`color-${index}`).value;
+                    document.getElementById(`hex-${index}`).value = layer.color;
+                    break;
+            }
+
+            updatePreview();
+        }
+
+        function updateShadowHex(index) {
+            const hex = document.getElementById(`hex-${index}`).value;
+            if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+                shadowLayers[index].color = hex;
+                document.getElementById(`color-${index}`).value = hex;
+                updatePreview();
+            }
+        }
+
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+        function updatePreview() {
+            const inset = document.getElementById('insetShadow').checked;
+            const insetStr = inset ? 'inset ' : '';
+            
+            const shadows = shadowLayers.map(layer => {
+                return `${insetStr}${layer.x}px ${layer.y}px ${layer.blur}px ${layer.spread}px ${hexToRgba(layer.color, layer.alpha)}`;
+            });
+
+            const shadowValue = shadows.join(', ');
+            document.getElementById('previewBox').style.boxShadow = shadowValue;
+            
+            // Generate CSS
+            let css = `.element {\n  box-shadow: ${shadowValue};\n}`;
+            document.getElementById('cssCode').textContent = css;
+        }
+
+        function setPreviewBg(type, el) {
+            const area = document.getElementById('previewArea');
+            document.querySelectorAll('#boxTab .bg-option').forEach(o => o.classList.remove('active'));
+            el.classList.add('active');
+
+            switch(type) {
+                case 'gradient':
+                    area.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    break;
+                case 'white':
+                    area.style.background = '#ffffff';
+                    break;
+                case 'checker':
+                    area.style.background = 'repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 20px 20px';
+                    break;
+            }
+        }
+
+        function updateBoxSize() {
+            const size = document.getElementById('boxSize').value;
+            document.getElementById('boxSizeValue').textContent = `${size}px`;
+            document.getElementById('previewBox').style.width = `${size}px`;
+            document.getElementById('previewBox').style.height = `${size}px`;
+        }
+
+        function copyCSS() {
+            const css = document.getElementById('cssCode').textContent;
+            navigator.clipboard.writeText(css).then(() => {
+                showToast(document.body.classList.contains('zh') ? '已复制到剪贴板！' : 'Copied to clipboard!');
+            });
+        }
+
+        function downloadCSS() {
+            const css = document.getElementById('cssCode').textContent;
+            const fullCSS = `${css}\n\n/* Add this class to your HTML element */\n.element {\n  /* Your existing styles */\n}`;
+            
+            const blob = new Blob([fullCSS], { type: 'text/css' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'shadow.css';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Text Shadow Functions
+        function updateTextShadow() {
+            const x = document.getElementById('textX').value;
+            const y = document.getElementById('textY').value;
+            const blur = document.getElementById('textBlur').value;
+            const color = document.getElementById('textShadowColor').value;
+
+            document.getElementById('textXVal').textContent = `${x}px`;
+            document.getElementById('textYVal').textContent = `${y}px`;
+            document.getElementById('textBlurVal').textContent = `${blur}px`;
+            document.getElementById('textShadowColorHex').value = color;
+
+            const shadow = `${x}px ${y}px ${blur}px ${color}`;
+            document.getElementById('textShadowPreview').style.textShadow = shadow;
+            document.getElementById('textCssCode').textContent = `.text {\n  text-shadow: ${shadow};\n}`;
+        }
+
+        function updateTextColorHex() {
+            const hex = document.getElementById('textShadowColorHex').value;
+            if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+                document.getElementById('textShadowColor').value = hex;
+                updateTextShadow();
+            }
+        }
+
+        function updatePreviewText() {
+            const text = document.getElementById('previewText').value || 'Shadow Text';
+            document.getElementById('textShadowPreview').textContent = text;
+            
+            const color = document.getElementById('previewTextColor').value;
+            document.getElementById('previewTextColorHex').value = color;
+            document.getElementById('textShadowPreview').style.color = color;
+            document.getElementById('textShadowPreview').style.webkitTextFillColor = color;
+        }
+
+        function updatePreviewTextHex() {
+            const hex = document.getElementById('previewTextColorHex').value;
+            if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+                document.getElementById('previewTextColor').value = hex;
+                updatePreviewText();
+            }
+        }
+
+        function setTextBg(type, el) {
+            const area = document.getElementById('textPreviewArea');
+            document.querySelectorAll('#textTab .bg-option').forEach(o => o.classList.remove('active'));
+            el.classList.add('active');
+
+            switch(type) {
+                case 'gradient':
+                    area.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    break;
+                case 'dark':
+                    area.style.background = '#1F2937';
+                    break;
+                case 'image':
+                    area.style.background = 'url("https://images.unsplash.com/photo-1557683316-973673baf926?w=800") center/cover';
+                    break;
+            }
+        }
+
+        function copyTextCSS() {
+            const css = document.getElementById('textCssCode').textContent;
+            navigator.clipboard.writeText(css).then(() => {
+                showToast(document.body.classList.contains('zh') ? '已复制到剪贴板！' : 'Copied to clipboard!');
+            });
+        }
+
+        // Load Presets
+        function loadPresets() {
+            // Box Shadow Presets
+            const boxGrid = document.getElementById('presetsGrid');
+            boxGrid.innerHTML = boxShadowPresets.map(preset => `
+                <div class="preset-item" onclick="applyBoxPreset('${preset.shadow.replace(/"/g, '&quot;')}')">
+                    <div class="preset-box" style="box-shadow: ${preset.shadow};"></div>
+                    <div class="preset-name">${preset.name}</div>
+                </div>
+            `).join('');
+
+            // Text Shadow Presets
+            const textGrid = document.getElementById('textPresetsGrid');
+            textGrid.innerHTML = textShadowPresets.map(preset => `
+                <div class="preset-item" onclick="applyTextPreset('${preset.shadow.replace(/"/g, '&quot;')}')">
+                    <div class="text-shadow-preview" style="text-shadow: ${preset.shadow}; font-size: 16px; padding: 20px;">Aa</div>
+                    <div class="preset-name">${preset.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function applyBoxPreset(shadow) {
+            shadowLayers = [{
+                x: 5,
+                y: 5,
+                blur: 10,
+                spread: 0,
+                color: '#000000',
+                alpha: 0.25
+            }];
+            renderShadowLayers();
+            document.getElementById('previewBox').style.boxShadow = shadow;
+            document.getElementById('cssCode').textContent = `.element {\n  box-shadow: ${shadow};\n}`;
+            switchTab('box');
+        }
+
+        function applyTextPreset(shadow) {
+            document.getElementById('textShadowPreview').style.textShadow = shadow;
+            document.getElementById('textCssCode').textContent = `.text {\n  text-shadow: ${shadow};\n}`;
+            switchTab('text');
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #10B981; color: white; padding: 12px 24px; border-radius: 8px; z-index: 1000;';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        // Initialize
+        addShadowLayer();
+        loadPresets();
+        updateTextShadow();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="image-compressor.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">图片压缩器</div><div class="r-desc">图片压缩</div></a>
+        <a href="svg-viewer.html" class="related-card"><div class="r-icon">🎨</div><div class="r-title">SVG 查看器</div><div class="r-desc">SVG预览优化</div></a>
+        <a href="image-to-base64.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">图片转 Base64</div><div class="r-desc">图片转编码</div></a>
+        <a href="base64-to-image.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">Base64 转图片</div><div class="r-desc">编码转图片</div></a>
+        <a href="image-resizer.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">图片缩放工具</div><div class="r-desc">图片缩放</div></a>
+        <a href="favicon-generator.html" class="related-card"><div class="r-icon">⭐</div><div class="r-title">Favicon 生成器</div><div class="r-desc">图标生成</div></a>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的在线robots.txt生成器，可视化创建网站的爬虫访问规则，设置User-agent、允许/禁止路径、Sitemap等。">
+    <meta name="keywords" content="robots.txt, 爬虫规则, SEO优化, 网站配置">
+    <title>robots.txt生成器 - DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/robots-txt-generator.html">
+    <meta property="og:title" content="robots.txt生成器 - DevToolBox">
+    <meta property="og:description" content="免费的在线robots.txt生成器，可视化创建网站的爬虫访问规则。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/robots-txt-generator.html">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "robots.txt生成器",
+        "description": "免费的在线robots.txt生成器，可视化创建网站的爬虫访问规则。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-danger {
+            background: #FEE2E2;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+        }
+        .btn-danger:hover {
+            background: #FECACA;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .rules-section {
+            margin-top: 24px;
+        }
+        .rules-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .rules-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .rule-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .rule-item .form-row {
+            display: grid;
+            grid-template-columns: 140px 1fr auto;
+            gap: 12px;
+            align-items: center;
+        }
+        .rule-type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .rule-type-badge.allow {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        .rule-type-badge.disallow {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+        .add-rule-section {
+            background: #F0F9FF;
+            border: 2px dashed #93C5FD;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+        .add-rule-section h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1E40AF;
+        }
+        .add-rule-form {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .code-output {
+            background: #1F2937;
+            color: #E5E7EB;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 6px;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .rule-item .form-row,
+            .add-rule-form { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🤖 robots.txt 生成器</h1>
+            <p>可视化创建网站的爬虫访问规则</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label for="sitemapUrl">Sitemap地址（可选）</label>
+                <input type="url" id="sitemapUrl" placeholder="https://example.com/sitemap.xml">
+            </div>
+
+            <div class="form-group">
+                <label>User-agent 爬虫类型</label>
+                <select id="userAgent" onchange="handleUserAgentChange()">
+                    <option value="*">所有爬虫 (*)</option>
+                    <option value="Googlebot">Googlebot (Google搜索)</option>
+                    <option value="Googlebot-Image">Googlebot-Image (Google图片)</option>
+                    <option value="Bingbot">Bingbot (必应搜索)</option>
+                    <option value="Baiduspider">Baiduspider (百度搜索)</option>
+                    <option value="YandexBot">YandexBot (Yandex搜索)</option>
+                    <option value="Sogou">Sogou (搜狗搜索)</option>
+                    <option value="360Spider">360Spider (360搜索)</option>
+                </select>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header">
+                    <h3>📜 规则列表</h3>
+                    <span id="ruleCount">0 条规则</span>
+                </div>
+                <div id="rulesContainer"></div>
+
+                <div class="add-rule-section">
+                    <h4>+ 添加新规则</h4>
+                    <div class="add-rule-form">
+                        <div class="form-group">
+                            <label>规则类型</label>
+                            <select id="newRuleType">
+                                <option value="allow">允许 (Allow)</option>
+                                <option value="disallow">禁止 (Disallow)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>路径</label>
+                            <input type="text" id="newRulePath" placeholder="/admin/ 或 /api/*">
+                        </div>
+                        <button class="btn btn-primary" onclick="addRule()">添加规则</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top: 24px;">
+                <button class="btn btn-primary" onclick="generateRobots()">🎯 生成代码</button>
+                <button class="btn btn-secondary" onclick="addCommonRules()">📦 添加常用规则</button>
+                <button class="btn btn-secondary" onclick="clearAllRules()">🗑 清空规则</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title">📋 生成的robots.txt代码</div>
+                <pre class="code-output" id="codeOutput"></pre>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="copyCode()">📋 复制代码</button>
+                    <button class="btn btn-secondary" onclick="downloadCode()">💾 下载文件</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>什么是robots.txt？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    robots.txt是网站根目录下的一个纯文本文件，用于告诉搜索引擎爬虫哪些页面可以抓取，哪些页面不应该抓取。它是网站与搜索引擎之间的"访问协议"，但不是强制性的安全措施。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>robots.txt应该放在哪里？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    robots.txt必须放在网站的根目录下，文件名必须是小写的"robots.txt"。例如：https://example.com/robots.txt。放在子目录中是无效的。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>Disallow和Allow的优先级是什么？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    默认情况下，如果同时有Allow和Disallow规则匹配同一路径，搜索引擎会选择更具体的规则。通常较长的路径规则优先于较短的路径规则。使用通配符时，爬虫会选择匹配度更高的规则。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>常用路径规则有哪些？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    <strong>/admin/</strong> - 禁止访问管理后台<br>
+                    <strong>/private/</strong> - 禁止访问私有目录<br>
+                    <strong>/*.php$</strong> - 禁止访问所有PHP文件<br>
+                    <strong>/api/*</strong> - 禁止访问API接口<br>
+                    <strong>/checkout/</strong> - 禁止访问结账页面<br>
+                    <strong>/cart/</strong> - 禁止访问购物车
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>如何验证robots.txt是否正确？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    可以使用各大搜索引擎的站长工具来测试：Google Search Console的robots.txt测试工具、Bing Webmaster Tools等。这些工具可以帮助您检查语法错误并模拟爬虫抓取效果。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="meta-tag-generator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">Meta 标签生成器</div><div class="r-desc">SEO标签</div></a>
+        <a href="open-graph-generator.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">OG 标签生成器</div><div class="r-desc">社交分享标签</div></a>
+        <a href="twitter-card-generator.html" class="related-card"><div class="r-icon">🐦</div><div class="r-title">Twitter Card 生成器</div><div class="r-desc">卡片标签</div></a>
+        <a href="url-slug-generator.html" class="related-card"><div class="r-icon">🔗</div><div class="r-title">URL Slug 生成器</div><div class="r-desc">SEO友好URL</div></a>
+        <a href="url-parser.html" class="related-card"><div class="r-icon">🔍</div><div class="r-title">URL 解析器</div><div class="r-desc">URL组件解析</div></a>
+        <a href="http-status-codes.html" class="related-card"><div class="r-icon">📡</div><div class="r-title">HTTP 状态码查询</div><div class="r-desc">状态码查询</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let rules = [];
+        let ruleIdCounter = 0;
+
+        function handleUserAgentChange() {
+            updateRulesDisplay();
+        }
+
+        function addRule() {
+            const type = document.getElementById('newRuleType').value;
+            const path = document.getElementById('newRulePath').value.trim();
+
+            if (!path) {
+                alert('请输入路径');
+                return;
+            }
+
+            if (!path.startsWith('/') && path !== '*') {
+                alert('路径必须以 / 开头');
+                return;
+            }
+
+            rules.push({
+                id: ruleIdCounter++,
+                type: type,
+                path: path
+            });
+
+            document.getElementById('newRulePath').value = '';
+            updateRulesDisplay();
+        }
+
+        function removeRule(id) {
+            rules = rules.filter(r => r.id !== id);
+            updateRulesDisplay();
+        }
+
+        function updateRulesDisplay() {
+            const container = document.getElementById('rulesContainer');
+            const userAgent = document.getElementById('userAgent').value;
+
+            if (rules.length === 0) {
+                container.innerHTML = '<p style="color: #6B7280; text-align: center; padding: 20px;">暂无规则，请添加规则或使用"添加常用规则"按钮</p>';
+                document.getElementById('ruleCount').textContent = '0 条规则';
+                return;
+            }
+
+            let html = `<div class="rule-item" style="background: #EFF6FF; border-color: #93C5FD;">
+                <div class="form-row">
+                    <span style="font-weight: 700; color: #1E40AF;">User-agent</span>
+                    <span style="font-family: monospace;">${userAgent}</span>
+                    <span></span>
+                </div>
+            </div>`;
+
+            rules.forEach(rule => {
+                html += `
+                <div class="rule-item">
+                    <div class="form-row">
+                        <span class="rule-type-badge ${rule.type}">${rule.type === 'allow' ? '允许' : '禁止'}</span>
+                        <span style="font-family: monospace; word-break: break-all;">${escapeHtml(rule.path)}</span>
+                        <button class="btn btn-danger" onclick="removeRule(${rule.id})" style="padding: 6px 12px; font-size: 14px;">✕</button>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('ruleCount').textContent = rules.length + ' 条规则';
+        }
+
+        function addCommonRules() {
+            const commonPaths = [
+                { type: 'disallow', path: '/admin/' },
+                { type: 'disallow', path: '/wp-admin/' },
+                { type: 'disallow', path: '/wp-includes/' },
+                { type: 'disallow', path: '/wp-content/plugins/' },
+                { type: 'disallow', path: '/cgi-bin/' },
+                { type: 'disallow', path: '/api/' },
+                { type: 'disallow', path: '/private/' }
+            ];
+
+            commonPaths.forEach(p => {
+                rules.push({
+                    id: ruleIdCounter++,
+                    type: p.type,
+                    path: p.path
+                });
+            });
+
+            updateRulesDisplay();
+        }
+
+        function clearAllRules() {
+            if (confirm('确定要清空所有规则吗？')) {
+                rules = [];
+                updateRulesDisplay();
+            }
+        }
+
+        function generateRobots() {
+            const sitemap = document.getElementById('sitemapUrl').value.trim();
+            const userAgent = document.getElementById('userAgent').value;
+
+            let code = `# robots.txt generated by DevToolBox
+# https://devtoolhub.cc/robots-txt-generator.html
+
+User-agent: ${userAgent}`;
+
+            if (rules.length > 0) {
+                rules.forEach(rule => {
+                    code += `\n${rule.type === 'allow' ? 'Allow' : 'Disallow'}: ${rule.path}`;
+                });
+            } else {
+                code += '\n# No rules defined';
+            }
+
+            if (sitemap) {
+                code += `\n\nSitemap: ${sitemap}`;
+            }
+
+            document.getElementById('codeOutput').textContent = code;
+            document.getElementById('resultBox').classList.add('show');
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeOutput').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('代码已复制到剪贴板！');
+            });
+        }
+
+        function downloadCode() {
+            const code = document.getElementById('codeOutput').textContent;
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'robots.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+
+        updateRulesDisplay();
+    </script>
+</body>
+</html>

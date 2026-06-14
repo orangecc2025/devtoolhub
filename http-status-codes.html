@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="完整的HTTP状态码查询工具，包含1xx-5xx所有状态码，含详细说明、常见原因和一键复制功能。">
+    <meta name="keywords" content="HTTP状态码, HTTP Status Code, 200, 404, 500, 常见HTTP错误, HTTP响应码">
+    <title>HTTP状态码查询 - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            flex: 1;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #0f172a;
+        }
+        .page-desc {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            border-color: #4F46E5;
+            background: #4F46E5;
+            color: #fff;
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            background: #fff;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .filter-tab.active {
+            border-color: #4F46E5;
+            background: #4F46E5;
+            color: #fff;
+        }
+        .filter-tab:hover {
+            border-color: #4F46E5;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .status-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .status-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .status-code {
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .status-code.info { background: #dbeafe; color: #1d4ed8; }
+        .status-code.success { background: #dcfce7; color: #15803d; }
+        .status-code.redirect { background: #fef3c7; color: #b45309; }
+        .status-code.client-error { background: #fee2e2; color: #dc2626; }
+        .status-code.server-error { background: #f3e8ff; color: #7c3aed; }
+        .status-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .status-desc {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+        .status-causes {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 0.75rem;
+        }
+        .status-causes h4 {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .status-causes ul {
+            list-style: none;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+        .status-causes li {
+            padding: 0.25rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+        .status-causes li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #94a3b8;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-title .badge {
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+        }
+        .badge.info { background: #dbeafe; color: #1d4ed8; }
+        .badge.success { background: #dcfce7; color: #15803d; }
+        .badge.redirect { background: #fef3c7; color: #b45309; }
+        .badge.client-error { background: #fee2e2; color: #dc2626; }
+        .badge.server-error { background: #f3e8ff; color: #7c3aed; }
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+        .no-results .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .copy-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        .copy-toast.show {
+            opacity: 1;
+        }
+        .footer {
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 0;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        .footer a {
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .hidden {
+            display: none !important;
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title" data-en="HTTP Status Codes">HTTP状态码查询</h1>
+        <p class="page-desc" data-en="Complete HTTP status code reference with detailed explanations and common causes">完整的HTTP状态码参考资料，包含详细说明和常见原因</p>
+
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+            <button class="lang-btn" onclick="setLang('en')">English</button>
+        </div>
+
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="搜索状态码、名称或描述..." oninput="filterStatus()">
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="setFilter('all')" data-en="All Codes">所有状态码</button>
+            <button class="filter-tab" onclick="setFilter('1xx')" data-en="Informational (1xx)">信息 (1xx)</button>
+            <button class="filter-tab" onclick="setFilter('2xx')" data-en="Success (2xx)">成功 (2xx)</button>
+            <button class="filter-tab" onclick="setFilter('3xx')" data-en="Redirect (3xx)">重定向 (3xx)</button>
+            <button class="filter-tab" onclick="setFilter('4xx')" data-en="Client Error (4xx)">客户端错误 (4xx)</button>
+            <button class="filter-tab" onclick="setFilter('5xx')" data-en="Server Error (5xx)">服务端错误 (5xx)</button>
+        </div>
+
+        <div id="statusGrid"></div>
+        <div id="noResults" class="no-results hidden">
+            <div class="icon">🔎</div>
+            <p data-en="No matching status codes found">未找到匹配的状态码</p>
+        </div>
+    </div>
+
+    <div id="copyToast" class="copy-toast" data-en="Copied!">已复制!</div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentLang = 'zh';
+        let currentFilter = 'all';
+
+        const statusCodes = [
+            // 1xx Informational
+            { code: 100, name: 'Continue', zhName: '继续', category: 'info', desc: '服务器已收到请求的初始部分，客户端应继续发送请求。', enDesc: 'Server has received the initial part of the request, client should continue sending.', causes: ['客户端应继续发送请求', 'Expect: 100-continue请求头', '大型请求体的开始'] },
+            { code: 101, name: 'Switching Protocols', zhName: '切换协议', category: 'info', desc: '服务器正在切换到不同的协议。', enDesc: 'Server is switching to a different protocol.', causes: ['WebSocket升级', 'HTTP/2升级', 'TLS握手完成'] },
+            { code: 102, name: 'Processing', zhName: '处理中', category: 'info', desc: '服务器正在处理请求，但尚未返回响应。', enDesc: 'Server is processing the request but no response is available yet.', causes: ['大型请求处理时间较长', 'WebDAV操作', '避免超时'] },
+            { code: 103, name: 'Early Hints', zhName: '早期提示', category: 'info', desc: '服务器在最终响应之前返回一些响应头。', enDesc: 'Server returns some response headers before final response.', causes: ['预加载资源提示', 'Link标签预加载', '改善页面加载性能'] },
+
+            // 2xx Success
+            { code: 200, name: 'OK', zhName: '成功', category: 'success', desc: '请求已成功处理。', enDesc: 'Request has succeeded.', causes: ['GET请求成功', 'POST请求已处理', 'PUT请求已更新'] },
+            { code: 201, name: 'Created', zhName: '已创建', category: 'success', desc: '请求已成功创建新资源。', enDesc: 'Request has succeeded and new resource has been created.', causes: ['POST请求创建资源', 'PUT请求创建新资源', '成功创建数据库记录'] },
+            { code: 202, name: 'Accepted', zhName: '已接受', category: 'success', desc: '请求已接受处理，但处理尚未完成。', enDesc: 'Request has been accepted for processing but not yet completed.', causes: ['异步处理请求', '批处理操作', '长时间运行的任务'] },
+            { code: 204, name: 'No Content', zhName: '无内容', category: 'success', desc: '请求已成功处理，但没有返回任何内容。', enDesc: 'Request has succeeded but returns no content.', causes: ['DELETE操作成功', '更新操作成功无需返回', '重置表单'] },
+            { code: 206, name: 'Partial Content', zhName: '部分内容', category: 'success', desc: '服务器返回了部分资源内容。', enDesc: 'Server returns partial resource content.', causes: ['断点续传下载', '分段请求', '视频/音频流媒体'] },
+
+            // 3xx Redirection
+            { code: 301, name: 'Moved Permanently', zhName: '永久移动', category: 'redirect', desc: '请求的资源已永久移动到新位置。', enDesc: 'Resource has been permanently moved to a new location.', causes: ['域名更换', 'URL规范化', 'SEO永久重定向'] },
+            { code: 302, name: 'Found', zhName: '临时移动', category: 'redirect', desc: '请求的资源临时位于不同位置。', enDesc: 'Resource is temporarily located at a different location.', causes: ['临时重定向', 'A/B测试', '登录重定向'] },
+            { code: 303, name: 'See Other', zhName: '查看其他', category: 'redirect', desc: '响应可在其他URI找到，应使用GET获取。', enDesc: 'Response can be found at another URI and should be retrieved with GET.', causes: ['POST后重定向', '避免重复提交', '表单处理后跳转'] },
+            { code: 304, name: 'Not Modified', zhName: '未修改', category: 'redirect', desc: '资源自上次请求后未修改，可使用缓存。', enDesc: 'Resource has not been modified since last request, use cached version.', causes: ['浏览器缓存', '条件请求', 'CDN缓存'] },
+            { code: 307, name: 'Temporary Redirect', zhName: '临时重定向', category: 'redirect', desc: '临时重定向，保持请求方法和主体不变。', enDesc: 'Temporary redirect, request method and body remain unchanged.', causes: ['临时维护', '负载均衡', '保留POST请求'] },
+            { code: 308, name: 'Permanent Redirect', zhName: '永久重定向', category: 'redirect', desc: '永久重定向，保持请求方法和主体不变。', enDesc: 'Permanent redirect, request method and body remain unchanged.', causes: ['永久迁移API', '强制保留方法', 'POST变为POST'] },
+
+            // 4xx Client Error
+            { code: 400, name: 'Bad Request', zhName: '错误请求', category: 'client-error', desc: '服务器无法理解请求格式。', enDesc: 'Server cannot understand the request format.', causes: ['语法错误', '无效JSON', '缺少必需参数', '参数格式错误'] },
+            { code: 401, name: 'Unauthorized', zhName: '未授权', category: 'client-error', desc: '请求需要用户认证。', enDesc: 'Request requires user authentication.', causes: ['未提供认证信息', 'token过期', '无效的认证凭证'] },
+            { code: 403, name: 'Forbidden', zhName: '禁止访问', category: 'client-error', desc: '服务器理解请求但拒绝执行。', enDesc: 'Server understood the request but refuses to execute it.', causes: ['权限不足', 'IP被禁止', '用户被禁用', '法律限制'] },
+            { code: 404, name: 'Not Found', zhName: '未找到', category: 'client-error', desc: '服务器找不到请求的资源。', enDesc: 'Server cannot find the requested resource.', causes: ['URL错误', '资源已删除', '链接失效', '拼写错误'] },
+            { code: 405, name: 'Method Not Allowed', zhName: '方法不允许', category: 'client-error', desc: '请求方法不支持该资源。', enDesc: 'Request method is not supported for this resource.', causes: ['使用了错误的HTTP方法', '只允许GET但用了POST', 'API方法限制'] },
+            { code: 408, name: 'Request Timeout', zhName: '请求超时', category: 'client-error', desc: '服务器等待请求时超时。', enDesc: 'Server timed out waiting for the request.', causes: ['网络延迟', '服务器过载', '客户端连接问题'] },
+            { code: 409, name: 'Conflict', zhName: '冲突', category: 'client-error', desc: '请求与服务器当前状态冲突。', enDesc: 'Request conflicts with the current state of the server.', causes: ['重复创建资源', '版本冲突', '数据并发冲突'] },
+            { code: 410, name: 'Gone', zhName: '已删除', category: 'client-error', desc: '请求的资源已永久删除。', enDesc: 'Requested resource has been permanently deleted.', causes: ['内容永久移除', '资源下线', '管理员主动删除'] },
+            { code: 411, name: 'Length Required', zhName: '长度必需', category: 'client-error', desc: '服务器要求Content-Length头。', enDesc: 'Server requires Content-Length header.', causes: ['POST/PUT请求无body', 'chunked编码未使用', '请求体大小未知'] },
+            { code: 412, name: 'Precondition Failed', zhName: '前置条件失败', category: 'client-error', desc: '请求的头部条件不满足。', enDesc: 'Precondition in request headers evaluate to false.', causes: ['If-Match不匹配', 'If-Unmodified-Since失败', '乐观锁冲突'] },
+            { code: 413, name: 'Payload Too Large', zhName: '请求体过大', category: 'client-error', desc: '请求体大小超过服务器限制。', enDesc: 'Request body is larger than server limit.', causes: ['文件上传过大', '请求body超限', '需要压缩数据'] },
+            { code: 414, name: 'URI Too Long', zhName: 'URI过长', category: 'client-error', desc: '请求的URI长度超出服务器处理范围。', enDesc: 'URI length exceeds server limit.', causes: ['Query参数过长', 'GET请求传递大量数据', '重定向循环'] },
+            { code: 415, name: 'Unsupported Media Type', zhName: '不支持的媒体类型', category: 'client-error', desc: '服务器不支持请求的数据格式。', enDesc: 'Server does not support the request data format.', causes: ['Content-Type错误', '上传了不支持的文件类型', '需要JSON但发送了XML'] },
+            { code: 422, name: 'Unprocessable Entity', zhName: '无法处理的实体', category: 'client-error', desc: '请求格式正确但语义错误。', enDesc: 'Request format is correct but semantically wrong.', causes: ['验证失败', '数据类型错误', '业务逻辑错误'] },
+            { code: 429, name: 'Too Many Requests', zhName: '请求过多', category: 'client-error', desc: '用户在规定时间内发送了过多请求。', enDesc: 'User has sent too many requests in a given time.', causes: ['API限流', '请求频率超限', 'DDoS防护触发'] },
+
+            // 5xx Server Error
+            { code: 500, name: 'Internal Server Error', zhName: '服务器内部错误', category: 'server-error', desc: '服务器遇到未知错误无法处理请求。', enDesc: 'Server encountered an unknown error.', causes: ['代码异常', '数据库错误', '配置问题', '服务器过载'] },
+            { code: 501, name: 'Not Implemented', zhName: '未实现', category: 'server-error', desc: '服务器不支持请求的功能。', enDesc: 'Server does not support the requested functionality.', causes: ['功能未开发', 'HTTP方法未实现', '需要升级服务器'] },
+            { code: 502, name: 'Bad Gateway', zhName: '错误网关', category: 'server-error', desc: '网关或代理收到无效响应。', enDesc: 'Gateway received invalid response from upstream server.', causes: ['上游服务器宕机', '网关配置错误', '代理服务器故障'] },
+            { code: 503, name: 'Service Unavailable', zhName: '服务不可用', category: 'server-error', desc: '服务器暂时无法处理请求。', enDesc: 'Server is temporarily unavailable.', causes: ['服务器维护', '服务器过载', '资源暂时不可用'] },
+            { code: 504, name: 'Gateway Timeout', zhName: '网关超时', category: 'server-error', desc: '网关等待上游服务器响应超时。', enDesc: 'Gateway timed out waiting for upstream server response.', causes: ['上游服务器响应慢', '网络连接问题', '代理服务器超时设置过短'] },
+            { code: 505, name: 'HTTP Version Not Supported', zhName: 'HTTP版本不支持', category: 'server-error', desc: '服务器不支持请求使用的HTTP版本。', enDesc: 'Server does not support the HTTP protocol version.', causes: ['HTTP版本过旧', '服务器不支持该版本', '协议不兼容'] },
+            { code: 511, name: 'Network Authentication Required', zhName: '需要网络认证', category: 'server-error', desc: '客户端需要认证才能访问网络。', enDesc: 'Client needs to authenticate to access network.', causes: ['WiFi需要登录', '代理认证要求', '企业网络认证'] }
+        ];
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderStatusCodes();
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            filterStatus();
+        }
+
+        function filterStatus() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.status-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const code = card.dataset.code;
+                const name = card.dataset.name.toLowerCase();
+                const desc = card.dataset.desc.toLowerCase();
+                const category = card.dataset.category;
+
+                const matchesSearch = !searchTerm || 
+                    code.includes(searchTerm) || 
+                    name.includes(searchTerm) || 
+                    desc.includes(searchTerm);
+                
+                const matchesFilter = currentFilter === 'all' || 
+                    category === currentFilter || 
+                    (currentFilter === '1xx' && category === 'info');
+
+                if (matchesSearch && matchesFilter) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            document.getElementById('noResults').classList.toggle('hidden', visibleCount > 0);
+        }
+
+        function renderStatusCodes() {
+            const grid = document.getElementById('statusGrid');
+            grid.innerHTML = '';
+
+            const categories = [
+                { key: 'info', zhTitle: '1xx 信息响应', enTitle: '1xx Informational', badgeClass: 'info' },
+                { key: 'success', zhTitle: '2xx 成功响应', enTitle: '2xx Success', badgeClass: 'success' },
+                { key: 'redirect', zhTitle: '3xx 重定向', enTitle: '3xx Redirection', badgeClass: 'redirect' },
+                { key: 'client-error', zhTitle: '4xx 客户端错误', enTitle: '4xx Client Error', badgeClass: 'client-error' },
+                { key: 'server-error', zhTitle: '5xx 服务端错误', enTitle: '5xx Server Error', badgeClass: 'server-error' }
+            ];
+
+            if (currentFilter !== 'all') {
+                const filterCat = categories.find(c => c.key === currentFilter || (currentFilter === '1xx' && c.key === 'info'));
+                if (filterCat) {
+                    renderCategory(grid, [filterCat], statusCodes);
+                    return;
+                }
+            }
+
+            renderCategory(grid, categories, statusCodes);
+        }
+
+        function renderCategory(container, categories, codes) {
+            categories.forEach(cat => {
+                const catCodes = codes.filter(c => c.category === cat.key);
+                if (catCodes.length === 0) return;
+
+                const section = document.createElement('div');
+                section.innerHTML = `
+                    <h2 class="section-title">
+                        ${currentLang === 'en' ? cat.enTitle : cat.zhTitle}
+                        <span class="badge ${cat.badgeClass}">${catCodes.length}</span>
+                    </h2>
+                    <div class="status-grid" id="grid-${cat.key}"></div>
+                `;
+                container.appendChild(section);
+
+                const grid = section.querySelector(`#grid-${cat.key}`);
+                catCodes.forEach(status => {
+                    const card = document.createElement('div');
+                    card.className = 'status-card';
+                    card.dataset.code = status.code;
+                    card.dataset.name = currentLang === 'zh' ? status.zhName : status.name;
+                    card.dataset.desc = currentLang === 'zh' ? status.desc : status.enDesc;
+                    card.dataset.category = status.category;
+
+                    card.innerHTML = `
+                        <div class="status-header">
+                            <span class="status-code ${status.category}">${status.code}</span>
+                            <span class="status-name">${currentLang === 'zh' ? status.zhName : status.name}</span>
+                        </div>
+                        <div class="status-desc">${currentLang === 'zh' ? status.desc : status.enDesc}</div>
+                        <div class="status-causes">
+                            <h4>${currentLang === 'en' ? 'Common Causes' : '常见原因'}</h4>
+                            <ul>
+                                ${status.causes.map(c => `<li>${currentLang === 'zh' ? c : translateCause(c)}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+
+                    card.onclick = () => copyStatus(status);
+                    grid.appendChild(card);
+                });
+            });
+        }
+
+        function translateCause(cause) {
+            const translations = {
+                '语法错误': 'Syntax error',
+                '无效JSON': 'Invalid JSON',
+                '缺少必需参数': 'Missing required parameters',
+                '参数格式错误': 'Invalid parameter format',
+                '未提供认证信息': 'No authentication provided',
+                'token过期': 'Token expired',
+                '无效的认证凭证': 'Invalid credentials',
+                '权限不足': 'Insufficient permissions',
+                'IP被禁止': 'IP blocked',
+                '用户被禁用': 'User disabled',
+                '法律限制': 'Legal restriction',
+                'URL错误': 'Wrong URL',
+                '资源已删除': 'Resource deleted',
+                '链接失效': 'Link expired',
+                '拼写错误': 'Spelling mistake',
+                '使用了错误的HTTP方法': 'Wrong HTTP method used',
+                '只允许GET但用了POST': 'POST used but GET only',
+                'API方法限制': 'API method limitation',
+                '网络延迟': 'Network delay',
+                '服务器过载': 'Server overloaded',
+                '客户端连接问题': 'Client connection issue',
+                '重复创建资源': 'Duplicate resource creation',
+                '版本冲突': 'Version conflict',
+                '数据并发冲突': 'Data concurrency conflict',
+                '内容永久移除': 'Content permanently removed',
+                '资源下线': 'Resource offline',
+                '管理员主动删除': 'Admin deleted',
+                'POST/PUT请求无body': 'POST/PUT request without body',
+                'chunked编码未使用': 'Chunked encoding not used',
+                '请求体大小未知': 'Request body size unknown',
+                'If-Match不匹配': 'If-Match mismatch',
+                'If-Unmodified-Since失败': 'If-Unmodified-Since failed',
+                '乐观锁冲突': 'Optimistic lock conflict',
+                '文件上传过大': 'File upload too large',
+                '请求body超限': 'Request body exceeds limit',
+                '需要压缩数据': 'Data compression needed',
+                'Query参数过长': 'Query parameters too long',
+                'GET请求传递大量数据': 'Too much data via GET',
+                '重定向循环': 'Redirect loop',
+                'Content-Type错误': 'Wrong Content-Type',
+                '上传了不支持的文件类型': 'Unsupported file type uploaded',
+                '需要JSON但发送了XML': 'XML sent but JSON needed',
+                '验证失败': 'Validation failed',
+                '数据类型错误': 'Data type error',
+                '业务逻辑错误': 'Business logic error',
+                'API限流': 'API rate limit exceeded',
+                '请求频率超限': 'Request frequency exceeded',
+                'DDoS防护触发': 'DDoS protection triggered',
+                '代码异常': 'Code exception',
+                '数据库错误': 'Database error',
+                '配置问题': 'Configuration issue',
+                '服务器过载': 'Server overloaded',
+                '功能未开发': 'Feature not implemented',
+                'HTTP方法未实现': 'HTTP method not implemented',
+                '需要升级服务器': 'Server upgrade needed',
+                '上游服务器宕机': 'Upstream server down',
+                '网关配置错误': 'Gateway misconfiguration',
+                '代理服务器故障': 'Proxy server failure',
+                '服务器维护': 'Server under maintenance',
+                '服务器过载': 'Server overloaded',
+                '资源暂时不可用': 'Resource temporarily unavailable',
+                '上游服务器响应慢': 'Upstream server slow response',
+                '网络连接问题': 'Network connection issue',
+                '代理服务器超时设置过短': 'Proxy timeout too short',
+                'HTTP版本过旧': 'HTTP version too old',
+                '服务器不支持该版本': 'Server does not support version',
+                '协议不兼容': 'Protocol incompatibility',
+                'WiFi需要登录': 'WiFi login required',
+                '代理认证要求': 'Proxy authentication required',
+                '企业网络认证': 'Corporate network authentication'
+            };
+            return translations[cause] || cause;
+        }
+
+        function copyStatus(status) {
+            const text = `${status.code} ${currentLang === 'zh' ? status.zhName : status.name}`;
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('copyToast');
+                toast.textContent = currentLang === 'en' ? 'Copied!' : '已复制!';
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        }
+
+        // Initialize
+        renderStatusCodes();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="meta-tag-generator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">Meta 标签生成器</div><div class="r-desc">SEO标签</div></a>
+        <a href="open-graph-generator.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">OG 标签生成器</div><div class="r-desc">社交分享标签</div></a>
+        <a href="twitter-card-generator.html" class="related-card"><div class="r-icon">🐦</div><div class="r-title">Twitter Card 生成器</div><div class="r-desc">卡片标签</div></a>
+        <a href="robots-txt-generator.html" class="related-card"><div class="r-icon">🤖</div><div class="r-title">robots.txt 生成器</div><div class="r-desc">生成规则</div></a>
+        <a href="url-slug-generator.html" class="related-card"><div class="r-icon">🔗</div><div class="r-title">URL Slug 生成器</div><div class="r-desc">SEO友好URL</div></a>
+        <a href="url-parser.html" class="related-card"><div class="r-icon">🔍</div><div class="r-title">URL 解析器</div><div class="r-desc">URL组件解析</div></a>
+        </div>
+    </section>
+</body>
+</html>

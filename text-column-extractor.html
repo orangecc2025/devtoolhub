@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="文本列提取器工具，按分隔符提取指定列，支持CSV/TSV/自定义分隔符，可多列提取。">
+    <meta name="keywords" content="列提取器,CSV提取,TSV提取,文本列提取,字段提取">
+    <title>文本列提取器 - 按分隔符提取指定列 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/text-column-extractor.html">
+    <meta property="og:title" content="文本列提取器 - 按分隔符提取指定列 | DevToolBox">
+    <meta property="og:description" content="文本列提取器工具，按分隔符提取指定列，支持CSV/TSV/自定义分隔符。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/text-column-extractor.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "文本列提取器",
+        "description": "按分隔符提取指定列，支持多列",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .result-content {
+            background: white;
+            border: 1px solid #D1FAE5;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .footer a:hover { text-decoration: underline; }
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .preset-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .preset-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .column-preview {
+            background: #FEF3C7;
+            border: 1px solid #FCD34D;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        .column-preview-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .stat-item {
+            background: white;
+            border: 1px solid #D1FAE5;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>📋 文本列提取器</h1>
+            <p>按分隔符提取指定列，支持多列</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label>输入文本（表格数据）</label>
+                <textarea id="inputText" rows="8" placeholder="输入表格数据，每行一条记录，列之间用分隔符隔开..."></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>分隔符</label>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" data-sep=",">逗号 ,</button>
+                        <button class="preset-btn" data-sep="	">制表符 Tab</button>
+                        <button class="preset-btn" data-sep="|">竖线 |</button>
+                        <button class="preset-btn" data-sep=";">分号 ;</button>
+                        <button class="preset-btn" data-sep=":">冒号 :</button>
+                        <button class="preset-btn" data-sep=" ">空格</button>
+                    </div>
+                    <input type="text" id="delimiter" value="," placeholder="输入分隔符，如: , | \t">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>要提取的列号（用逗号分隔，如: 1,3,5）</label>
+                    <input type="text" id="columns" value="1" placeholder="1,3,5">
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="keepHeader" checked>
+                            <span>保留表头（第一行）</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column-preview" id="previewBox" style="display:none;">
+                <div class="column-preview-title">📊 列预览：</div>
+                <div id="previewContent"></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="extractColumns()">📋 提取列</button>
+                <button class="btn btn-secondary" onclick="previewColumns()">👁 预览</button>
+                <button class="btn btn-secondary" onclick="clearAll()">🗑 清空</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title">📋 提取结果</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalRows">0</div>
+                        <div class="stat-label">总行数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="extractedCols">0</div>
+                        <div class="stat-label">提取列数</div>
+                    </div>
+                </div>
+                <div class="result-content" id="resultText"></div>
+                <div class="btn-group" style="margin-top: 16px;">
+                    <button class="btn btn-secondary" onclick="copyResult()">📋 复制结果</button>
+                    <button class="btn btn-secondary" onclick="downloadResult()">📥 下载</button>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">如何指定多列？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">在"要提取的列号"输入框中，用逗号分隔多个列号，如"1,3,5"表示提取第1、3、5列。列号从1开始计数。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">支持CSV文件吗？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">支持的。将CSV内容粘贴到输入框，选择逗号作为分隔符即可。点击"逗号 ,"快捷按钮可以快速设置。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">什么是制表符（Tab）？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">制表符是键盘上的Tab键产生的字符，常用于TSV（制表符分隔值）文件。点击"制表符 Tab"按钮可以快速设置为制表符分隔。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">保留表头是什么意思？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">勾选后，第一行会被原样保留，不会进行列提取。这对于CSV/Excel导出后的表头处理很有用。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="text-diff.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">文本差异对比</div><div class="r-desc">差异高亮</div></a>
+        <a href="word-counter.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">字数统计器</div><div class="r-desc">中英文统计</div></a>
+        <a href="character-counter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">字符计数器</div><div class="r-desc">各类字符统计</div></a>
+        <a href="whitespace-remover.html" class="related-card"><div class="r-icon">🧹</div><div class="r-title">空白字符清理器</div><div class="r-desc">移除空格空行</div></a>
+        <a href="text-reverser.html" class="related-card"><div class="r-icon">🔃</div><div class="r-title">文本反转器</div><div class="r-desc">反转文本</div></a>
+        <a href="remove-duplicate-lines.html" class="related-card"><div class="r-icon">✂</div><div class="r-title">去除重复行</div><div class="r-desc">智能去重</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        // 预设按钮
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('delimiter').value = btn.dataset.sep;
+                if (btn.dataset.sep === '	') {
+                    document.getElementById('delimiter').value = '\t';
+                }
+            });
+        });
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function splitLine(line, delimiter) {
+            // 简单的CSV处理：处理引号包裹的字段
+            if (delimiter === ',') {
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === delimiter && !inQuotes) {
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            } else {
+                // 其他分隔符使用简单split
+                if (delimiter === '\t') {
+                    return line.split('\t').map(s => s.trim());
+                }
+                return line.split(delimiter).map(s => s.trim());
+            }
+        }
+
+        function previewColumns() {
+            const input = document.getElementById('inputText').value;
+            const delimiter = document.getElementById('delimiter').value;
+            
+            if (!input.trim()) {
+                alert('请输入要处理的文本');
+                return;
+            }
+
+            const lines = input.split('\n').filter(l => l.trim());
+            if (lines.length === 0) {
+                alert('请输入有效的数据');
+                return;
+            }
+
+            const firstLine = lines[0];
+            const headers = splitLine(firstLine, delimiter);
+            
+            const preview = headers.map((h, i) => `列${i + 1}: ${h || '(空)'}`).join('<br>');
+            
+            document.getElementById('previewContent').innerHTML = preview;
+            document.getElementById('previewBox').style.display = 'block';
+        }
+
+        function extractColumns() {
+            const input = document.getElementById('inputText').value;
+            const delimiter = document.getElementById('delimiter').value;
+            const columnsStr = document.getElementById('columns').value;
+            const keepHeader = document.getElementById('keepHeader').checked;
+
+            if (!input.trim()) {
+                alert('请输入要处理的文本');
+                return;
+            }
+
+            if (!columnsStr.trim()) {
+                alert('请输入要提取的列号');
+                return;
+            }
+
+            // 解析列号
+            const colIndices = columnsStr.split(',')
+                .map(s => parseInt(s.trim()) - 1)
+                .filter(n => !isNaN(n) && n >= 0);
+
+            if (colIndices.length === 0) {
+                alert('请输入有效的列号（如：1,3,5）');
+                return;
+            }
+
+            const lines = input.split('\n').filter(l => l.trim());
+            const result = [];
+            
+            // 处理表头
+            if (keepHeader && lines.length > 0) {
+                const headerCols = splitLine(lines[0], delimiter);
+                const selectedHeaders = colIndices.map(i => headerCols[i] || '');
+                result.push(selectedHeaders.join(delimiter));
+            }
+
+            // 处理数据行
+            const startRow = keepHeader ? 1 : 0;
+            for (let i = startRow; i < lines.length; i++) {
+                const cols = splitLine(lines[i], delimiter);
+                const selectedCols = colIndices.map(idx => cols[idx] !== undefined ? cols[idx] : '');
+                result.push(selectedCols.join(delimiter));
+            }
+
+            document.getElementById('totalRows').textContent = result.length;
+            document.getElementById('extractedCols').textContent = colIndices.length;
+            document.getElementById('resultText').textContent = result.join('\n');
+            document.getElementById('resultBox').classList.add('show');
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('delimiter').value = ',';
+            document.getElementById('columns').value = '1';
+            document.getElementById('resultText').textContent = '';
+            document.getElementById('resultBox').classList.remove('show');
+            document.getElementById('previewBox').style.display = 'none';
+        }
+
+        function copyResult() {
+            const result = document.getElementById('resultText').textContent;
+            if (result) {
+                navigator.clipboard.writeText(result).then(() => {
+                    alert('已复制到剪贴板！');
+                });
+            }
+        }
+
+        function downloadResult() {
+            const result = document.getElementById('resultText').textContent;
+            const delimiter = document.getElementById('delimiter').value;
+            if (result) {
+                // 尝试检测导出格式
+                let filename = 'extracted-data.txt';
+                if (delimiter === ',') filename = 'extracted-data.csv';
+                else if (delimiter === '\t') filename = 'extracted-data.tsv';
+                
+                const blob = new Blob([result], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

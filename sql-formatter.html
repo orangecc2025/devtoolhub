@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费在线SQL格式化工具，美化SQL语句、关键词大写、语法高亮，支持MySQL/PostgreSQL/SQL Server方言。">
+    <meta name="keywords" content="SQL格式化器,SQL prettifier,SQL美化,SQL关键词大写,SQL语法高亮,在线工具">
+    <title>SQL 格式化工具 - 美化SQL/关键词大写 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/sql-formatter.html">
+    <meta property="og:title" content="SQL 格式化工具 - 美化SQL/关键词大写">
+    <meta property="og:description" content="免费在线SQL格式化工具，美化SQL语句、关键词大写、语法高亮，支持多种方言。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/sql-formatter.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SQL 格式化工具",
+        "description": "免费在线SQL格式化工具，美化SQL语句、关键词大写、语法高亮，支持多种方言。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+            min-height: 200px;
+            resize: vertical;
+        }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .highlighted-sql {
+            background: #1E293B;
+            color: #E2E8F0;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin-top: 16px;
+        }
+        .sql-keyword { color: #F472B6; font-weight: 600; }
+        .sql-function { color: #34D399; }
+        .sql-string { color: #FBBF24; }
+        .sql-number { color: #60A5FA; }
+        .sql-comment { color: #6B7280; font-style: italic; }
+        .sql-operator { color: #A78BFA; }
+        .sql-type { color: #FB923C; }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🗃 SQL 格式化工具</h1>
+            <p>美化SQL语句、关键词大写、语法高亮，支持多种SQL方言</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label>输入 SQL 语句</label>
+                <textarea id="inputCode" placeholder="在此粘贴您的 SQL 语句..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>SQL 方言</label>
+                <select id="dialect">
+                    <option value="mysql">MySQL</option>
+                    <option value="postgresql">PostgreSQL</option>
+                    <option value="sqlserver">SQL Server</option>
+                    <option value="standard">标准 SQL</option>
+                </select>
+            </div>
+
+            <div class="checkbox-group">
+                <label class="checkbox-item">
+                    <input type="checkbox" id="uppercaseKeywords" checked> 关键词大写
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" id="indent" checked> 自动缩进
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" id="highlight" checked> 语法高亮
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" id="lineBreakBetweenClauses" checked> 子句换行
+                </label>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="formatSQL()">✨ 格式化 SQL</button>
+                <button class="btn btn-secondary" onclick="copyResult()">📋 复制结果</button>
+                <button class="btn btn-secondary" onclick="clearAll()">🗑 清空</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title">✅ 格式化结果</div>
+                <div class="highlighted-sql" id="highlightedOutput"></div>
+                <div class="form-group" style="margin-top: 20px; margin-bottom: 0;">
+                    <label>原始文本（复制用）</label>
+                    <textarea id="outputCode" readonly style="background: #fff; font-family: 'Monaco', 'Consolas', monospace;"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    不同SQL方言有什么区别？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    不同数据库的SQL语法略有差异：<br>
+                    <strong>MySQL</strong>：支持 LIMIT、SHOW 等专属语法<br>
+                    <strong>PostgreSQL</strong>：支持 RETURNING、WITH RECURSIVE 等<br>
+                    <strong>SQL Server</strong>：使用 TOP 代替 LIMIT，WITH (NOLOCK) 等<br>
+                    选择正确的方言可以确保关键词识别准确。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    格式化会影响SQL性能吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    格式化只改变SQL文本的外观（缩进、大小写），不会改变SQL的逻辑或执行效率。数据库执行器在处理前会先解析和优化SQL，空白和大小写不影响执行计划。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    为什么推荐关键词大写？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    SQL关键词大写是业界通用规范（如 SELECT、FROM、WHERE）。这样可以轻松区分SQL保留字和表名/列名，提高SQL的可读性和可维护性，是SQL编码规范的最佳实践。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    支持子查询和CTE格式化吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    是的，本工具支持嵌套子查询和WITH子句（CTE）的格式化。CTE会正确缩进，子查询也会保持适当的嵌套层级结构。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    如何处理字符串中的内容？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    工具会智能识别SQL字符串（单引号或双引号包围的内容），避免将字符串内部的SQL关键词（如字符串中包含的"SELECT"）错误地转换大小写。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="json-formatter.html" class="related-card"><div class="r-icon">{ }</div><div class="r-title">JSON 格式化工具</div><div class="r-desc">JSON美化校验压缩</div></a>
+        <a href="xml-formatter.html" class="related-card"><div class="r-icon">📄</div><div class="r-title">XML 格式化工具</div><div class="r-desc">XML美化压缩校验</div></a>
+        <a href="html-minifier.html" class="related-card"><div class="r-icon">📦</div><div class="r-title">HTML 压缩器</div><div class="r-desc">压缩HTML代码</div></a>
+        <a href="css-minifier.html" class="related-card"><div class="r-icon">🎨</div><div class="r-title">CSS 压缩器</div><div class="r-desc">压缩CSS代码</div></a>
+        <a href="js-minifier.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">JavaScript 压缩器</div><div class="r-desc">压缩JS代码</div></a>
+        <a href="code-beautifier.html" class="related-card"><div class="r-icon">✨</div><div class="r-title">代码美化器</div><div class="r-desc">JS/CSS/HTML格式化</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        // SQL Keywords list
+        const SQL_KEYWORDS = [
+            'SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'NOT', 'IN', 'IS', 'NULL', 'AS',
+            'JOIN', 'LEFT', 'RIGHT', 'INNER', 'OUTER', 'CROSS', 'FULL', 'ON',
+            'GROUP', 'BY', 'HAVING', 'ORDER', 'ASC', 'DESC', 'LIMIT', 'OFFSET',
+            'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'CREATE', 'TABLE',
+            'ALTER', 'DROP', 'INDEX', 'VIEW', 'DATABASE', 'SCHEMA', 'IF', 'EXISTS',
+            'PRIMARY', 'KEY', 'FOREIGN', 'REFERENCES', 'UNIQUE', 'CHECK', 'DEFAULT',
+            'AUTO_INCREMENT', 'SERIAL', 'IDENTITY', 'VARCHAR', 'CHAR', 'INT', 'INTEGER',
+            'BIGINT', 'SMALLINT', 'DECIMAL', 'NUMERIC', 'FLOAT', 'REAL', 'DOUBLE',
+            'DATE', 'TIME', 'DATETIME', 'TIMESTAMP', 'BOOLEAN', 'BOOL', 'TEXT',
+            'BLOB', 'JSON', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'CAST', 'CONVERT',
+            'COALESCE', 'NULLIF', 'IFNULL', 'NVL', 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX',
+            'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'ANY', 'SOME',
+            'BETWEEN', 'LIKE', 'ILIKE', 'ESCAPE', 'EXISTS', 'BETWEEN', 'OVER', 'PARTITION',
+            'ROW_NUMBER', 'RANK', 'DENSE_RANK', 'LEAD', 'LAG', 'FIRST_VALUE', 'LAST_VALUE',
+            'WITH', 'RECURSIVE', 'RETURNING', 'USING', 'REPLACE', 'MERGE', 'MATCHED',
+            'TRUNCATE', 'COMMIT', 'ROLLBACK', 'TRANSACTION', 'BEGIN', 'END', 'GRANT',
+            'REVOKE', 'CASCADE', 'RESTRICT', 'NO', 'ACTION', 'DEFINER', 'CONTAINS',
+            'TOP', 'WITH TIES', 'OPTION', 'NOLOCK', 'UPDLOCK', 'HOLDLOCK', 'READ UNCOMMITTED',
+            'READ COMMITTED', 'REPEATABLE READ', 'SERIALIZABLE', 'ROWLOCK', 'PAGLOCK',
+            'EXCLUSIVE', 'KEYSET', 'INSENSITIVE', 'SCROLL', 'STATIC', 'FAST_FORWARD',
+            'TRIGGER', 'AFTER', 'BEFORE', 'INSTEAD', 'FOR', 'EACH', 'STATEMENT',
+            'FUNCTION', 'PROCEDURE', 'PACKAGE', 'BODY', 'EXECUTE', 'CALL', 'DECLARE'
+        ];
+
+        // SQL Functions
+        const SQL_FUNCTIONS = [
+            'ABS', 'ACOS', 'ASIN', 'ATAN', 'AVG', 'CEIL', 'CEILING', 'COS', 'COUNT',
+            'EXP', 'FLOOR', 'LN', 'LOG', 'LOG10', 'LOG2', 'MAX', 'MIN', 'MOD',
+            'PI', 'POW', 'POWER', 'RAND', 'ROUND', 'SIN', 'SQRT', 'SUM', 'TAN',
+            'TRUNCATE', 'TRUNC', 'CONCAT', 'CONCAT_WS', 'LENGTH', 'LEN', 'CHAR_LENGTH',
+            'LOWER', 'UPPER', 'LTRIM', 'RTRIM', 'TRIM', 'LPAD', 'RPAD', 'REPLACE',
+            'SUBSTRING', 'SUBSTR', 'INSTR', 'LOCATE', 'POSITION', 'LEFT', 'RIGHT',
+            'REVERSE', 'REPEAT', 'SPACE', 'STUFF', 'TRANSLATE', 'ASCII', 'CHAR',
+            'CHARINDEX', 'DIFFERENCE', 'SOUNDEX', 'STRING_AGG', 'STRING_SPLIT',
+            'FORMAT', 'DATEADD', 'DATEDIFF', 'DATEPART', 'DATENAME', 'DAY', 'MONTH',
+            'YEAR', 'HOUR', 'MINUTE', 'SECOND', 'GETDATE', 'NOW', 'CURRENT_DATE',
+            'CURRENT_TIME', 'CURRENT_TIMESTAMP', 'DATE_FORMAT', 'TO_CHAR', 'TO_DATE',
+            'TO_NUMBER', 'TO_TIMESTAMP', 'EXTRACT', 'DATE_TRUNC', 'NOW', 'SYSDATE',
+            'ROW_NUMBER', 'RANK', 'DENSE_RANK', 'NTILE', 'LAG', 'LEAD', 'FIRST_VALUE',
+            'LAST_VALUE', 'NTH_VALUE', 'CUME_DIST', 'PERCENT_RANK', 'JSON_VALUE',
+            'JSON_OBJECT', 'JSON_ARRAY', 'JSON_QUERY', 'JSON_EXTRACT', 'JSON_KEYS',
+            'JSON_LENGTH', 'JSON_OBJECTAGG', 'JSON_ARRAYAGG', 'COALESCE', 'NULLIF',
+            'NVL', 'NVL2', 'IFNULL', 'IF', 'ISNULL', 'DECODE', 'IIF', 'CHOOSE'
+        ];
+
+        // SQL Types
+        const SQL_TYPES = [
+            'INT', 'INTEGER', 'BIGINT', 'SMALLINT', 'TINYINT', 'MEDIUMINT',
+            'DECIMAL', 'NUMERIC', 'FLOAT', 'REAL', 'DOUBLE', 'MONEY', 'SMALLMONEY',
+            'VARCHAR', 'CHAR', 'NVARCHAR', 'NCHAR', 'TEXT', 'NTEXT', 'MEDIUMTEXT',
+            'LONGTEXT', 'TINYTEXT', 'VARBINARY', 'BINARY', 'IMAGE', 'BLOB', 'MEDIUMBLOB',
+            'LONGBLOB', 'TINYBLOB', 'DATE', 'DATETIME', 'TIMESTAMP', 'TIME', 'YEAR',
+            'BOOLEAN', 'BOOL', 'BIT', 'JSON', 'JSONB', 'XML', 'UUID', 'ARRAY',
+            'ENUM', 'SET', 'SERIAL', 'BIGSERIAL', 'IDENTITY', 'DEC', 'FIXED'
+        ];
+
+        function formatSQL() {
+            const input = document.getElementById('inputCode').value;
+            if (!input.trim()) {
+                alert('请输入要格式化的 SQL 语句');
+                return;
+            }
+
+            let output = input;
+            const dialect = document.getElementById('dialect').value;
+            const uppercase = document.getElementById('uppercaseKeywords').checked;
+            const indent = document.getElementById('indent').checked;
+            const highlight = document.getElementById('highlight').checked;
+
+            // Normalize whitespace first
+            output = output.replace(/\s+/g, ' ').trim();
+
+            // Uppercase keywords
+            if (uppercase) {
+                output = uppercaseKeywords(output);
+            }
+
+            // Format SQL with proper indentation
+            if (indent) {
+                output = formatIndentation(output, dialect);
+            }
+
+            // Line breaks between clauses
+            if (document.getElementById('lineBreakBetweenClauses').checked) {
+                output = addLineBreaks(output);
+            }
+
+            // Display results
+            document.getElementById('outputCode').value = output;
+            document.getElementById('resultBox').classList.add('show');
+
+            if (highlight) {
+                const highlighted = highlightSQL(output);
+                document.getElementById('highlightedOutput').innerHTML = highlighted;
+                document.getElementById('highlightedOutput').style.display = 'block';
+            } else {
+                document.getElementById('highlightedOutput').innerHTML = escapeHTML(output);
+                document.getElementById('highlightedOutput').style.display = 'block';
+            }
+        }
+
+        function uppercaseKeywords(sql) {
+            // Escape strings first to avoid modifying content inside strings
+            const strings = [];
+            let result = sql;
+            
+            // Replace string literals with placeholders
+            result = result.replace(/'([^']*)'/g, (match, content) => {
+                strings.push(content);
+                return `__STRING_${strings.length - 1}__`;
+            });
+            
+            // Replace double-quoted identifiers
+            result = result.replace(/"([^"]*)"/g, (match, content) => {
+                return `"${content}"`;
+            });
+            
+            // Replace backtick identifiers (MySQL)
+            result = result.replace(/`([^`]*)`/g, (match, content) => {
+                return `\`${content}\``;
+            });
+
+            // Uppercase keywords
+            const allKeywords = [...SQL_KEYWORDS];
+            if (dialect === 'sqlserver') {
+                allKeywords.push('TOP');
+            }
+            
+            const keywordPattern = new RegExp('\\b(' + allKeywords.join('|') + ')\\b', 'gi');
+            result = result.replace(keywordPattern, (match) => match.toUpperCase());
+
+            // Restore string literals
+            strings.forEach((str, i) => {
+                result = result.replace(`__STRING_${i}__`, `'${str}'`);
+            });
+
+            return result;
+        }
+
+        function formatIndentation(sql, dialect) {
+            let result = sql;
+            const indentSize = 4;
+            const spaces = ' '.repeat(indentSize);
+            
+            // Split by major clauses
+            const clauses = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'GROUP BY', 'HAVING', 'ORDER BY', 'LIMIT', 'OFFSET', 'UNION', 'INTERSECT', 'EXCEPT'];
+            
+            // Handle CTEs
+            if (sql.match(/\bWITH\b/i)) {
+                result = result.replace(/\bWITH\b/i, '\nWITH');
+                result = result.replace(/\bSELECT\b/gi, '\nSELECT');
+            }
+
+            // Add line breaks before main clauses
+            clauses.forEach(clause => {
+                const regex = new RegExp('\\s+' + clause + '\\b', 'gi');
+                result = result.replace(regex, '\n' + clause);
+            });
+
+            // Handle JOINs
+            result = result.replace(/\b(LEFT|RIGHT|INNER|OUTER|CROSS|FULL)\s+JOIN\b/gi, '\n$1 JOIN');
+            result = result.replace(/\bJOIN\b/gi, '\nJOIN');
+
+            // Handle ON clauses
+            result = result.replace(/\bON\b/gi, '\n' + spaces + 'ON');
+
+            // Indent SELECT columns
+            const lines = result.split('\n');
+            result = lines.map((line, index) => {
+                if (line.trim().startsWith('SELECT') && !line.trim().endsWith(',')) {
+                    return line;
+                }
+                if (line.includes(',') && !line.includes('FROM') && !line.includes('WHERE')) {
+                    return spaces + line.trim();
+                }
+                return line;
+            }).join('\n');
+
+            // Apply proper indentation
+            result = result.split('\n').map(line => {
+                if (line.match(/^\s*(SELECT|WITH)\b/i)) return line;
+                if (line.match(/^\s*(FROM|WHERE|GROUP|HAVING|ORDER|LIMIT|OFFSET|UNION|INTERSECT|EXCEPT)\b/i)) return line;
+                if (line.match(/^\s*(LEFT|RIGHT|INNER|OUTER|CROSS|FULL)?\s*JOIN\b/i)) return line;
+                return spaces + line;
+            }).join('\n');
+
+            return result.trim();
+        }
+
+        function addLineBreaks(sql) {
+            let result = sql;
+            
+            // Ensure space before major keywords
+            const keywords = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'GROUP BY', 'HAVING', 'ORDER BY', 'LIMIT', 'OFFSET', 'UNION', 'INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'CROSS JOIN', 'FULL JOIN', 'JOIN', 'INSERT INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE FROM', 'CREATE TABLE', 'ALTER TABLE', 'DROP TABLE'];
+            
+            keywords.forEach(kw => {
+                const regex = new RegExp('\\s+' + kw.replace(/\s+/g, '\\s+'), 'gi');
+                result = result.replace(regex, '\n' + kw);
+            });
+
+            return result;
+        }
+
+        function highlightSQL(sql) {
+            let result = escapeHTML(sql);
+            
+            // Comments
+            result = result.replace(/(--[^\n]*)/g, '<span class="sql-comment">$1</span>');
+            
+            // Strings (single quotes)
+            result = result.replace(/'([^']*)'/g, '<span class="sql-string">\'$1\'</span>');
+            
+            // Numbers
+            result = result.replace(/\b(\d+\.?\d*)\b/g, '<span class="sql-number">$1</span>');
+            
+            // Keywords
+            const keywordPattern = new RegExp('\\b(' + SQL_KEYWORDS.join('|') + ')\\b', 'gi');
+            result = result.replace(keywordPattern, '<span class="sql-keyword">$1</span>');
+            
+            // Functions
+            const funcPattern = new RegExp('\\b(' + SQL_FUNCTIONS.join('|') + ')\\s*\\(', 'gi');
+            result = result.replace(funcPattern, '<span class="sql-function">$1</span>(');
+            
+            // Types
+            const typePattern = new RegExp('\\b(' + SQL_TYPES.join('|') + ')\\b', 'gi');
+            result = result.replace(typePattern, '<span class="sql-type">$1</span>');
+            
+            // Operators
+            result = result.replace(/(&lt;|&gt;|<>|!=|>=|<=|=|\+|-|\*|\/)/g, '<span class="sql-operator">$1</span>');
+
+            return result;
+        }
+
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function copyResult() {
+            const output = document.getElementById('outputCode').value;
+            if (!output) {
+                alert('没有可复制的内容，请先格式化');
+                return;
+            }
+            navigator.clipboard.writeText(output).then(() => {
+                alert('已复制到剪贴板');
+            });
+        }
+
+        function clearAll() {
+            document.getElementById('inputCode').value = '';
+            document.getElementById('outputCode').value = '';
+            document.getElementById('highlightedOutput').innerHTML = '';
+            document.getElementById('resultBox').classList.remove('show');
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

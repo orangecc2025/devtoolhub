@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="在线MIME类型查询工具，支持200+文件类型，支持按扩展名和MIME类型双向查询，提供拖拽文件自动识别功能。">
+    <meta name="keywords" content="MIME类型, MIME查询, 文件类型, Content-Type, 扩展名查询, 在线工具">
+    <title>MIME类型查询 - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            flex: 1;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #0f172a;
+        }
+        .page-desc {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            border-color: #4F46E5;
+            background: #4F46E5;
+            color: #fff;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .search-box {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        .lookup-mode {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .lookup-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e2e8f0;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .lookup-btn.active {
+            border-color: #4F46E5;
+            background: #4F46E5;
+            color: #fff;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .result-table th, .result-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .result-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.875rem;
+        }
+        .result-table tr:hover {
+            background: #f8fafc;
+        }
+        .mime-ext {
+            font-family: 'Monaco', 'Menlo', monospace;
+            color: #4F46E5;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            background: #eff6ff;
+            border-radius: 4px;
+        }
+        .mime-type {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+        }
+        .mime-desc {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        .drag-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .drag-zone:hover, .drag-zone.dragover {
+            border-color: #4F46E5;
+            background: #eff6ff;
+        }
+        .drag-zone .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .drag-zone p {
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+        .drag-zone .hint {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        .drag-zone input[type="file"] {
+            display: none;
+        }
+        .detected-result {
+            background: #f0fdf4;
+            border: 2px solid #22c55e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        .detected-result .label {
+            font-size: 0.75rem;
+            color: #16a34a;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        .detected-result .mime-display {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #15803d;
+            margin-bottom: 0.5rem;
+        }
+        .detected-result .file-name {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        .quick-cats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.75rem;
+        }
+        .quick-cat {
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .quick-cat:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+        .quick-cat .cat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .quick-cat .cat-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        .quick-cat .cat-count {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        .category-section {
+            margin-top: 1.5rem;
+        }
+        .category-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #0f172a;
+        }
+        .category-title .emoji {
+            font-size: 1.25rem;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-success {
+            background: #10b981;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #059669;
+        }
+        .copy-feedback {
+            color: #10b981;
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .copy-feedback.show {
+            opacity: 1;
+        }
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .footer {
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 0;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        .footer a {
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 4px solid #4F46E5;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+        }
+        .tip-box p {
+            color: #3b82f6;
+            font-size: 0.875rem;
+        }
+        @media (max-width: 768px) {
+            .result-table {
+                font-size: 0.875rem;
+            }
+            .result-table th, .result-table td {
+                padding: 0.5rem;
+            }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title" data-en="MIME Type Lookup">MIME类型查询</h1>
+        <p class="page-desc" data-en="Look up MIME types by file extension or search MIME types to find extensions. Also supports drag-and-drop file identification.">通过文件扩展名查询MIME类型，或通过MIME类型查找扩展名。也支持拖拽文件自动识别。</p>
+
+        <div class="lang-toggle">
+            <button class="lang-btn active" onclick="setLang('zh')">中文</button>
+            <button class="lang-btn" onclick="setLang('en')">English</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-en="🎯 Lookup Mode">🎯 查询模式</div>
+            <div class="lookup-mode">
+                <button class="lookup-btn active" onclick="setLookupMode('ext')" data-en="Extension → MIME">扩展名 → MIME</button>
+                <button class="lookup-btn" onclick="setLookupMode('mime')" data-en="MIME → Extension">MIME → 扩展名</button>
+            </div>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="输入扩展名(如: pdf, jpg)或MIME类型搜索..." oninput="searchMIME()">
+            </div>
+            <div id="searchResults"></div>
+            <div id="noResults" class="no-results hidden" data-en="No matching MIME types found">未找到匹配的MIME类型</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-en="📁 Drag & Drop File Detection">📁 拖拽文件自动识别</div>
+            <div class="drag-zone" id="dragZone">
+                <div class="icon">📄</div>
+                <p data-en="Drag and drop a file here">将文件拖拽到此处</p>
+                <p class="hint" data-en="or click to select">或点击选择文件</p>
+                <input type="file" id="fileInput" onchange="detectFile(this.files[0])">
+            </div>
+            <div id="detectedResult" class="detected-result hidden">
+                <div class="label" data-en="Detected MIME Type:">检测到的MIME类型：</div>
+                <div class="mime-display" id="detectedMime"></div>
+                <div class="file-name" id="detectedFileName"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-en="⚡ Quick Categories">⚡ 常用类型</div>
+            <div class="quick-cats">
+                <div class="quick-cat" onclick="filterByCategory('image')">
+                    <div class="cat-icon">🖼️</div>
+                    <div class="cat-name" data-en="Images">图片</div>
+                    <div class="cat-count" data-en="Images">图片</div>
+                </div>
+                <div class="quick-cat" onclick="filterByCategory('document')">
+                    <div class="cat-icon">📄</div>
+                    <div class="cat-name" data-en="Documents">文档</div>
+                    <div class="cat-count" data-en="Documents">文档</div>
+                </div>
+                <div class="quick-cat" onclick="filterByCategory('video')">
+                    <div class="cat-icon">🎬</div>
+                    <div class="cat-name" data-en="Video">视频</div>
+                    <div class="cat-count" data-en="Video">视频</div>
+                </div>
+                <div class="quick-cat" onclick="filterByCategory('audio')">
+                    <div class="cat-icon">🎵</div>
+                    <div class="cat-name" data-en="Audio">音频</div>
+                    <div class="cat-count" data-en="Audio">音频</div>
+                </div>
+                <div class="quick-cat" onclick="filterByCategory('archive')">
+                    <div class="cat-icon">📦</div>
+                    <div class="cat-name" data-en="Archives">压缩包</div>
+                    <div class="cat-count" data-en="Archives">压缩包</div>
+                </div>
+                <div class="quick-cat" onclick="filterByCategory('web')">
+                    <div class="cat-icon">🌐</div>
+                    <div class="cat-name" data-en="Web">Web</div>
+                    <div class="cat-count" data-en="Web files">Web文件</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-en="📚 Complete MIME Type Database">📚 完整MIME类型数据库</div>
+            <div id="categorySections"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentLang = 'zh';
+        let lookupMode = 'ext';
+        let currentCategory = null;
+
+        const mimeTypes = {
+            // Images
+            'jpg,jpeg': { mime: 'image/jpeg', category: 'image', desc: { zh: 'JPEG图像', en: 'JPEG Image' } },
+            'png': { mime: 'image/png', category: 'image', desc: { zh: 'PNG图像', en: 'PNG Image' } },
+            'gif': { mime: 'image/gif', category: 'image', desc: { zh: 'GIF图像', en: 'GIF Image' } },
+            'webp': { mime: 'image/webp', category: 'image', desc: { zh: 'WebP图像', en: 'WebP Image' } },
+            'svg': { mime: 'image/svg+xml', category: 'image', desc: { zh: 'SVG矢量图形', en: 'SVG Vector Image' } },
+            'bmp': { mime: 'image/bmp', category: 'image', desc: { zh: 'BMP位图', en: 'BMP Bitmap' } },
+            'ico': { mime: 'image/x-icon', category: 'image', desc: { zh: '图标文件', en: 'Icon File' } },
+            'tiff,tif': { mime: 'image/tiff', category: 'image', desc: { zh: 'TIFF图像', en: 'TIFF Image' } },
+            'heic,heif': { mime: 'image/heic', category: 'image', desc: { zh: 'HEIC图像', en: 'HEIC Image' } },
+            'avif': { mime: 'image/avif', category: 'image', desc: { zh: 'AVIF图像', en: 'AVIF Image' } },
+            'apng': { mime: 'image/apng', category: 'image', desc: { zh: 'Animated PNG', en: 'Animated PNG' } },
+            'cr2,cr3': { mime: 'image/x-canon-cr2', category: 'image', desc: { zh: '佳能RAW图像', en: 'Canon RAW Image' } },
+            'nef': { mime: 'image/x-nikon-nef', category: 'image', desc: { zh: '尼康RAW图像', en: 'Nikon RAW Image' } },
+            'arw': { mime: 'image/x-sony-arw', category: 'image', desc: { zh: '索尼RAW图像', en: 'Sony RAW Image' } },
+            'dwg': { mime: 'image/vnd.dwg', category: 'image', desc: { zh: 'DWG工程图', en: 'DWG Drawing' } },
+            'dxf': { mime: 'image/vnd.dxf', category: 'image', desc: { zh: 'DXF工程图', en: 'DXF Drawing' } },
+            
+            // Documents
+            'pdf': { mime: 'application/pdf', category: 'document', desc: { zh: 'PDF文档', en: 'PDF Document' } },
+            'doc': { mime: 'application/msword', category: 'document', desc: { zh: 'Word文档', en: 'Word Document' } },
+            'docx': { mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', category: 'document', desc: { zh: 'Word文档(DOCX)', en: 'Word Document (DOCX)' } },
+            'xls': { mime: 'application/vnd.ms-excel', category: 'document', desc: { zh: 'Excel表格', en: 'Excel Spreadsheet' } },
+            'xlsx': { mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', category: 'document', desc: { zh: 'Excel表格(XLSX)', en: 'Excel Spreadsheet (XLSX)' } },
+            'ppt': { mime: 'application/vnd.ms-powerpoint', category: 'document', desc: { zh: 'PowerPoint演示', en: 'PowerPoint Presentation' } },
+            'pptx': { mime: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', category: 'document', desc: { zh: 'PowerPoint演示(PPTX)', en: 'PowerPoint Presentation (PPTX)' } },
+            'odt': { mime: 'application/vnd.oasis.opendocument.text', category: 'document', desc: { zh: 'OpenDocument文本', en: 'OpenDocument Text' } },
+            'ods': { mime: 'application/vnd.oasis.opendocument.spreadsheet', category: 'document', desc: { zh: 'OpenDocument表格', en: 'OpenDocument Spreadsheet' } },
+            'odp': { mime: 'application/vnd.oasis.opendocument.presentation', category: 'document', desc: { zh: 'OpenDocument演示', en: 'OpenDocument Presentation' } },
+            'rtf': { mime: 'application/rtf', category: 'document', desc: { zh: '富文本格式', en: 'Rich Text Format' } },
+            'txt': { mime: 'text/plain', category: 'document', desc: { zh: '纯文本', en: 'Plain Text' } },
+            'csv': { mime: 'text/csv', category: 'document', desc: { zh: 'CSV表格', en: 'CSV Spreadsheet' } },
+            'tsv': { mime: 'text/tab-separated-values', category: 'document', desc: { zh: 'TSV表格', en: 'Tab-separated Values' } },
+            'md,markdown': { mime: 'text/markdown', category: 'document', desc: { zh: 'Markdown文档', en: 'Markdown Document' } },
+            'tex': { mime: 'application/x-tex', category: 'document', desc: { zh: 'LaTeX文档', en: 'LaTeX Document' } },
+            'epub': { mime: 'application/epub+zip', category: 'document', desc: { zh: 'EPUB电子书', en: 'EPUB E-book' } },
+            'mobi': { mime: 'application/x-mobipocket-ebook', category: 'document', desc: { zh: 'MOBI电子书', en: 'MOBI E-book' } },
+            'fb2': { mime: 'application/x-fictionbook+xml', category: 'document', desc: { zh: 'FictionBook电子书', en: 'FictionBook E-book' } },
+            
+            // Video
+            'mp4': { mime: 'video/mp4', category: 'video', desc: { zh: 'MP4视频', en: 'MP4 Video' } },
+            'webm': { mime: 'video/webm', category: 'video', desc: { zh: 'WebM视频', en: 'WebM Video' } },
+            'avi': { mime: 'video/x-msvideo', category: 'video', desc: { zh: 'AVI视频', en: 'AVI Video' } },
+            'mkv': { mime: 'video/x-matroska', category: 'video', desc: { zh: 'MKV视频', en: 'MKV Video' } },
+            'mov': { mime: 'video/quicktime', category: 'video', desc: { zh: 'QuickTime视频', en: 'QuickTime Video' } },
+            'wmv': { mime: 'video/x-ms-wmv', category: 'video', desc: { zh: 'WMV视频', en: 'WMV Video' } },
+            'flv': { mime: 'video/x-flv', category: 'video', desc: { zh: 'FLV视频', en: 'FLV Video' } },
+            'm4v': { mime: 'video/x-m4v', category: 'video', desc: { zh: 'M4V视频', en: 'M4V Video' } },
+            'mpg,mpeg': { mime: 'video/mpeg', category: 'video', desc: { zh: 'MPEG视频', en: 'MPEG Video' } },
+            '3gp': { mime: 'video/3gpp', category: 'video', desc: { zh: '3GP视频', en: '3GP Video' } },
+            '3g2': { mime: 'video/3gpp2', category: 'video', desc: { zh: '3G2视频', en: '3G2 Video' } },
+            'ogv': { mime: 'video/ogg', category: 'video', desc: { zh: 'OGV视频', en: 'OGV Video' } },
+            'mts': { mime: 'video/mp2t', category: 'video', desc: { zh: 'AVCHD视频', en: 'AVCHD Video' } },
+            'ts': { mime: 'video/mp2t', category: 'video', desc: { zh: 'MPEG传输流', en: 'MPEG Transport Stream' } },
+            
+            // Audio
+            'mp3': { mime: 'audio/mpeg', category: 'audio', desc: { zh: 'MP3音频', en: 'MP3 Audio' } },
+            'wav': { mime: 'audio/wav', category: 'audio', desc: { zh: 'WAV音频', en: 'WAV Audio' } },
+            'ogg,oga': { mime: 'audio/ogg', category: 'audio', desc: { zh: 'OGG音频', en: 'OGG Audio' } },
+            'flac': { mime: 'audio/flac', category: 'audio', desc: { zh: 'FLAC无损音频', en: 'FLAC Lossless Audio' } },
+            'aac': { mime: 'audio/aac', category: 'audio', desc: { zh: 'AAC音频', en: 'AAC Audio' } },
+            'm4a': { mime: 'audio/mp4', category: 'audio', desc: { zh: 'M4A音频', en: 'M4A Audio' } },
+            'wma': { mime: 'audio/x-ms-wma', category: 'audio', desc: { zh: 'WMA音频', en: 'WMA Audio' } },
+            'opus': { mime: 'audio/opus', category: 'audio', desc: { zh: 'Opus音频', en: 'Opus Audio' } },
+            'alac': { mime: 'audio/x-alac', category: 'audio', desc: { zh: 'ALAC无损音频', en: 'ALAC Lossless Audio' } },
+            'ape': { mime: 'audio/x-ape', category: 'audio', desc: { zh: 'APE音频', en: 'APE Audio' } },
+            'mid,midi': { mime: 'audio/midi', category: 'audio', desc: { zh: 'MIDI音频', en: 'MIDI Audio' } },
+            'amr': { mime: 'audio/amr', category: 'audio', desc: { zh: 'AMR音频', en: 'AMR Audio' } },
+            'aiff,aif': { mime: 'audio/aiff', category: 'audio', desc: { zh: 'AIFF音频', en: 'AIFF Audio' } },
+            'eac3': { mime: 'audio/eac3', category: 'audio', desc: { zh: 'Dolby Digital Plus', en: 'Dolby Digital Plus' } },
+            'ac3': { mime: 'audio/ac3', category: 'audio', desc: { zh: 'Dolby Digital AC3', en: 'Dolby Digital AC3' } },
+            'dts': { mime: 'audio/dts', category: 'audio', desc: { zh: 'DTS音频', en: 'DTS Audio' } },
+            
+            // Archives
+            'zip': { mime: 'application/zip', category: 'archive', desc: { zh: 'ZIP压缩包', en: 'ZIP Archive' } },
+            'rar': { mime: 'application/vnd.rar', category: 'archive', desc: { zh: 'RAR压缩包', en: 'RAR Archive' } },
+            '7z': { mime: 'application/x-7z-compressed', category: 'archive', desc: { zh: '7-Zip压缩包', en: '7-Zip Archive' } },
+            'tar': { mime: 'application/x-tar', category: 'archive', desc: { zh: 'TAR归档', en: 'TAR Archive' } },
+            'gz,tgz': { mime: 'application/gzip', category: 'archive', desc: { zh: 'GZIP压缩', en: 'GZIP Compressed' } },
+            'bz2': { mime: 'application/x-bzip2', category: 'archive', desc: { zh: 'BZIP2压缩', en: 'BZIP2 Compressed' } },
+            'xz': { mime: 'application/x-xz', category: 'archive', desc: { zh: 'XZ压缩', en: 'XZ Compressed' } },
+            'jar': { mime: 'application/java-archive', category: 'archive', desc: { zh: 'Java JAR包', en: 'Java JAR Archive' } },
+            'war': { mime: 'application/x-webarchive', category: 'archive', desc: { zh: 'Web归档', en: 'Web Archive' } },
+            'dmg': { mime: 'application/x-apple-diskimage', category: 'archive', desc: { zh: 'macOS磁盘镜像', en: 'macOS Disk Image' } },
+            'iso': { mime: 'application/x-iso9660-image', category: 'archive', desc: { zh: '光盘镜像', en: 'Disk Image' } },
+            'lz4': { mime: 'application/x-lz4', category: 'archive', desc: { zh: 'LZ4压缩', en: 'LZ4 Compressed' } },
+            'zst': { mime: 'application/zstd', category: 'archive', desc: { zh: 'Zstandard压缩', en: 'Zstandard Compressed' } },
+            
+            // Web
+            'html,htm': { mime: 'text/html', category: 'web', desc: { zh: 'HTML网页', en: 'HTML Web Page' } },
+            'css': { mime: 'text/css', category: 'web', desc: { zh: 'CSS样式表', en: 'CSS Stylesheet' } },
+            'js': { mime: 'application/javascript', category: 'web', desc: { zh: 'JavaScript', en: 'JavaScript' } },
+            'mjs': { mime: 'application/javascript', category: 'web', desc: { zh: 'ES Module JS', en: 'ES Module JavaScript' } },
+            'json': { mime: 'application/json', category: 'web', desc: { zh: 'JSON数据', en: 'JSON Data' } },
+            'xml': { mime: 'application/xml', category: 'web', desc: { zh: 'XML数据', en: 'XML Data' } },
+            'rss': { mime: 'application/rss+xml', category: 'web', desc: { zh: 'RSS订阅', en: 'RSS Feed' } },
+            'atom': { mime: 'application/atom+xml', category: 'web', desc: { zh: 'Atom订阅', en: 'Atom Feed' } },
+            'yaml,yml': { mime: 'text/yaml', category: 'web', desc: { zh: 'YAML配置', en: 'YAML Configuration' } },
+            'toml': { mime: 'application/toml', category: 'web', desc: { zh: 'TOML配置', en: 'TOML Configuration' } },
+            'ini,cfg': { mime: 'text/plain', category: 'web', desc: { zh: '配置文件', en: 'Configuration File' } },
+            'env': { mime: 'text/plain', category: 'web', desc: { zh: '环境变量文件', en: 'Environment File' } },
+            'vue': { mime: 'application/javascript', category: 'web', desc: { zh: 'Vue组件', en: 'Vue Component' } },
+            'jsx': { mime: 'text/javascript', category: 'web', desc: { zh: 'React JSX', en: 'React JSX' } },
+            'tsx': { mime: 'text/typescript', category: 'web', desc: { zh: 'React TSX', en: 'React TSX' } },
+            'scss,sass,less': { mime: 'text/css', category: 'web', desc: { zh: 'CSS预处理器', en: 'CSS Preprocessor' } },
+            'woff': { mime: 'font/woff', category: 'web', desc: { zh: 'WOFF字体', en: 'WOFF Font' } },
+            'woff2': { mime: 'font/woff2', category: 'web', desc: { zh: 'WOFF2字体', en: 'WOFF2 Font' } },
+            'ttf': { mime: 'font/ttf', category: 'web', desc: { zh: 'TTF字体', en: 'TTF Font' } },
+            'otf': { mime: 'font/otf', category: 'web', desc: { zh: 'OTF字体', en: 'OTF Font' } },
+            'eot': { mime: 'application/vnd.ms-fontobject', category: 'web', desc: { zh: 'EOT字体', en: 'EOT Font' } },
+            'svgz': { mime: 'image/svg+xml', category: 'web', desc: { zh: '压缩SVG', en: 'Compressed SVG' } },
+            
+            // Application
+            'exe': { mime: 'application/x-msdownload', category: 'app', desc: { zh: 'Windows可执行文件', en: 'Windows Executable' } },
+            'msi': { mime: 'application/x-msi', category: 'app', desc: { zh: 'Windows安装包', en: 'Windows Installer' } },
+            'bat,cmd': { mime: 'application/x-bat', category: 'app', desc: { zh: '批处理脚本', en: 'Batch Script' } },
+            'sh': { mime: 'application/x-sh', category: 'app', desc: { zh: 'Shell脚本', en: 'Shell Script' } },
+            'bash': { mime: 'application/x-sh', category: 'app', desc: { zh: 'Bash脚本', en: 'Bash Script' } },
+            'zsh': { mime: 'application/x-zsh', category: 'app', desc: { zh: 'Zsh脚本', en: 'Zsh Script' } },
+            'ps1': { mime: 'application/x-powershell', category: 'app', desc: { zh: 'PowerShell脚本', en: 'PowerShell Script' } },
+            'py': { mime: 'text/x-python', category: 'app', desc: { zh: 'Python脚本', en: 'Python Script' } },
+            'pyc': { mime: 'application/x-python-code', category: 'app', desc: { zh: 'Python字节码', en: 'Python Bytecode' } },
+            'java': { mime: 'text/x-java-source', category: 'app', desc: { zh: 'Java源代码', en: 'Java Source' } },
+            'class': { mime: 'application/x-java-applet', category: 'app', desc: { zh: 'Java类文件', en: 'Java Class' } },
+            'c': { mime: 'text/x-c', category: 'app', desc: { zh: 'C源代码', en: 'C Source' } },
+            'cpp,cxx,cc': { mime: 'text/x-c++', category: 'app', desc: { zh: 'C++源代码', en: 'C++ Source' } },
+            'h,hpp': { mime: 'text/x-chdr', category: 'app', desc: { zh: 'C/C++头文件', en: 'C/C++ Header' } },
+            'cs': { mime: 'text/x-csharp', category: 'app', desc: { zh: 'C#源代码', en: 'C# Source' } },
+            'go': { mime: 'text/x-go', category: 'app', desc: { zh: 'Go源代码', en: 'Go Source' } },
+            'rs': { mime: 'text/x-rust', category: 'app', desc: { zh: 'Rust源代码', en: 'Rust Source' } },
+            'rb': { mime: 'text/x-ruby', category: 'app', desc: { zh: 'Ruby源代码', en: 'Ruby Source' } },
+            'php': { mime: 'text/x-php', category: 'app', desc: { zh: 'PHP脚本', en: 'PHP Script' } },
+            'swift': { mime: 'text/x-swift', category: 'app', desc: { zh: 'Swift源代码', en: 'Swift Source' } },
+            'kt,kts': { mime: 'text/x-kotlin', category: 'app', desc: { zh: 'Kotlin源代码', en: 'Kotlin Source' } },
+            'scala': { mime: 'text/x-scala', category: 'app', desc: { zh: 'Scala源代码', en: 'Scala Source' } },
+            'pl,pm': { mime: 'text/x-perl', category: 'app', desc: { zh: 'Perl脚本', en: 'Perl Script' } },
+            'r': { mime: 'text/x-r', category: 'app', desc: { zh: 'R源代码', en: 'R Source' } },
+            'sql': { mime: 'text/x-sql', category: 'app', desc: { zh: 'SQL脚本', en: 'SQL Script' } },
+            'db,sqlite': { mime: 'application/x-sqlite3', category: 'app', desc: { zh: 'SQLite数据库', en: 'SQLite Database' } },
+            'psd': { mime: 'image/vnd.adobe.photoshop', category: 'app', desc: { zh: 'Photoshop文档', en: 'Photoshop Document' } },
+            'ai': { mime: 'application/postscript', category: 'app', desc: { zh: 'Illustrator文档', en: 'Illustrator Document' } },
+            'sketch': { mime: 'application/octet-stream', category: 'app', desc: { zh: 'Sketch文档', en: 'Sketch Document' } },
+            'fig': { mime: 'application/zip', category: 'app', desc: { zh: 'Figma文档', en: 'Figma Document' } },
+            'xd': { mime: 'application/zip', category: 'app', desc: { zh: 'Adobe XD文档', en: 'Adobe XD Document' } },
+            'indd': { mime: 'application/x-indesign', category: 'app', desc: { zh: 'InDesign文档', en: 'InDesign Document' } },
+            'prproj': { mime: 'application/xml', category: 'app', desc: { zh: 'Premiere项目', en: 'Premiere Project' } },
+            'blend': { mime: 'application/x-blender', category: 'app', desc: { zh: 'Blender项目', en: 'Blender Project' } },
+            'unity': { mime: 'application/octet-stream', category: 'app', desc: { zh: 'Unity项目', en: 'Unity Project' } },
+            'apk': { mime: 'application/vnd.android.package-archive', category: 'app', desc: { zh: 'Android安装包', en: 'Android APK' } },
+            'aab': { mime: 'application/android.app.bundle', category: 'app', desc: { zh: 'Android App Bundle', en: 'Android App Bundle' } },
+            'ipa': { mime: 'application/x-itunes-ipa', category: 'app', desc: { zh: 'iOS安装包', en: 'iOS IPA' } },
+            'appimage': { mime: 'application/x-iso9660-appimage', category: 'app', desc: { zh: 'AppImage', en: 'AppImage' } },
+            'deb': { mime: 'application/x-debian-package', category: 'app', desc: { zh: 'Debian包', en: 'Debian Package' } },
+            'rpm': { mime: 'application/x-rpm', category: 'app', desc: { zh: 'RPM包', en: 'RPM Package' } },
+            'dmg': { mime: 'application/x-apple-diskimage', category: 'app', desc: { zh: 'macOS应用', en: 'macOS Application' } },
+            'pkg': { mime: 'application/x-newton-compatible-pkg', category: 'app', desc: { zh: 'macOS安装包', en: 'macOS Package' } },
+            
+            // Other
+            'pem': { mime: 'application/x-pem-file', category: 'other', desc: { zh: 'PEM证书', en: 'PEM Certificate' } },
+            'crt,cer': { mime: 'application/x-x509-ca-cert', category: 'other', desc: { zh: 'X.509证书', en: 'X.509 Certificate' } },
+            'p12,pfx': { mime: 'application/x-pkcs12', category: 'other', desc: { zh: 'PKCS#12证书', en: 'PKCS#12 Certificate' } },
+            'key': { mime: 'application/x-pem-file', category: 'other', desc: { zh: '私钥文件', en: 'Private Key' } },
+            'ics': { mime: 'text/calendar', category: 'other', desc: { zh: '日历事件', en: 'Calendar Event' } },
+            'vcf,vcard': { mime: 'text/vcard', category: 'other', desc: { zh: '电子名片', en: 'vCard' } },
+            'torrent': { mime: 'application/x-bittorrent', category: 'other', desc: { zh: 'BitTorrent种子', en: 'BitTorrent' } },
+            'magnet': { mime: 'text/plain', category: 'other', desc: { zh: '磁力链接', en: 'Magnet Link' } },
+            'wasm': { mime: 'application/wasm', category: 'other', desc: { zh: 'WebAssembly', en: 'WebAssembly' } },
+            'wasm': { mime: 'application/wasm', category: 'other', desc: { zh: 'WebAssembly二进制', en: 'WebAssembly Binary' } },
+            'bin': { mime: 'application/octet-stream', category: 'other', desc: { zh: '二进制文件', en: 'Binary File' } },
+            'dat': { mime: 'application/octet-stream', category: 'other', desc: { zh: '数据文件', en: 'Data File' } },
+            'log': { mime: 'text/plain', category: 'other', desc: { zh: '日志文件', en: 'Log File' } },
+            'srt': { mime: 'text/plain', category: 'other', desc: { zh: '字幕文件', en: 'Subtitle File' } },
+            'vtt': { mime: 'text/vtt', category: 'other', desc: { zh: 'WebVTT字幕', en: 'WebVTT Subtitle' } },
+            'ass': { mime: 'text/plain', category: 'other', desc: { zh: 'ASS字幕', en: 'ASS Subtitle' } }
+        };
+
+        const categoryNames = {
+            image: { zh: '🖼️ 图片文件', en: '🖼️ Image Files', icon: '🖼️' },
+            document: { zh: '📄 文档文件', en: '📄 Document Files', icon: '📄' },
+            video: { zh: '🎬 视频文件', en: '🎬 Video Files', icon: '🎬' },
+            audio: { zh: '🎵 音频文件', en: '🎵 Audio Files', icon: '🎵' },
+            archive: { zh: '📦 压缩归档', en: '📦 Archives', icon: '📦' },
+            web: { zh: '🌐 Web文件', en: '🌐 Web Files', icon: '🌐' },
+            app: { zh: '⚙️ 应用程序', en: '⚙️ Applications', icon: '⚙️' },
+            other: { zh: '📋 其他文件', en: '📋 Other Files', icon: '📋' }
+        };
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const enText = el.getAttribute('data-en');
+                el.textContent = lang === 'en' ? enText : el.getAttribute('data-zh') || enText;
+            });
+            
+            searchMIME();
+            renderAllCategories();
+        }
+
+        function setLookupMode(mode) {
+            lookupMode = mode;
+            document.querySelectorAll('.lookup-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const input = document.getElementById('searchInput');
+            if (mode === 'ext') {
+                input.placeholder = currentLang === 'en' ? 'Enter extension (e.g., pdf, jpg)...' : '输入扩展名(如: pdf, jpg)...';
+            } else {
+                input.placeholder = currentLang === 'en' ? 'Enter MIME type (e.g., image/jpeg)...' : '输入MIME类型(如: image/jpeg)...';
+            }
+            input.value = '';
+            searchMIME();
+        }
+
+        function searchMIME() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('searchResults');
+            const noResults = document.getElementById('noResults');
+
+            if (!query) {
+                resultsContainer.innerHTML = '';
+                noResults.classList.add('hidden');
+                return;
+            }
+
+            let results = [];
+
+            if (lookupMode === 'ext') {
+                // Search by extension
+                for (const [ext, data] of Object.entries(mimeTypes)) {
+                    if (ext.includes(query) || query.includes(ext.replace(/[,]/g, ''))) {
+                        results.push({ ext: ext.split(','), mime: data.mime, desc: data.desc[currentLang] });
+                    }
+                }
+            } else {
+                // Search by MIME type
+                for (const [ext, data] of Object.entries(mimeTypes)) {
+                    if (data.mime.toLowerCase().includes(query)) {
+                        results.push({ ext: ext.split(','), mime: data.mime, desc: data.desc[currentLang] });
+                    }
+                }
+            }
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+            let html = '<table class="result-table"><thead><tr>';
+            html += `<th>${currentLang === 'en' ? 'Extension' : '扩展名'}</th>`;
+            html += `<th>${currentLang === 'en' ? 'MIME Type' : 'MIME类型'}</th>`;
+            html += `<th>${currentLang === 'en' ? 'Description' : '描述'}</th>`;
+            html += '</tr></thead><tbody>';
+
+            results.forEach(r => {
+                html += '<tr>';
+                html += `<td><span class="mime-ext" onclick="copyText('${r.ext[0]}')">${r.ext[0]}</span>${r.ext.length > 1 ? ' (' + r.ext.slice(1).join(', ') + ')' : ''}</td>`;
+                html += `<td class="mime-type" onclick="copyText('${r.mime}')">${r.mime}</td>`;
+                html += `<td class="mime-desc">${r.desc}</td>`;
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            resultsContainer.innerHTML = html;
+        }
+
+        function filterByCategory(cat) {
+            currentCategory = cat;
+            const resultsContainer = document.getElementById('searchResults');
+            
+            let html = '<div class="category-section">';
+            html += `<h3 class="category-title">${categoryNames[cat][currentLang]}</h3>`;
+            html += '<table class="result-table"><thead><tr>';
+            html += `<th>${currentLang === 'en' ? 'Extension' : '扩展名'}</th>`;
+            html += `<th>${currentLang === 'en' ? 'MIME Type' : 'MIME类型'}</th>`;
+            html += `<th>${currentLang === 'en' ? 'Description' : '描述'}</th>`;
+            html += '</tr></thead><tbody>';
+
+            for (const [ext, data] of Object.entries(mimeTypes)) {
+                if (data.category === cat) {
+                    html += '<tr>';
+                    html += `<td><span class="mime-ext" onclick="copyText('${ext.split(',')[0]}')">${ext.split(',')[0]}</span>${ext.includes(',') ? ' (' + ext.split(',').slice(1).join(', ') + ')' : ''}</td>`;
+                    html += `<td class="mime-type" onclick="copyText('${data.mime}')">${data.mime}</td>`;
+                    html += `<td class="mime-desc">${data.desc[currentLang]}</td>`;
+                    html += '</tr>';
+                }
+            }
+
+            html += '</tbody></table></div>';
+            resultsContainer.innerHTML = html;
+        }
+
+        function renderAllCategories() {
+            const container = document.getElementById('categorySections');
+            container.innerHTML = '';
+
+            const categories = ['image', 'document', 'video', 'audio', 'archive', 'web', 'app', 'other'];
+
+            categories.forEach(cat => {
+                const items = Object.entries(mimeTypes).filter(([_, data]) => data.category === cat);
+                if (items.length === 0) return;
+
+                let html = `<div class="category-section">`;
+                html += `<h3 class="category-title">${categoryNames[cat][currentLang]} <span style="color:#94a3b8;font-size:0.875rem;font-weight:400">(${items.length})</span></h3>`;
+                html += '<table class="result-table"><thead><tr>';
+                html += `<th>${currentLang === 'en' ? 'Extension' : '扩展名'}</th>`;
+                html += `<th>${currentLang === 'en' ? 'MIME Type' : 'MIME类型'}</th>`;
+                html += `<th>${currentLang === 'en' ? 'Description' : '描述'}</th>`;
+                html += '</tr></thead><tbody>';
+
+                items.forEach(([ext, data]) => {
+                    html += '<tr>';
+                    html += `<td><span class="mime-ext" onclick="copyText('${ext.split(',')[0]}')">${ext.split(',')[0]}</span>${ext.includes(',') ? ' (' + ext.split(',').slice(1).join(', ') + ')' : ''}</td>`;
+                    html += `<td class="mime-type" onclick="copyText('${data.mime}')">${data.mime}</td>`;
+                    html += `<td class="mime-desc">${data.desc[currentLang]}</td>`;
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table></div>';
+                container.innerHTML += html;
+            });
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.createElement('div');
+                toast.className = 'copy-toast';
+                toast.textContent = currentLang === 'en' ? 'Copied!' : '已复制!';
+                toast.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:0.75rem 1.5rem;border-radius:8px;font-size:0.875rem;opacity:0;transition:opacity 0.3s;z-index:1000;';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.style.opacity = '1', 10);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2000);
+            });
+        }
+
+        // Drag and drop
+        const dragZone = document.getElementById('dragZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dragZone.addEventListener('click', () => fileInput.click());
+        dragZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dragZone.classList.add('dragover');
+        });
+        dragZone.addEventListener('dragleave', () => {
+            dragZone.classList.remove('dragover');
+        });
+        dragZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) detectFile(file);
+        });
+
+        function detectFile(file) {
+            const result = document.getElementById('detectedResult');
+            const mimeDisplay = document.getElementById('detectedMime');
+            const fileNameDisplay = document.getElementById('detectedFileName');
+
+            const ext = file.name.split('.').pop().toLowerCase();
+            const mimeFromExt = mimeTypes[ext]?.mime || file.type || 'application/octet-stream';
+            
+            mimeDisplay.textContent = mimeFromExt;
+            fileNameDisplay.textContent = `${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+            
+            if (file.type && file.type !== mimeFromExt) {
+                fileNameDisplay.textContent += ` | ${currentLang === 'en' ? 'Browser detected:' : '浏览器检测:'} ${file.type}`;
+            }
+            
+            result.classList.remove('hidden');
+
+            // Auto-copy
+            navigator.clipboard.writeText(mimeFromExt).then(() => {
+                const toast = document.createElement('div');
+                toast.className = 'copy-toast';
+                toast.textContent = `${currentLang === 'en' ? 'MIME type copied!' : 'MIME类型已复制!'}`;
+                toast.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:0.75rem 1.5rem;border-radius:8px;font-size:0.875rem;opacity:0;transition:opacity 0.3s;z-index:1000;';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.style.opacity = '1', 10);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2000);
+            });
+        }
+
+        // Initialize
+        renderAllCategories();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="meta-tag-generator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">Meta 标签生成器</div><div class="r-desc">SEO标签</div></a>
+        <a href="open-graph-generator.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">OG 标签生成器</div><div class="r-desc">社交分享标签</div></a>
+        <a href="twitter-card-generator.html" class="related-card"><div class="r-icon">🐦</div><div class="r-title">Twitter Card 生成器</div><div class="r-desc">卡片标签</div></a>
+        <a href="robots-txt-generator.html" class="related-card"><div class="r-icon">🤖</div><div class="r-title">robots.txt 生成器</div><div class="r-desc">生成规则</div></a>
+        <a href="url-slug-generator.html" class="related-card"><div class="r-icon">🔗</div><div class="r-title">URL Slug 生成器</div><div class="r-desc">SEO友好URL</div></a>
+        <a href="url-parser.html" class="related-card"><div class="r-icon">🔍</div><div class="r-title">URL 解析器</div><div class="r-desc">URL组件解析</div></a>
+        </div>
+    </section>
+</body>
+</html>

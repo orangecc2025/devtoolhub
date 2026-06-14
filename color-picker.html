@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>在线颜色选择器 - DevToolBox | HEX RGB HSL CMYK 颜色互转工具</title>
+  <meta name="description" content="免费的在线颜色选择器工具，支持色轮取色、HEX/RGB/HSL/CMYK格式互转、调色板生成、WCAG对比度检测、颜色历史记录功能。">
+  <meta name="keywords" content="颜色选择器, 在线取色器, HEX颜色, RGB颜色, HSL颜色, CMYK颜色, 颜色格式转换, WCAG对比度">
+  <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+  <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+  <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+  <link rel="canonical" href="https://devtoolhub.cc/color-picker.html">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #F9FAFB;
+      color: #1F2937;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .lang-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+    }
+    .lang-btn {
+      padding: 6px 12px;
+      border: 1px solid #D1D5DB;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover { background: #F3F4F6; }
+    .lang-btn.active {
+      background: #4F46E5;
+      color: white;
+      border-color: #4F46E5;
+    }
+    header {
+      background: white;
+      padding: 16px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    header a.logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #4F46E5;
+      text-decoration: none;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+    .subtitle {
+      color: #6B7280;
+      margin-bottom: 24px;
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 800px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #374151;
+    }
+    .color-preview {
+      width: 100%;
+      height: 120px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #E5E7EB;
+    }
+    .picker-area {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .hue-slider {
+      width: 100%;
+      height: 20px;
+      border-radius: 10px;
+      background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .hue-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid #333;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .saturation-area {
+      width: 100%;
+      height: 150px;
+      border-radius: 12px;
+      position: relative;
+      cursor: crosshair;
+      border: 1px solid #E5E7EB;
+    }
+    .picker-cursor {
+      width: 20px;
+      height: 20px;
+      border: 3px solid white;
+      border-radius: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+    .format-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .format-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .format-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6B7280;
+      width: 50px;
+    }
+    .format-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #D1D5DB;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: monospace;
+    }
+    .format-input:focus {
+      outline: none;
+      border-color: #4F46E5;
+    }
+    .copy-btn-small {
+      padding: 6px 10px;
+      background: #F3F4F6;
+      border: 1px solid #D1D5DB;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .copy-btn-small:hover {
+      background: #E5E7EB;
+    }
+    .copy-btn-small.copied {
+      background: #10B981;
+      color: white;
+      border-color: #10B981;
+    }
+    .palettes-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .palette-card {
+      background: #F9FAFB;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .palette-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #6B7280;
+      margin-bottom: 10px;
+    }
+    .palette-colors {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .palette-color {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .palette-color:hover {
+      transform: scale(1.1);
+      border-color: #4F46E5;
+    }
+    .contrast-section {
+      background: #F9FAFB;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .contrast-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .contrast-preview {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .contrast-color-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      border: 1px solid #E5E7EB;
+    }
+    .contrast-arrow {
+      color: #9CA3AF;
+    }
+    .contrast-info {
+      flex: 1;
+    }
+    .contrast-ratio {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+    }
+    .contrast-level {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 2px;
+    }
+    .contrast-level.pass { background: #D1FAE5; color: #065F46; }
+    .contrast-level.fail { background: #FEE2E2; color: #991B1B; }
+    .contrast-inputs {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .contrast-inputs input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #D1D5DB;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: monospace;
+    }
+    .history-section {
+      margin-top: 20px;
+    }
+    .history-colors {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .history-color {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .history-color:hover {
+      transform: scale(1.1);
+      border-color: #4F46E5;
+    }
+    footer {
+      background: white;
+      padding: 24px;
+      text-align: center;
+      margin-top: 40px;
+      border-top: 1px solid #E5E7EB;
+      color: #6B7280;
+    }
+    footer a {
+      color: #4F46E5;
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+  .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+  <div class="lang-toggle">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+  
+  <header>
+    <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+  </header>
+  
+  <div class="container">
+    <h1 data-zh="在线颜色选择器" data-en="Color Picker">在线颜色选择器</h1>
+    <p class="subtitle" data-zh="色轮取色、格式互转、调色板生成、WCAG对比度检测" data-en="Color wheel picker, format conversion, palette generator, WCAG contrast checker">色轮取色、格式互转、调色板生成、WCAG对比度检测</p>
+    
+    <div class="main-grid">
+      <div class="left-panel">
+        <div class="card">
+          <div class="color-preview" id="colorPreview"></div>
+          
+          <div class="picker-area">
+            <div class="saturation-area" id="saturationArea">
+              <div class="picker-cursor" id="pickerCursor"></div>
+            </div>
+            <input type="range" class="hue-slider" id="hueSlider" min="0" max="360" value="210">
+          </div>
+          
+          <div class="format-inputs" style="margin-top: 20px;">
+            <div class="format-row">
+              <span class="format-label">HEX</span>
+              <input type="text" class="format-input" id="hexInput" value="#4F46E5">
+              <button class="copy-btn-small" data-target="hexInput">复制</button>
+            </div>
+            <div class="format-row">
+              <span class="format-label">RGB</span>
+              <input type="text" class="format-input" id="rgbInput" value="rgb(79, 70, 229)">
+              <button class="copy-btn-small" data-target="rgbInput">复制</button>
+            </div>
+            <div class="format-row">
+              <span class="format-label">HSL</span>
+              <input type="text" class="format-input" id="hslInput" value="hsl(239, 84%, 67%)">
+              <button class="copy-btn-small" data-target="hslInput">复制</button>
+            </div>
+            <div class="format-row">
+              <span class="format-label">CMYK</span>
+              <input type="text" class="format-input" id="cmykInput" value="cmyk(65%, 69%, 0%, 10%)">
+              <button class="copy-btn-small" data-target="cmykInput">复制</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" style="margin-top: 20px;">
+          <div class="contrast-section">
+            <div class="card-title" data-zh="WCAG对比度检测" data-en="WCAG Contrast Checker">WCAG对比度检测</div>
+            <div class="contrast-row">
+              <div class="contrast-preview">
+                <div class="contrast-color-box" id="fgPreview" style="background: #4F46E5;"></div>
+                <span style="font-size: 14px;">前景</span>
+              </div>
+              <span class="contrast-arrow">vs</span>
+              <div class="contrast-preview">
+                <div class="contrast-color-box" id="bgPreview" style="background: #FFFFFF;"></div>
+                <span style="font-size: 14px;">背景</span>
+              </div>
+            </div>
+            <div class="contrast-info">
+              <div class="contrast-ratio" id="contrastRatio">12.3:1</div>
+              <span class="contrast-level pass" id="contrastLevel">AAA级</span>
+            </div>
+            <div class="contrast-inputs">
+              <input type="text" id="fgColorInput" value="#4F46E5" placeholder="前景色">
+              <input type="text" id="bgColorInput" value="#FFFFFF" placeholder="背景色">
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="right-panel">
+        <div class="card">
+          <div class="card-title" data-zh="配色方案" data-en="Color Palettes">配色方案</div>
+          <div class="palettes-section">
+            <div class="palette-card">
+              <div class="palette-title" data-zh="互补色" data-en="Complementary">互补色</div>
+              <div class="palette-colors" id="complementary"></div>
+            </div>
+            <div class="palette-card">
+              <div class="palette-title" data-zh="类似色" data-en="Analogous">类似色</div>
+              <div class="palette-colors" id="analogous"></div>
+            </div>
+            <div class="palette-card">
+              <div class="palette-title" data-zh="三角色" data-en="Triadic">三角色</div>
+              <div class="palette-colors" id="triadic"></div>
+            </div>
+            <div class="palette-card">
+              <div class="palette-title" data-zh="四角色" data-en="Tetradic">四角色</div>
+              <div class="palette-colors" id="tetradic"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card history-section">
+          <div class="card-title" data-zh="历史记录" data-en="Color History">历史记录</div>
+          <div class="history-colors" id="colorHistory"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer>
+    © 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a>
+  </footer>
+  
+  <script>
+    const translations = {
+      zh: {
+        '在线颜色选择器': '在线颜色选择器',
+        '色轮取色、格式互转、调色板生成、WCAG对比度检测': '色轮取色、格式互转、调色板生成、WCAG对比度检测',
+        'WCAG对比度检测': 'WCAG对比度检测',
+        '配色方案': '配色方案',
+        '互补色': '互补色',
+        '类似色': '类似色',
+        '三角色': '三角色',
+        '四角色': '四角色',
+        '历史记录': '历史记录',
+        '前景': '前景',
+        '背景': '背景',
+        'A级': 'A级',
+        'AA级': 'AA级',
+        'AAA级': 'AAA级',
+        '不通过': '不通过',
+        '复制': '复制'
+      },
+      en: {
+        '在线颜色选择器': 'Color Picker',
+        '色轮取色、格式互转、调色板生成、WCAG对比度检测': 'Color wheel picker, format conversion, palette generator, WCAG contrast checker',
+        'WCAG对比度检测': 'WCAG Contrast Checker',
+        '配色方案': 'Color Palettes',
+        '互补色': 'Complementary',
+        '类似色': 'Analogous',
+        '三角色': 'Triadic',
+        '四角色': 'Tetradic',
+        '历史记录': 'Color History',
+        '前景': 'Foreground',
+        '背景': 'Background',
+        'A级': 'A Level',
+        'AA级': 'AA Level',
+        'AAA级': 'AAA Level',
+        '不通过': 'Fail',
+        '复制': 'Copy'
+      }
+    };
+
+    let currentLang = 'zh';
+    let currentHue = 239;
+    let currentSaturation = 84;
+    let currentLightness = 67;
+    let colorHistory = [];
+    
+    function switchLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+        el.textContent = el.dataset[lang];
+      });
+      updateContrastInfo();
+    }
+    
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchLang(btn.dataset.lang));
+    });
+    
+    function hslToRgb(h, s, l) {
+      s /= 100;
+      l /= 100;
+      const a = s * Math.min(l, 1 - l);
+      const f = n => {
+        const k = (n + h / 30) % 12;
+        return l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+      };
+      return [Math.round(f(0) * 255), Math.round(f(8) * 255), Math.round(f(4) * 255)];
+    }
+    
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+          case g: h = ((b - r) / d + 2) / 6; break;
+          case b: h = ((r - g) / d + 4) / 6; break;
+        }
+      }
+      return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+    }
+    
+    function rgbToHex(r, g, b) {
+      return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+    }
+    
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [0, 0, 0];
+    }
+    
+    function rgbToCmyk(r, g, b) {
+      if (r === 0 && g === 0 && b === 0) return [0, 0, 0, 100];
+      const c = 1 - r / 255;
+      const m = 1 - g / 255;
+      const y = 1 - b / 255;
+      const k = Math.min(c, m, y);
+      return [
+        Math.round((c - k) / (1 - k) * 100),
+        Math.round((m - k) / (1 - k) * 100),
+        Math.round((y - k) / (1 - k) * 100),
+        Math.round(k * 100)
+      ];
+    }
+    
+    function getLuminance(r, g, b) {
+      const [rs, gs, bs] = [r, g, b].map(c => {
+        c /= 255;
+        return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      });
+      return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+    }
+    
+    function getContrastRatio(hex1, hex2) {
+      const rgb1 = hexToRgb(hex1);
+      const rgb2 = hexToRgb(hex2);
+      const l1 = getLuminance(...rgb1);
+      const l2 = getLuminance(...rgb2);
+      const lighter = Math.max(l1, l2);
+      const darker = Math.min(l1, l2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+    
+    function updateColor() {
+      const rgb = hslToRgb(currentHue, currentSaturation, currentLightness);
+      const hex = rgbToHex(...rgb);
+      
+      document.getElementById('colorPreview').style.background = hex;
+      document.getElementById('hexInput').value = hex;
+      document.getElementById('rgbInput').value = `rgb(${rgb.join(', ')})`;
+      
+      const [h, s, l] = rgbToHsl(...rgb);
+      document.getElementById('hslInput').value = `hsl(${currentHue}, ${currentSaturation}%, ${currentLightness}%)`;
+      
+      const cmyk = rgbToCmyk(...rgb);
+      document.getElementById('cmykInput').value = `cmyk(${cmyk[0]}%, ${cmyk[1]}%, ${cmyk[2]}%, ${cmyk[3]}%)`;
+      
+      document.getElementById('fgPreview').style.background = hex;
+      document.getElementById('fgColorInput').value = hex;
+      
+      const satColor = `hsl(${currentHue}, 100%, 50%)`;
+      const lightColor = `hsl(${currentHue}, ${currentSaturation}%, 100%)`;
+      document.getElementById('saturationArea').style.background = `linear-gradient(to right, white, ${satColor})`;
+      document.getElementById('saturationArea').style.background += `, linear-gradient(to bottom, transparent, black)`;
+      document.getElementById('saturationArea').style.background = `linear-gradient(to bottom, transparent, black), linear-gradient(to right, white, hsl(${currentHue}, 100%, 50%))`;
+      
+      updatePalettes(hex);
+      updateContrastInfo();
+      
+      if (!colorHistory.includes(hex)) {
+        colorHistory.unshift(hex);
+        if (colorHistory.length > 20) colorHistory.pop();
+        renderHistory();
+      }
+    }
+    
+    function updatePalettes(hex) {
+      const rgb = hexToRgb(hex);
+      const hsl = rgbToHsl(...rgb);
+      
+      const complementary = [
+        hex,
+        rgbToHex(...hslToRgb((hsl[0] + 180) % 360, hsl[1], hsl[2]))
+      ];
+      
+      const analogous = [
+        hex,
+        rgbToHex(...hslToRgb((hsl[0] - 30 + 360) % 360, hsl[1], hsl[2])),
+        rgbToHex(...hslToRgb((hsl[0] + 30) % 360, hsl[1], hsl[2]))
+      ];
+      
+      const triadic = [
+        hex,
+        rgbToHex(...hslToRgb((hsl[0] + 120) % 360, hsl[1], hsl[2])),
+        rgbToHex(...hslToRgb((hsl[0] + 240) % 360, hsl[1], hsl[2]))
+      ];
+      
+      const tetradic = [
+        hex,
+        rgbToHex(...hslToRgb((hsl[0] + 90) % 360, hsl[1], hsl[2])),
+        rgbToHex(...hslToRgb((hsl[0] + 180) % 360, hsl[1], hsl[2])),
+        rgbToHex(...hslToRgb((hsl[0] + 270) % 360, hsl[1], hsl[2]))
+      ];
+      
+      renderPalette('complementary', complementary);
+      renderPalette('analogous', analogous);
+      renderPalette('triadic', triadic);
+      renderPalette('tetradic', tetradic);
+    }
+    
+    function renderPalette(id, colors) {
+      const container = document.getElementById(id);
+      container.innerHTML = '';
+      colors.forEach(color => {
+        const div = document.createElement('div');
+        div.className = 'palette-color';
+        div.style.background = color;
+        div.addEventListener('click', () => {
+          const rgb = hexToRgb(color);
+          const hsl = rgbToHsl(...rgb);
+          currentHue = hsl[0];
+          currentSaturation = hsl[1];
+          currentLightness = hsl[2];
+          document.getElementById('hueSlider').value = currentHue;
+          updateColor();
+        });
+        container.appendChild(div);
+      });
+    }
+    
+    function renderHistory() {
+      const container = document.getElementById('colorHistory');
+      container.innerHTML = '';
+      colorHistory.forEach(color => {
+        const div = document.createElement('div');
+        div.className = 'history-color';
+        div.style.background = color;
+        div.addEventListener('click', () => {
+          const rgb = hexToRgb(color);
+          const hsl = rgbToHsl(...rgb);
+          currentHue = hsl[0];
+          currentSaturation = hsl[1];
+          currentLightness = hsl[2];
+          document.getElementById('hueSlider').value = currentHue;
+          updateColor();
+        });
+        container.appendChild(div);
+      });
+    }
+    
+    function updateContrastInfo() {
+      const fg = document.getElementById('fgColorInput').value || '#4F46E5';
+      const bg = document.getElementById('bgColorInput').value || '#FFFFFF';
+      const ratio = getContrastRatio(fg, bg);
+      document.getElementById('contrastRatio').textContent = ratio.toFixed(2) + ':1';
+      document.getElementById('fgPreview').style.background = fg;
+      document.getElementById('bgPreview').style.background = bg;
+      
+      const levelEl = document.getElementById('contrastLevel');
+      if (ratio >= 7) {
+        levelEl.textContent = currentLang === 'zh' ? 'AAA级' : 'AAA';
+        levelEl.className = 'contrast-level pass';
+      } else if (ratio >= 4.5) {
+        levelEl.textContent = currentLang === 'zh' ? 'AA级' : 'AA';
+        levelEl.className = 'contrast-level pass';
+      } else if (ratio >= 3) {
+        levelEl.textContent = currentLang === 'zh' ? 'A级' : 'A';
+        levelEl.className = 'contrast-level pass';
+      } else {
+        levelEl.textContent = currentLang === 'zh' ? '不通过' : 'Fail';
+        levelEl.className = 'contrast-level fail';
+      }
+    }
+    
+    const saturationArea = document.getElementById('saturationArea');
+    let isDraggingSat = false;
+    
+    saturationArea.addEventListener('mousedown', (e) => {
+      isDraggingSat = true;
+      updateSatFromEvent(e);
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (isDraggingSat) updateSatFromEvent(e);
+    });
+    document.addEventListener('mouseup', () => isDraggingSat = false);
+    
+    function updateSatFromEvent(e) {
+      const rect = saturationArea.getBoundingClientRect();
+      const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+      currentSaturation = Math.round(x * 100);
+      currentLightness = Math.round((1 - y) * 100);
+      updateCursor();
+      updateColor();
+    }
+    
+    function updateCursor() {
+      const cursor = document.getElementById('pickerCursor');
+      cursor.style.left = currentSaturation + '%';
+      cursor.style.top = (100 - currentLightness) + '%';
+    }
+    
+    document.getElementById('hueSlider').addEventListener('input', (e) => {
+      currentHue = parseInt(e.target.value);
+      updateColor();
+    });
+    
+    document.querySelectorAll('.format-input').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const val = e.target.value;
+        let rgb;
+        
+        if (val.startsWith('#')) {
+          rgb = hexToRgb(val);
+        } else if (val.startsWith('rgb')) {
+          const match = val.match(/\d+/g);
+          if (match && match.length >= 3) {
+            rgb = [parseInt(match[0]), parseInt(match[1]), parseInt(match[2])];
+          }
+        } else if (val.startsWith('hsl')) {
+          const match = val.match(/\d+/g);
+          if (match && match.length >= 3) {
+            rgb = hslToRgb(parseInt(match[0]), parseInt(match[1]), parseInt(match[2]));
+          }
+        }
+        
+        if (rgb) {
+          const hsl = rgbToHsl(...rgb);
+          currentHue = hsl[0];
+          currentSaturation = hsl[1];
+          currentLightness = hsl[2];
+          document.getElementById('hueSlider').value = currentHue;
+          updateColor();
+        }
+      });
+    });
+    
+    document.querySelectorAll('.copy-btn-small').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.target);
+        navigator.clipboard.writeText(target.value).then(() => {
+          btn.textContent = '✓';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = currentLang === 'zh' ? '复制' : 'Copy';
+            btn.classList.remove('copied');
+          }, 1500);
+        });
+      });
+    });
+    
+    document.getElementById('fgColorInput').addEventListener('change', updateContrastInfo);
+    document.getElementById('bgColorInput').addEventListener('change', updateContrastInfo);
+    
+    updateColor();
+    renderHistory();
+  </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="image-compressor.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">图片压缩器</div><div class="r-desc">图片压缩</div></a>
+        <a href="svg-viewer.html" class="related-card"><div class="r-icon">🎨</div><div class="r-title">SVG 查看器</div><div class="r-desc">SVG预览优化</div></a>
+        <a href="image-to-base64.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">图片转 Base64</div><div class="r-desc">图片转编码</div></a>
+        <a href="base64-to-image.html" class="related-card"><div class="r-icon">🖼</div><div class="r-title">Base64 转图片</div><div class="r-desc">编码转图片</div></a>
+        <a href="image-resizer.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">图片缩放工具</div><div class="r-desc">图片缩放</div></a>
+        <a href="favicon-generator.html" class="related-card"><div class="r-icon">⭐</div><div class="r-title">Favicon 生成器</div><div class="r-desc">图标生成</div></a>
+        </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="免费在线UUID生成器，支持UUID v4批量生成，一键复制，本地生成保障唯一性。开发者必备ID生成工具。">
+    <meta name="keywords" content="UUID生成器,UUID v4,GUID生成器,UUID generator,唯一ID">
+    <title>UUID生成器 - 免费在线批量生成UUID v4 | UUID Generator</title>
+    <meta property="og:title" content="UUID生成器 - 免费在线工具">
+    <meta property="og:description" content="免费在线UUID v4批量生成器，一键复制，本地生成。">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebApplication","name":"UUID生成器","description":"免费在线UUID v4批量生成器","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+    </script>
+    <style>
+        :root{--primary:#4F46E5;--primary-hover:#4338CA;--primary-light:#EEF2FF;--bg:#F9FAFB;--card-bg:#FFF;--text:#111827;--text-secondary:#6B7280;--border:#E5E7EB;--success:#059669;--success-bg:#ECFDF5;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,.1)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+        .header{background:var(--card-bg);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:0;z-index:100}
+        .header-inner{max-width:720px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center}
+        .logo{font-size:18px;font-weight:700;color:var(--primary);text-decoration:none}
+        .nav-links{display:flex;gap:16px}
+        .nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px}
+        .nav-links a:hover{color:var(--primary)}
+        .container{max-width:720px;margin:0 auto;padding:28px 20px}
+        .hero{text-align:center;margin-bottom:28px}
+        .hero h1{font-size:28px;font-weight:800;margin-bottom:8px}
+        .hero p{font-size:16px;color:var(--text-secondary)}
+        .uuid-display{background:#1F2937;border-radius:12px;padding:24px;text-align:center;margin-bottom:24px}
+        .uuid-text{font-family:'SF Mono','Fira Code','Courier New',monospace;font-size:28px;color:#A5F3FC;letter-spacing:2px;word-break:break-all}
+        .uuid-actions{display:flex;justify-content:center;gap:12px;margin-top:16px}
+        .tool-card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px;margin-bottom:24px}
+        .tool-card h2{font-size:18px;font-weight:700;margin-bottom:16px}
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;font-weight:600;margin-bottom:8px;font-size:14px}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .form-group input,.form-group select{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:15px;background:var(--bg)}
+        .form-group input:focus,.form-group select:focus{outline:none;border-color:var(--primary)}
+        .checkbox-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px}
+        .checkbox-row label{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer}
+        .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+        .btn-primary{background:var(--primary);color:#fff}
+        .btn-primary:hover{background:var(--primary-hover)}
+        .btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+        .btn-secondary:hover{background:#F3F4F6}
+        .btn-group{display:flex;gap:10px;flex-wrap:wrap}
+        .batch-list{background:#1F2937;border-radius:8px;padding:16px;font-family:'SF Mono',monospace;font-size:14px;color:#A5F3FC;max-height:400px;overflow-y:auto;line-height:2.2}
+        .batch-list .uuid-row{display:flex;justify-content:space-between;align-items:center;padding:2px 0}
+        .batch-list .uuid-row button{background:none;border:none;color:#818CF8;cursor:pointer;font-size:12px;padding:2px 8px;border-radius:4px}
+        .batch-list .uuid-row button:hover{background:rgba(129,140,248,.2)}
+        .format-options{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+        .format-btn{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:var(--card-bg);font-size:13px;cursor:pointer;transition:all .2s}
+        .format-btn.active{background:var(--primary-light);border-color:var(--primary);color:var(--primary);font-weight:600}
+        .format-btn:hover{background:var(--primary-light)}
+        .ad-slot{background:#F3F4F6;border:1px dashed var(--border);border-radius:8px;padding:16px;text-align:center;color:var(--text-secondary);font-size:13px;margin:20px 0}
+        .faq-section{margin-top:36px}
+        .faq-section h2{font-size:22px;font-weight:700;margin-bottom:16px}
+        .faq-item{border-bottom:1px solid var(--border);padding:12px 0}
+        .faq-q{font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+        .faq-a{color:var(--text-secondary);margin-top:8px;display:none;line-height:1.8;font-size:14px}
+        .faq-item.open .faq-a{display:block}
+        .faq-toggle{transition:transform .2s;font-size:12px}
+        .faq-item.open .faq-toggle{transform:rotate(180deg)}
+        .footer{background:var(--card-bg);border-top:1px solid var(--border);padding:20px 0;margin-top:36px;text-align:center;color:var(--text-secondary);font-size:13px}
+        .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+        .toast.show{opacity:1}
+        @media(max-width:640px){.hero h1{font-size:22px}.uuid-text{font-size:18px}.form-row{grid-template-columns:1fr}}
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🔑 UUID Gen</a>
+            <nav class="nav-links">
+                <a href="#tool">生成器</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>UUID 生成器</h1>
+            <p>免费在线批量生成UUID v4，支持多种格式输出，本地生成保障唯一性</p>
+        </section>
+
+        <div class="uuid-display" id="tool">
+            <div class="uuid-text" id="currentUUID">点击下方按钮生成</div>
+            <div class="uuid-actions">
+                <button class="btn btn-primary" onclick="generateSingle()">🔄 生成新UUID</button>
+                <button class="btn btn-secondary" onclick="copyCurrentUUID()">📋 复制</button>
+            </div>
+        </div>
+
+        <div class="tool-card">
+            <h2>格式选项</h2>
+            <div class="format-options">
+                <button class="format-btn active" onclick="setFormat('default',this)">标准格式</button>
+                <button class="format-btn" onclick="setFormat('uppercase',this)">大写</button>
+                <button class="format-btn" onclick="setFormat('nodash',this)">无连字符</button>
+                <button class="format-btn" onclick="setFormat('braces',this)">{花括号}</button>
+                <button class="format-btn" onclick="setFormat('csharp',this)">C#格式</button>
+                <button class="format-btn" onclick="setFormat('java',this)">Java格式</button>
+            </div>
+
+            <h2>批量生成</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>生成数量</label>
+                    <input type="number" id="batchCount" value="10" min="1" max="1000">
+                </div>
+                <div class="form-group">
+                    <label>版本</label>
+                    <select id="uuidVersion">
+                        <option value="v4">UUID v4（随机）</option>
+                        <option value="v1">UUID v1（时间戳，模拟）</option>
+                    </select>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="generateBatch()">批量生成</button>
+                <button class="btn btn-secondary" onclick="copyAllUUID()">📋 复制全部</button>
+                <button class="btn btn-secondary" onclick="clearBatch()">清空</button>
+            </div>
+            <div class="batch-list" id="batchList"></div>
+        </div>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">什么是UUID？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">UUID（Universally Unique Identifier）是128位的唯一标识符，标准格式为8-4-4-4-12的十六进制字符串，如 550e8400-e29b-41d4-a716-446655440000。UUID不依赖中心节点即可生成，全局唯一。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">UUID v4和v1有什么区别？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">UUID v4基于随机数生成，碰撞概率极低（约122位随机性）；UUID v1基于时间戳和MAC地址生成，有序但可能暴露硬件信息。大多数场景推荐v4。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">UUID会重复吗？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">理论上可能，但实际概率极低。UUID v4的重复概率约为生成10亿个UUID后碰撞概率才0.00000000006%。可以说比被陨石砸中的概率还低。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">UUID和GUID有什么区别？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">GUID是微软对UUID的实现，本质上是一样的。GUID通常指Microsoft的实现（带花括号），UUID是RFC 4122标准。两者在大多数场景下可互换使用。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="password-generator.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">安全密码生成器</div><div class="r-desc">高强度密码</div></a>
+        <a href="qrcode-generator.html" class="related-card"><div class="r-icon">📱</div><div class="r-title">二维码生成器</div><div class="r-desc">生成二维码</div></a>
+        <a href="fake-data-generator.html" class="related-card"><div class="r-icon">🎭</div><div class="r-title">假数据生成器</div><div class="r-desc">批量假数据</div></a>
+        <a href="barcode-generator.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">条形码生成器</div><div class="r-desc">Code128/EAN</div></a>
+        <a href="random-number-generator.html" class="related-card"><div class="r-icon">🎲</div><div class="r-title">随机数生成器</div><div class="r-desc">随机数批量生成</div></a>
+        <a href="ascii-art-generator.html" class="related-card"><div class="r-icon">✏</div><div class="r-title">ASCII 艺术生成器</div><div class="r-desc">ASCII艺术</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 UUID Gen. Free online UUID v4 generator.</p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentFormat = 'default';
+        let batchUUIDs = [];
+
+        function generateUUIDv4() {
+            if (crypto.randomUUID) return crypto.randomUUID();
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                const r = crypto.getRandomValues(new Uint8Array(1))[0] % 16;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function generateUUIDv1() {
+            const now = Date.now();
+            const timeLow = (now & 0xFFFFFFFF).toString(16).padStart(8, '0');
+            const timeMid = ((now >> 32) & 0xFFFF).toString(16).padStart(4, '0');
+            const timeHi = ((now >> 48) & 0x0FFF | 0x1000).toString(16).padStart(4, '0');
+            const clockSeq = (crypto.getRandomValues(new Uint8Array(1))[0] & 0x3FFF | 0x8000).toString(16).padStart(4, '0');
+            const node = Array.from(crypto.getRandomValues(new Uint8Array(6))).map(b => b.toString(16).padStart(2, '0')).join('');
+            return `${timeLow}-${timeMid}-${timeHi}-${clockSeq}-${node}`;
+        }
+
+        function formatUUID(uuid) {
+            switch(currentFormat) {
+                case 'uppercase': return uuid.toUpperCase();
+                case 'nodash': return uuid.replace(/-/g, '');
+                case 'braces': return '{' + uuid + '}';
+                case 'csharp': return 'new Guid("' + uuid + '")';
+                case 'java': return 'UUID.fromString("' + uuid + '")';
+                default: return uuid;
+            }
+        }
+
+        function generateSingle() {
+            const ver = document.getElementById('uuidVersion').value;
+            const uuid = ver === 'v1' ? generateUUIDv1() : generateUUIDv4();
+            document.getElementById('currentUUID').textContent = formatUUID(uuid);
+        }
+
+        function copyCurrentUUID() {
+            const text = document.getElementById('currentUUID').textContent;
+            if (text === '点击下方按钮生成') return;
+            navigator.clipboard.writeText(text).then(() => showToast('已复制到剪贴板'));
+        }
+
+        function setFormat(format, btn) {
+            currentFormat = format;
+            document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (batchUUIDs.length) renderBatch();
+            const current = document.getElementById('currentUUID').textContent;
+            if (current !== '点击下方按钮生成') {
+                const raw = current.replace(/[{}}]/g, '').replace(/new Guid\("/, '').replace(/UUID\.fromJson\("/, '').replace(/"\)/, '').replace(/"\)/, '');
+            }
+        }
+
+        function generateBatch() {
+            const count = Math.min(parseInt(document.getElementById('batchCount').value) || 10, 1000);
+            const ver = document.getElementById('uuidVersion').value;
+            batchUUIDs = [];
+            for (let i = 0; i < count; i++) {
+                batchUUIDs.push(ver === 'v1' ? generateUUIDv1() : generateUUIDv4());
+            }
+            renderBatch();
+        }
+
+        function renderBatch() {
+            const list = document.getElementById('batchList');
+            list.innerHTML = batchUUIDs.map((uuid, i) => {
+                const formatted = formatUUID(uuid);
+                return `<div class="uuid-row"><span>${formatted}</span><button onclick="navigator.clipboard.writeText('${formatted}');showToast('已复制')">复制</button></div>`;
+            }).join('');
+        }
+
+        function copyAllUUID() {
+            if (!batchUUIDs.length) { showToast('请先生成UUID'); return; }
+            const text = batchUUIDs.map(uuid => formatUUID(uuid)).join('\n');
+            navigator.clipboard.writeText(text).then(() => showToast(`已复制${batchUUIDs.length}个UUID`));
+        }
+
+        function clearBatch() {
+            batchUUIDs = [];
+            document.getElementById('batchList').innerHTML = '';
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+        });
+
+        generateSingle();
+    </script>
+</body>
+</html>

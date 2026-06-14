@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的长度转换器，支持 m/ft/in/cm/mm/yd/mile/km 等长度单位在线互转。实时计算，简单易用。">
+    <meta name="keywords" content="长度转换器,米英尺转换,厘米英寸转换,码转换,公里英里转换,在线工具">
+    <title>长度转换器 - m/ft/in/cm/mm/yd/mile/km 在线互转</title>
+    <link rel="canonical" href="https://devtoolhub.cc/length-converter.html">
+    <meta property="og:title" content="长度转换器 - m/ft/in/cm/mm/yd/mile/km 在线互转">
+    <meta property="og:description" content="免费的长度转换器，支持 m/ft/in/cm/mm/yd/mile/km 等长度单位在线互转。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/length-converter.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "长度转换器",
+        "description": "免费的长度转换器，支持 m/ft/in/cm/mm/yd/mile/km 等长度单位在线互转。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero-icon { font-size: 48px; margin-bottom: 16px; }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: #F3F4F6; }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #D1FAE5;
+        }
+        .result-item:last-child { border-bottom: none; }
+        .result-label { color: var(--text-secondary); }
+        .result-value { font-weight: 600; }
+        .result-highlight {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            text-align: center;
+            margin: 16px 0;
+            padding: 12px;
+            background: #EEF2FF;
+            border-radius: 8px;
+        }
+        .reference-table {
+            margin-top: 24px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .reference-table th,
+        .reference-table td {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            font-size: 14px;
+        }
+        .reference-table th {
+            background: var(--bg);
+            font-weight: 600;
+        }
+        .reference-table tr:hover { background: #F9FAFB; }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 6px;
+        }
+        .footer a:hover { color: var(--primary); }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+            .reference-table { font-size: 12px; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-icon">📏</div>
+            <h1>长度转换器</h1>
+            <p>支持 m、cm、mm、km、ft、in、yd、mile 等常用长度单位在线互转，实时计算</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="inputValue">输入长度值</label>
+                    <input type="number" id="inputValue" placeholder="请输入长度数值" step="any">
+                </div>
+                <div class="form-group">
+                    <label for="inputUnit">选择单位</label>
+                    <select id="inputUnit">
+                        <option value="m">米 (m)</option>
+                        <option value="cm">厘米 (cm)</option>
+                        <option value="mm">毫米 (mm)</option>
+                        <option value="km">千米 (km)</option>
+                        <option value="um">微米 (μm)</option>
+                        <option value="nm">纳米 (nm)</option>
+                        <option value="ft">英尺 (ft)</option>
+                        <option value="in">英寸 (in)</option>
+                        <option value="yd">码 (yd)</option>
+                        <option value="mile">英里 (mile)</option>
+                        <option value="nmi">海里 (nmi)</option>
+                        <option value="li">里</option>
+                        <option value="zhang">丈</option>
+                    </select>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="convert()">转换</button>
+                <button class="btn btn-secondary" onclick="reset()">重置</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title">转换结果</div>
+                <div class="result-highlight" id="mainResult"></div>
+                <div id="resultDetails"></div>
+            </div>
+
+            <h3 style="margin-top: 32px; font-size: 18px;">常见长度参考</h3>
+            <table class="reference-table">
+                <thead>
+                    <tr>
+                        <th>物品</th>
+                        <th>长度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>标准足球场</td><td>约 105 米</td></tr>
+                    <tr><td>篮球场</td><td>约 28 米 × 15 米</td></tr>
+                    <tr><td>标准跑道一圈</td><td>400 米</td></tr>
+                    <tr><td>珠穆朗玛峰</td><td>8,848.86 米</td></tr>
+                    <tr><td>长城全长</td><td>约 21,196 千米</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>1米等于多少英尺？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    1米 ≈ 3.281英尺，1英尺 ≈ 0.3048米。这是国际单位制和英制单位之间最常用的换算关系。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>英寸和厘米如何换算？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    1英寸 = 2.54厘米，1厘米 ≈ 0.394英寸。这个换算在显示器尺寸、电视尺寸、鞋子尺码等场景中经常用到。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>中国里和公里是什么关系？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    1里 = 500米 = 0.5公里。公里是中国常用的千米别称，"里"是传统单位，常用于描述两地间的距离。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>海里和普通公里有什么区别？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    1海里 = 1852米 ≈ 1.852公里。海里是航海和航空中使用的长度单位，基于地球子午线的弧度定义。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="css-unit-converter.html" class="related-card"><div class="r-icon">📐</div><div class="r-title">CSS 单位转换器</div><div class="r-desc">9种单位互转</div></a>
+        <a href="pixel-to-rem-converter.html" class="related-card"><div class="r-icon">🔢</div><div class="r-title">px/rem 转换器</div><div class="r-desc">px转rem</div></a>
+        <a href="timezone-converter.html" class="related-card"><div class="r-icon">🌍</div><div class="r-title">时区转换器</div><div class="r-desc">全球时区对比</div></a>
+        <a href="temperature-converter.html" class="related-card"><div class="r-icon">🌡</div><div class="r-title">温度转换器</div><div class="r-desc">温度互转</div></a>
+        <a href="data-size-converter.html" class="related-card"><div class="r-icon">💿</div><div class="r-title">数据大小转换器</div><div class="r-desc">B/KB/MB互转</div></a>
+        <a href="speed-converter.html" class="related-card"><div class="r-icon">🚀</div><div class="r-title">速度转换器</div><div class="r-desc">速度单位互转</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        // Convert to meters
+        const toM = {
+            'm': 1,
+            'cm': 0.01,
+            'mm': 0.001,
+            'km': 1000,
+            'um': 0.000001,
+            'nm': 0.000000001,
+            'ft': 0.3048,
+            'in': 0.0254,
+            'yd': 0.9144,
+            'mile': 1609.344,
+            'nmi': 1852,
+            'li': 500,
+            'zhang': 3.3333
+        };
+
+        const unitNames = {
+            'm': '米 (m)',
+            'cm': '厘米 (cm)',
+            'mm': '毫米 (mm)',
+            'km': '千米 (km)',
+            'um': '微米 (μm)',
+            'nm': '纳米 (nm)',
+            'ft': '英尺 (ft)',
+            'in': '英寸 (in)',
+            'yd': '码 (yd)',
+            'mile': '英里 (mile)',
+            'nmi': '海里 (nmi)',
+            'li': '里',
+            'zhang': '丈'
+        };
+
+        function convert() {
+            const inputVal = document.getElementById('inputValue').value;
+            if (inputVal === '' || isNaN(parseFloat(inputVal))) {
+                alert('请输入有效的长度数值');
+                return;
+            }
+            
+            const value = parseFloat(inputVal);
+            const unit = document.getElementById('inputUnit').value;
+            
+            // Convert to meters
+            const meters = value * toM[unit];
+            
+            document.getElementById('mainResult').textContent = 
+                `${value} ${unitNames[unit]} = ${formatNum(meters)} m`;
+            
+            let html = '';
+            Object.keys(toM).forEach(key => {
+                if (key !== unit) {
+                    const converted = meters / toM[key];
+                    html += `<div class="result-item">
+                        <span class="result-label">${unitNames[key]}</span>
+                        <span class="result-value">${formatNum(converted)}</span>
+                    </div>`;
+                }
+            });
+            
+            document.getElementById('resultDetails').innerHTML = html;
+            document.getElementById('resultBox').classList.add('show');
+        }
+        
+        function formatNum(num) {
+            if (Math.abs(num) >= 1000000000) {
+                return num.toExponential(4);
+            } else if (Math.abs(num) < 0.0000001 && num !== 0) {
+                return num.toExponential(4);
+            }
+            return num.toLocaleString('en-US', { maximumFractionDigits: 8 });
+        }
+        
+        function reset() {
+            document.getElementById('inputValue').value = '';
+            document.getElementById('inputUnit').selectedIndex = 0;
+            document.getElementById('resultBox').classList.remove('show');
+        }
+        
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

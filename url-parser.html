@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="URL Parser & Builder - 免费在线URL解析工具，支持解析协议、主机、端口、路径、参数等，一键构建和复制URL">
+    <meta name="keywords" content="URL解析, URL解析器, URL构建器, URL解码, URL编码, query参数">
+    <title>URL Parser & Builder - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f7;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .lang-toggle {
+            float: right;
+            margin-top: 2px;
+        }
+        .lang-btn {
+            padding: 6px 12px;
+            border: 1px solid #4F46E5;
+            background: #fff;
+            color: #4F46E5;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .lang-btn.active {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        .page-desc {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .input-field::placeholder {
+            color: #999;
+        }
+        textarea.input-field {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .result-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .result-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4F46E5;
+            min-width: 80px;
+        }
+        .result-value {
+            flex: 1;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            color: #333;
+            word-break: break-all;
+        }
+        .result-value.highlight {
+            color: #4F46E5;
+            font-weight: 500;
+        }
+        .copy-btn {
+            padding: 6px 12px;
+            background: #4F46E5;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover {
+            background: #4338ca;
+        }
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        .params-list {
+            margin-top: 16px;
+        }
+        .param-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        .param-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .param-input:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .param-remove {
+            padding: 8px;
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .param-remove:hover {
+            background: #fecaca;
+        }
+        .add-param-btn {
+            padding: 10px 20px;
+            background: #f3f4f6;
+            color: #4F46E5;
+            border: 1px dashed #4F46E5;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .add-param-btn:hover {
+            background: #eef2ff;
+        }
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #4F46E5;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #666;
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: #f3f4f6;
+            padding: 4px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+        .tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: #fff;
+            color: #4F46E5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .url-preview {
+            background: #1a1a2e;
+            color: #a8dadc;
+            padding: 16px 20px;
+            border-radius: 10px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            word-break: break-all;
+            margin-top: 16px;
+        }
+        .url-preview .protocol { color: #90be6d; }
+        .url-preview .host { color: #f9c74f; }
+        .url-preview .port { color: #f8961e; }
+        .url-preview .path { color: #a8dadc; }
+        .url-preview .query { color: #f94144; }
+        .url-preview .hash { color: #90be6d; }
+        .tip-box {
+            background: #eff6ff;
+            border-left: 4px solid #4F46E5;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 24px;
+        }
+        .tip-box h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4F46E5;
+            margin-bottom: 8px;
+        }
+        .tip-box p {
+            font-size: 14px;
+            color: #666;
+        }
+        .footer {
+            background: #fff;
+            border-top: 1px solid #e5e5e5;
+            padding: 24px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer p {
+            font-size: 14px;
+            color: #666;
+        }
+        .footer a {
+            color: #4F46E5;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+            .page-title {
+                font-size: 24px;
+            }
+            .result-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .param-item {
+                flex-wrap: wrap;
+            }
+            .param-input {
+                min-width: 100%;
+            }
+            .tabs {
+                width: 100%;
+            }
+            .tab {
+                flex: 1;
+                text-align: center;
+                padding: 10px 12px;
+            }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title" data-zh="URL 解析器 & 构建器" data-en="URL Parser & Builder">URL 解析器 & 构建器</h1>
+        <p class="page-desc" data-zh="输入任意URL，自动解析各组件，支持编辑参数并重新构建URL" data-en="Parse any URL into components, edit parameters, and rebuild URLs">输入任意URL，自动解析各组件，支持编辑参数并重新构建URL</p>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab active" data-tab="parser" data-zh="URL解析" data-en="URL Parser">URL解析</button>
+                <button class="tab" data-tab="builder" data-zh="URL构建器" data-en="URL Builder">URL构建器</button>
+            </div>
+
+            <div id="parser-tab" class="tab-content active">
+                <div class="input-group">
+                    <label class="input-label" data-zh="输入URL" data-en="Enter URL">输入URL</label>
+                    <input type="text" id="url-input" class="input-field" placeholder="https://example.com:8080/path?query=value#hash" value="https://www.example.com:8080/products/electronics?category=laptop&brand=apple&sort=price#top">
+                </div>
+                <button class="btn btn-primary" id="parse-btn" data-zh="解析URL" data-en="Parse URL">解析URL</button>
+
+                <div id="parse-results" style="margin-top: 24px;">
+                    <div class="result-item">
+                        <span class="result-label" data-zh="完整URL" data-en="Full URL">完整URL</span>
+                        <span class="result-value highlight" id="full-url"></span>
+                        <button class="copy-btn" data-copy="full-url" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Protocol</span>
+                        <span class="result-value" id="protocol"></span>
+                        <button class="copy-btn" data-copy="protocol" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Host</span>
+                        <span class="result-value" id="host"></span>
+                        <button class="copy-btn" data-copy="host" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Port</span>
+                        <span class="result-value" id="port"></span>
+                        <button class="copy-btn" data-copy="port" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Path</span>
+                        <span class="result-value" id="path"></span>
+                        <button class="copy-btn" data-copy="path" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Query</span>
+                        <span class="result-value" id="query"></span>
+                        <button class="copy-btn" data-copy="query" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Hash</span>
+                        <span class="result-value" id="hash"></span>
+                        <button class="copy-btn" data-copy="hash" data-zh="复制" data-en="Copy">复制</button>
+                    </div>
+                </div>
+
+                <div class="card" style="background: #f8f9fa; margin-top: 20px;">
+                    <h3 class="card-title" data-zh="Query 参数编辑" data-en="Query Parameters">Query 参数编辑</h3>
+                    <div id="params-list" class="params-list"></div>
+                    <button class="add-param-btn" id="add-param" data-zh="+ 添加参数" data-en="+ Add Parameter">+ 添加参数</button>
+                    <div class="btn-row">
+                        <button class="btn btn-primary" id="rebuild-url" data-zh="重新构建URL" data-en="Rebuild URL">重新构建URL</button>
+                        <button class="btn btn-secondary" id="clear-params" data-zh="清空" data-en="Clear">清空</button>
+                    </div>
+                </div>
+
+                <div class="url-preview" id="url-preview"></div>
+            </div>
+
+            <div id="builder-tab" class="tab-content">
+                <div class="input-group">
+                    <label class="input-label">Protocol</label>
+                    <select id="builder-protocol" class="input-field">
+                        <option value="https://">https://</option>
+                        <option value="http://">http://</option>
+                        <option value="ftp://">ftp://</option>
+                        <option value="ws://">ws://</option>
+                        <option value="wss://">wss://</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Host</label>
+                    <input type="text" id="builder-host" class="input-field" placeholder="www.example.com">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" data-zh="端口（留空使用默认）" data-en="Port (leave empty for default)">端口（留空使用默认）</label>
+                    <input type="text" id="builder-port" class="input-field" placeholder="8080">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Path</label>
+                    <input type="text" id="builder-path" class="input-field" placeholder="/path/to/page">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Hash</label>
+                    <input type="text" id="builder-hash" class="input-field" placeholder="section-id">
+                </div>
+                
+                <h4 style="margin: 20px 0 12px; font-size: 14px;" data-zh="Query 参数" data-en="Query Parameters">Query 参数</h4>
+                <div id="builder-params-list" class="params-list"></div>
+                <button class="add-param-btn" id="builder-add-param" data-zh="+ 添加参数" data-en="+ Add Parameter">+ 添加参数</button>
+                
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="generate-url" data-zh="生成URL" data-en="Generate URL">生成URL</button>
+                    <button class="btn btn-secondary" id="copy-generated" data-zh="复制URL" data-en="Copy URL">复制URL</button>
+                </div>
+
+                <div class="url-preview" id="builder-preview" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <div class="tip-box">
+            <h4 data-zh="💡 使用提示" data-en="💡 Tips">💡 使用提示</h4>
+            <p data-zh="• 粘贴任意URL，系统自动解析所有组件<br>• 在参数编辑区可以添加、修改、删除query参数<br>• 点击各组件旁的复制按钮快速复制<br>• URL构建器支持从零创建完整URL" data-en="• Paste any URL to parse all components<br>• Add, edit, or delete query parameters in the editor<br>• Click copy button next to any component<br>• Use URL Builder to create URLs from scratch">• 粘贴任意URL，系统自动解析所有组件<br>• 在参数编辑区可以添加、修改、删除query参数<br>• 点击各组件旁的复制按钮快速复制<br>• URL构建器支持从零创建完整URL</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentLang = 'zh';
+        let params = [];
+
+        function updateLanguage() {
+            document.querySelectorAll('[data-' + currentLang + ']').forEach(el => {
+                const text = el.getAttribute('data-' + currentLang);
+                if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.placeholder = text;
+                } else {
+                    el.textContent = text;
+                }
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === currentLang);
+            });
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentLang = btn.dataset.lang;
+                updateLanguage();
+            });
+        });
+
+        function parseURL(url) {
+            try {
+                const urlObj = new URL(url);
+                return {
+                    full: url,
+                    protocol: urlObj.protocol.replace(':', ''),
+                    host: urlObj.hostname,
+                    port: urlObj.port || (urlObj.protocol === 'https:' ? '443' : '80'),
+                    path: urlObj.pathname,
+                    query: urlObj.search.replace('?', ''),
+                    hash: urlObj.hash.replace('#', ''),
+                    searchParams: urlObj.searchParams
+                };
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function displayResults(result) {
+            if (!result) {
+                alert(currentLang === 'zh' ? '无效的URL格式' : 'Invalid URL format');
+                return;
+            }
+            
+            document.getElementById('full-url').textContent = result.full;
+            document.getElementById('protocol').textContent = result.protocol;
+            document.getElementById('host').textContent = result.host;
+            document.getElementById('port').textContent = result.port;
+            document.getElementById('path').textContent = result.path;
+            document.getElementById('query').textContent = result.query;
+            document.getElementById('hash').textContent = result.hash;
+
+            params = [];
+            result.searchParams.forEach((value, key) => {
+                params.push({ key, value });
+            });
+            renderParams();
+            updatePreview();
+        }
+
+        function renderParams() {
+            const container = document.getElementById('params-list');
+            container.innerHTML = params.map((p, i) => `
+                <div class="param-item">
+                    <input type="text" class="param-input param-key" placeholder="Key" value="${p.key}" data-index="${i}">
+                    <input type="text" class="param-input param-value" placeholder="Value" value="${p.value}" data-index="${i}">
+                    <button class="param-remove" data-index="${i}">×</button>
+                </div>
+            `).join('');
+
+            container.querySelectorAll('.param-key, .param-value').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    const field = e.target.classList.contains('param-key') ? 'key' : 'value';
+                    params[index][field] = e.target.value;
+                    updatePreview();
+                });
+            });
+
+            container.querySelectorAll('.param-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    params.splice(index, 1);
+                    renderParams();
+                    updatePreview();
+                });
+            });
+        }
+
+        function updatePreview() {
+            const original = parseURL(document.getElementById('url-input').value);
+            if (!original) return;
+
+            let preview = `<span class="protocol">${original.protocol}</span>://`;
+            preview += `<span class="host">${original.host}</span>`;
+            if (original.port && original.port !== '443' && original.port !== '80') {
+                preview += `<span class="port">:${original.port}</span>`;
+            }
+            preview += `<span class="path">${original.path}</span>`;
+            
+            if (params.length > 0) {
+                const queryStr = params.filter(p => p.key).map(p => `${encodeURIComponent(p.key)}=${encodeURIComponent(p.value)}`).join('&');
+                if (queryStr) {
+                    preview += `<span class="query">?${queryStr}</span>`;
+                }
+            }
+            
+            if (original.hash) {
+                preview += `<span class="hash">#${original.hash}</span>`;
+            }
+            
+            document.getElementById('url-preview').innerHTML = preview;
+        }
+
+        function rebuildURL() {
+            const original = parseURL(document.getElementById('url-input').value);
+            if (!original) return;
+
+            let url = `${original.protocol}://${original.host}`;
+            if (original.port && original.port !== '443' && original.port !== '80') {
+                url += `:${original.port}`;
+            }
+            url += original.path;
+            
+            const validParams = params.filter(p => p.key);
+            if (validParams.length > 0) {
+                const queryStr = validParams.map(p => `${encodeURIComponent(p.key)}=${encodeURIComponent(p.value)}`).join('&');
+                url += `?${queryStr}`;
+            }
+            
+            if (original.hash) {
+                url += `#${original.hash}`;
+            }
+
+            document.getElementById('url-input').value = url;
+            displayResults(parseURL(url));
+            
+            const btn = document.getElementById('rebuild-url');
+            const originalText = currentLang === 'zh' ? '重新构建URL' : 'Rebuild URL';
+            btn.textContent = currentLang === 'zh' ? '✓ 已构建' : '✓ Built';
+            setTimeout(() => btn.textContent = originalText, 1500);
+        }
+
+        function buildURL() {
+            const protocol = document.getElementById('builder-protocol').value.replace('://', '');
+            const host = document.getElementById('builder-host').value;
+            const port = document.getElementById('builder-port').value;
+            const path = document.getElementById('builder-path').value || '/';
+            const hash = document.getElementById('builder-hash').value;
+
+            if (!host) {
+                alert(currentLang === 'zh' ? '请输入主机名' : 'Please enter a hostname');
+                return;
+            }
+
+            let url = `${protocol}://${host}`;
+            if (port) {
+                url += `:${port}`;
+            }
+            url += path.startsWith('/') ? path : '/' + path;
+
+            const builderParams = Array.from(document.querySelectorAll('#builder-params-list .param-item')).map(item => ({
+                key: item.querySelector('.param-key').value,
+                value: item.querySelector('.param-value').value
+            })).filter(p => p.key);
+
+            if (builderParams.length > 0) {
+                const queryStr = builderParams.map(p => `${encodeURIComponent(p.key)}=${encodeURIComponent(p.value)}`).join('&');
+                url += `?${queryStr}`;
+            }
+
+            if (hash) {
+                url += `#${hash}`;
+            }
+
+            const preview = `<span class="protocol">${protocol}</span>://<span class="host">${host}</span>${port ? `<span class="port">:${port}</span>` : ''}<span class="path">${path}</span>${builderParams.length ? `<span class="query">?${builderParams.map(p => `${encodeURIComponent(p.key)}=${encodeURIComponent(p.value)}`).join('&')}</span>` : ''}${hash ? `<span class="hash">#${hash}</span>` : ''}`;
+            document.getElementById('builder-preview').innerHTML = preview;
+
+            const btn = document.getElementById('generate-url');
+            btn.textContent = currentLang === 'zh' ? '✓ 已生成' : '✓ Generated';
+            setTimeout(() => btn.textContent = currentLang === 'zh' ? '生成URL' : 'Generate URL', 1500);
+        }
+
+        function copyGeneratedURL() {
+            const preview = document.getElementById('builder-preview').textContent;
+            if (!preview) {
+                alert(currentLang === 'zh' ? '请先生成URL' : 'Please generate URL first');
+                return;
+            }
+            copyToClipboard(preview);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showCopiedFeedback(event.target);
+            });
+        }
+
+        function showCopiedFeedback(btn) {
+            const originalText = btn.textContent;
+            btn.textContent = currentLang === 'zh' ? '✓ 已复制' : '✓ Copied';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('copied');
+            }, 1500);
+        }
+
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.dataset.copy;
+                const text = document.getElementById(targetId).textContent;
+                if (text) {
+                    copyToClipboard(text);
+                }
+            });
+        });
+
+        document.getElementById('parse-btn').addEventListener('click', () => {
+            const url = document.getElementById('url-input').value;
+            if (url) {
+                displayResults(parseURL(url));
+            }
+        });
+
+        document.getElementById('url-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const url = document.getElementById('url-input').value;
+                if (url) {
+                    displayResults(parseURL(url));
+                }
+            }
+        });
+
+        document.getElementById('add-param').addEventListener('click', () => {
+            params.push({ key: '', value: '' });
+            renderParams();
+            updatePreview();
+        });
+
+        document.getElementById('rebuild-url').addEventListener('click', rebuildURL);
+        document.getElementById('clear-params').addEventListener('click', () => {
+            params = [];
+            renderParams();
+            updatePreview();
+        });
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+            });
+        });
+
+        document.getElementById('builder-add-param').addEventListener('click', () => {
+            const container = document.getElementById('builder-params-list');
+            const index = container.children.length;
+            const div = document.createElement('div');
+            div.className = 'param-item';
+            div.innerHTML = `
+                <input type="text" class="param-input param-key" placeholder="Key" data-index="${index}">
+                <input type="text" class="param-input param-value" placeholder="Value" data-index="${index}">
+                <button class="param-remove" data-index="${index}">×</button>
+            `;
+            container.appendChild(div);
+            div.querySelector('.param-remove').addEventListener('click', () => div.remove());
+        });
+
+        document.getElementById('generate-url').addEventListener('click', buildURL);
+        document.getElementById('copy-generated').addEventListener('click', copyGeneratedURL);
+
+        ['builder-protocol', 'builder-host', 'builder-port', 'builder-path', 'builder-hash'].forEach(id => {
+            document.getElementById(id).addEventListener('input', buildURL);
+        });
+        document.getElementById('builder-protocol').addEventListener('change', buildURL);
+
+        // Initialize
+        displayResults(parseURL(document.getElementById('url-input').value));
+        updateLanguage();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="meta-tag-generator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">Meta 标签生成器</div><div class="r-desc">SEO标签</div></a>
+        <a href="open-graph-generator.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">OG 标签生成器</div><div class="r-desc">社交分享标签</div></a>
+        <a href="twitter-card-generator.html" class="related-card"><div class="r-icon">🐦</div><div class="r-title">Twitter Card 生成器</div><div class="r-desc">卡片标签</div></a>
+        <a href="robots-txt-generator.html" class="related-card"><div class="r-icon">🤖</div><div class="r-title">robots.txt 生成器</div><div class="r-desc">生成规则</div></a>
+        <a href="url-slug-generator.html" class="related-card"><div class="r-icon">🔗</div><div class="r-title">URL Slug 生成器</div><div class="r-desc">SEO友好URL</div></a>
+        <a href="http-status-codes.html" class="related-card"><div class="r-icon">📡</div><div class="r-title">HTTP 状态码查询</div><div class="r-desc">状态码查询</div></a>
+        </div>
+    </section>
+</body>
+</html>

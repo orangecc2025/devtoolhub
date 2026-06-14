@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chmod权限计算器 | DevToolBox</title>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="在线Chmod权限计算器，可视化设置文件权限，支持数字(755)和符号(rwxr-xr-x)表示，实时双向转换，附带常用预设模板。">
+    <meta name="keywords" content="chmod,权限计算器,文件权限,linux权限,rwxr-xr-x,755">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(79, 70, 229, 0.3);
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .lang-btn {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid rgba(255,255,255,0.5);
+            background: transparent;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: white;
+            color: #4F46E5;
+            border-color: white;
+        }
+        .lang-btn:hover:not(.active) {
+            border-color: white;
+        }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-title h1 {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+        .page-title p {
+            color: #64748b;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .permission-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 600px) {
+            .permission-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .perm-section {
+            text-align: center;
+        }
+        .perm-label {
+            font-weight: 600;
+            color: #4F46E5;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .perm-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .perm-bit {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.75rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .perm-bit input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #4F46E5;
+            cursor: pointer;
+        }
+        .perm-bit span {
+            flex: 1;
+            text-align: left;
+            margin-left: 0.5rem;
+            color: #475569;
+        }
+        .perm-value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .result-display {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+        .result-box {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            color: white;
+            padding: 1.25rem 2rem;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 180px;
+        }
+        .result-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        .result-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+        .result-box .copy-btn {
+            margin-top: 0.75rem;
+            padding: 0.4rem 1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+        .result-box .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .converter-section {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .converter-input {
+            flex: 1;
+            min-width: 200px;
+        }
+        .converter-input label {
+            display: block;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.3rem;
+        }
+        .converter-input input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.2s;
+        }
+        .converter-input input:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .converter-arrow {
+            font-size: 1.5rem;
+            color: #4F46E5;
+        }
+        .presets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .preset-btn {
+            padding: 0.5rem 1rem;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #475569;
+            transition: all 0.2s;
+        }
+        .preset-btn:hover {
+            background: #4F46E5;
+            color: white;
+            border-color: #4F46E5;
+        }
+        .preset-btn span {
+            display: block;
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .info-item {
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 3px solid #4F46E5;
+        }
+        .info-item code {
+            display: block;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #4F46E5;
+            margin-bottom: 0.3rem;
+        }
+        .info-item p {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        .description {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .description h4 {
+            color: #0369a1;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .description ul {
+            margin-left: 1.2rem;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+        .description li {
+            margin-bottom: 0.3rem;
+        }
+        .footer {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover {
+            color: white;
+        }
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+            <div class="lang-toggle">
+                <button class="lang-btn active" data-lang="zh">中文</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h1 data-zh="Chmod权限计算器" data-en="Chmod Permission Calculator">Chmod权限计算器</h1>
+            <p data-zh="可视化设置文件权限，实时显示数字和符号表示" data-en="Visual file permission editor with numeric and symbolic display">可视化设置文件权限，实时显示数字和符号表示</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>🔐</span>
+                <span data-zh="权限设置" data-en="Permission Settings">权限设置</span>
+            </div>
+            <div class="permission-grid">
+                <div class="perm-section">
+                    <div class="perm-label" data-zh="所有者 (Owner)" data-en="Owner">所有者 (Owner)</div>
+                    <div class="perm-row">
+                        <div class="perm-bit">
+                            <span data-zh="读" data-en="Read">读</span>
+                            <input type="checkbox" data-type="owner" data-bit="4" checked>
+                        </div>
+                        <div class="perm-bit">
+                            <span data-zh="写" data-en="Write">写</span>
+                            <input type="checkbox" data-type="owner" data-bit="2" checked>
+                        </div>
+                        <div class="perm-bit">
+                            <span data-zh="执行" data-en="Execute">执行</span>
+                            <input type="checkbox" data-type="owner" data-bit="1" checked>
+                        </div>
+                    </div>
+                </div>
+                <div class="perm-section">
+                    <div class="perm-label" data-zh="用户组 (Group)" data-en="Group">用户组 (Group)</div>
+                    <div class="perm-row">
+                        <div class="perm-bit">
+                            <span data-zh="读" data-en="Read">读</span>
+                            <input type="checkbox" data-type="group" data-bit="4" checked>
+                        </div>
+                        <div class="perm-bit">
+                            <span data-zh="写" data-en="Write">写</span>
+                            <input type="checkbox" data-type="group" data-bit="2">
+                        </div>
+                        <div class="perm-bit">
+                            <span data-zh="执行" data-en="Execute">执行</span>
+                            <input type="checkbox" data-type="group" data-bit="1" checked>
+                        </div>
+                    </div>
+                </div>
+                <div class="perm-section">
+                    <div class="perm-label" data-zh="其他用户 (Others)" data-en="Others">其他用户 (Others)</div>
+                    <div class="perm-row">
+                        <div class="perm-bit">
+                            <span data-zh="读" data-en="Read">读</span>
+                            <input type="checkbox" data-type="others" data-bit="4" checked>
+                        </div>
+                        <div class="perm-bit">
+                            <span data-zh="写" data-en="Write">写</span>
+                            <input type="checkbox" data-type="others" data-bit="2">
+                        </div>
+                        <div class="perm-bit">
+                            <span data-zh="执行" data-en="Execute">执行</span>
+                            <input type="checkbox" data-type="others" data-bit="1" checked>
+                        </div>
+                    </div>
+                </div>
+                <div class="perm-section">
+                    <div class="perm-label" data-zh="特殊权限" data-en="Special">特殊权限</div>
+                    <div class="perm-row">
+                        <div class="perm-bit">
+                            <span>SUID</span>
+                            <input type="checkbox" data-type="special" data-bit="4" id="suid">
+                        </div>
+                        <div class="perm-bit">
+                            <span>SGID</span>
+                            <input type="checkbox" data-type="special" data-bit="2" id="sgid">
+                        </div>
+                        <div class="perm-bit">
+                            <span>Sticky</span>
+                            <input type="checkbox" data-type="special" data-bit="1" id="sticky">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-display">
+                <div class="result-box">
+                    <div class="result-label" data-zh="数字表示" data-en="Numeric">数字表示</div>
+                    <div class="result-value" id="numeric-value">755</div>
+                    <button class="copy-btn" onclick="copyToClipboard('755', this)" data-zh="复制" data-en="Copy">复制</button>
+                </div>
+                <div class="result-box">
+                    <div class="result-label" data-zh="符号表示" data-en="Symbolic">符号表示</div>
+                    <div class="result-value" id="symbolic-value">rwxr-xr-x</div>
+                    <button class="copy-btn" onclick="copyToClipboard('rwxr-xr-x', this)" data-zh="复制" data-en="Copy">复制</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>🔄</span>
+                <span data-zh="双向转换器" data-en="Bidirectional Converter">双向转换器</span>
+            </div>
+            <div class="converter-section">
+                <div class="converter-input">
+                    <label data-zh="输入数字权限 (如 755)" data-en="Enter numeric (e.g. 755)">输入数字权限 (如 755)</label>
+                    <input type="text" id="numeric-input" placeholder="755" maxlength="4" oninput="convertToSymbolic(this.value)">
+                </div>
+                <div class="converter-arrow">⇄</div>
+                <div class="converter-input">
+                    <label data-zh="输入符号权限 (如 rwxr-xr-x)" data-en="Enter symbolic (e.g. rwxr-xr-x)">输入符号权限 (如 rwxr-xr-x)</label>
+                    <input type="text" id="symbolic-input" placeholder="rwxr-xr-x" maxlength="9" oninput="convertToNumeric(this.value)">
+                </div>
+            </div>
+            <div class="presets">
+                <span class="text-sm text-gray-500 mr-2" data-zh="常用预设:" data-en="Common presets:">常用预设:</span>
+                <button class="preset-btn" onclick="setPermission(0)">000<span data-zh="无权限" data-en="None">无权限</span></button>
+                <button class="preset-btn" onclick="setPermission(1)">111<span data-zh="仅执行" data-en="Exec">仅执行</span></button>
+                <button class="preset-btn" onclick="setPermission(6)">666<span data-zh="读写" data-en="RW">读写</span></button>
+                <button class="preset-btn" onclick="setPermission(7)">777<span data-zh="完全" data-en="Full">完全</span></button>
+                <button class="preset-btn" onclick="setPermission(644)">644<span data-zh="默认文件" data-en="Default">默认文件</span></button>
+                <button class="preset-btn" onclick="setPermission(755)">755<span data-zh="目录/脚本" data-en="Dir/Script">目录/脚本</span></button>
+                <button class="preset-btn" onclick="setPermission(600)">600<span data-zh="私钥" data-en="Private">私钥</span></button>
+                <button class="preset-btn" onclick="setPermission(400)">400<span data-zh="只读" data-en="Read-only">只读</span></button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>📚</span>
+                <span data-zh="权限含义说明" data-en="Permission Reference">权限含义说明</span>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <code>r (4)</code>
+                    <p data-zh="读取文件内容/列出目录内容" data-en="Read file contents/list directory">读取文件内容/列出目录内容</p>
+                </div>
+                <div class="info-item">
+                    <code>w (2)</code>
+                    <p data-zh="修改文件内容/在目录中增删文件" data-en="Modify file/add or delete files">修改文件内容/在目录中增删文件</p>
+                </div>
+                <div class="info-item">
+                    <code>x (1)</code>
+                    <p data-zh="执行文件/进入目录" data-en="Execute file/enter directory">执行文件/进入目录</p>
+                </div>
+                <div class="info-item">
+                    <code>- (0)</code>
+                    <p data-zh="无对应权限" data-en="No permission">无对应权限</p>
+                </div>
+                <div class="info-item">
+                    <code>SUID (4)</code>
+                    <p data-zh="执行时以所有者身份运行" data-en="Run as owner when executed">执行时以所有者身份运行</p>
+                </div>
+                <div class="info-item">
+                    <code>SGID (2)</code>
+                    <p data-zh="执行时以用户组身份运行" data-en="Run as group when executed">执行时以用户组身份运行</p>
+                </div>
+                <div class="info-item">
+                    <code>Sticky (1)</code>
+                    <p data-zh="目录中仅所有者可删除" data-en="Only owner can delete in directory">目录中仅所有者可删除</p>
+                </div>
+            </div>
+            <div class="description">
+                <h4>💡 <span data-zh="使用场景建议" data-en="Common Use Cases">使用场景建议</span></h4>
+                <ul>
+                    <li data-zh="<b>755:</b> Web目录、可执行脚本 - 所有者完全控制，其他人可读和执行" data-en="<b>755:</b> Web directories, scripts - full control for owner, read/execute for others"><b>755:</b> Web目录、可执行脚本 - 所有者完全控制，其他人可读和执行</li>
+                    <li data-zh="<b>644:</b> 普通文件 - 所有者可读写，其他人只读" data-en="<b>644:</b> Regular files - owner read/write, others read-only"><b>644:</b> 普通文件 - 所有者可读写，其他人只读</li>
+                    <li data-zh="<b>600:</b> 敏感文件如私钥 - 只有所有者可访问" data-en="<b>600:</b> Sensitive files like private keys - owner only"><b>600:</b> 敏感文件如私钥 - 只有所有者可访问</li>
+                    <li data-zh="<b>777:</b> 谨慎使用！所有用户完全控制，风险较高" data-en="<b>777:</b> Use with caution! All users have full control"><b>777:</b> 谨慎使用！所有用户完全控制，风险较高</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Permission calculation
+        const bitMap = { '4': 'r', '2': 'w', '1': 'x' };
+        const bitToNum = { 'r': 4, 'w': 2, 'x': 1 };
+        const numToBit = { '4': 'r', '2': 'w', '1': 'x' };
+
+        function calculatePermissions() {
+            let owner = 0, group = 0, others = 0, special = 0;
+            
+            document.querySelectorAll('input[data-type]').forEach(cb => {
+                if (cb.checked) {
+                    const type = cb.dataset.type;
+                    const bit = parseInt(cb.dataset.bit);
+                    if (type === 'owner') owner += bit;
+                    else if (type === 'group') group += bit;
+                    else if (type === 'others') others += bit;
+                    else if (type === 'special') special += bit;
+                }
+            });
+
+            const numeric = special * 512 + owner * 64 + group * 8 + others;
+            const ownerStr = (owner & 4 ? 'r' : '-') + (owner & 2 ? 'w' : '-') + (owner & 1 ? 'x' : '-');
+            const groupStr = (group & 4 ? 'r' : '-') + (group & 2 ? 'w' : '-') + (group & 1 ? 'x' : '-');
+            const othersStr = (others & 4 ? 'r' : '-') + (others & 2 ? 'w' : '-') + (others & 1 ? 'x' : '-');
+            
+            let specialStr = '';
+            if (special & 4) specialStr += (owner & 1 ? 's' : 'S');
+            else specialStr += '-';
+            if (special & 2) specialStr += (group & 1 ? 's' : 'S');
+            else specialStr += '-';
+            if (special & 1) specialStr += 't';
+            else specialStr += '-';
+            
+            const symbolic = specialStr + ownerStr + groupStr + othersStr;
+
+            document.getElementById('numeric-value').textContent = numeric;
+            document.getElementById('symbolic-value').textContent = symbolic;
+            
+            document.querySelector('.result-box:first-child .copy-btn').onclick = () => copyToClipboard(numeric, this);
+            document.querySelector('.result-box:last-child .copy-btn').onclick = () => copyToClipboard(symbolic, this);
+
+            return { numeric, symbolic };
+        }
+
+        function setPermission(num) {
+            num = parseInt(num);
+            const owner = Math.floor(num / 100) % 10;
+            const group = Math.floor(num / 10) % 10;
+            const others = num % 10;
+            
+            document.querySelectorAll('input[data-type="owner"]').forEach(cb => {
+                cb.checked = owner >= parseInt(cb.dataset.bit);
+            });
+            document.querySelectorAll('input[data-type="group"]').forEach(cb => {
+                cb.checked = group >= parseInt(cb.dataset.bit);
+            });
+            document.querySelectorAll('input[data-type="others"]').forEach(cb => {
+                cb.checked = others >= parseInt(cb.dataset.bit);
+            });
+            calculatePermissions();
+        }
+
+        function convertToSymbolic(val) {
+            if (!/^\d{3,4}$/.test(val)) return;
+            setPermission(val);
+            document.getElementById('symbolic-input').value = document.getElementById('symbolic-value').textContent;
+        }
+
+        function convertToNumeric(val) {
+            if (!/^[rwxsSSt-]{9}$/.test(val)) return;
+            const owner = (val[0] === 'r' ? 4 : 0) + (val[1] === 'w' ? 2 : 0) + (val[2] === 'x' || val[2] === 's' ? 1 : 0);
+            const group = (val[3] === 'r' ? 4 : 0) + (val[4] === 'w' ? 2 : 0) + (val[5] === 'x' || val[5] === 's' ? 1 : 0);
+            const others = (val[6] === 'r' ? 4 : 0) + (val[7] === 'w' ? 2 : 0) + (val[8] === 'x' || val[8] === 't' ? 1 : 0);
+            
+            document.querySelectorAll('input[data-type="owner"]').forEach(cb => {
+                const bit = parseInt(cb.dataset.bit);
+                cb.checked = bit === 4 ? val[0] === 'r' : bit === 2 ? val[1] === 'w' : val[2] === 'x' || val[2] === 's';
+            });
+            document.querySelectorAll('input[data-type="group"]').forEach(cb => {
+                const bit = parseInt(cb.dataset.bit);
+                cb.checked = bit === 4 ? val[3] === 'r' : bit === 2 ? val[4] === 'w' : val[5] === 'x' || val[5] === 's';
+            });
+            document.querySelectorAll('input[data-type="others"]').forEach(cb => {
+                const bit = parseInt(cb.dataset.bit);
+                cb.checked = bit === 4 ? val[6] === 'r' : bit === 2 ? val[7] === 'w' : val[8] === 'x' || val[8] === 't';
+            });
+            
+            calculatePermissions();
+            document.getElementById('numeric-input').value = document.getElementById('numeric-value').textContent;
+        }
+
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(btn.dataset.zh === undefined ? 'Copied!' : '已复制!');
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Language toggle
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const lang = btn.dataset.lang;
+                document.querySelectorAll('[data-zh]').forEach(el => {
+                    el.textContent = el.dataset[lang];
+                });
+            });
+        });
+
+        // Initialize
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', calculatePermissions);
+        });
+        calculatePermissions();
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="percentage-calculator.html" class="related-card"><div class="r-icon">💯</div><div class="r-title">百分比计算器</div><div class="r-desc">百分比计算</div></a>
+        <a href="ratio-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">比例计算器</div><div class="r-desc">比例求解</div></a>
+        <a href="age-calculator.html" class="related-card"><div class="r-icon">🎂</div><div class="r-title">年龄计算器</div><div class="r-desc">精确年龄</div></a>
+        <a href="bmi-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">BMI 计算器</div><div class="r-desc">体重指数</div></a>
+        <a href="loan-calculator.html" class="related-card"><div class="r-icon">🏠</div><div class="r-title">贷款计算器</div><div class="r-desc">月供计算</div></a>
+        <a href="tip-calculator.html" class="related-card"><div class="r-icon">💰</div><div class="r-title">小费计算器</div><div class="r-desc">AA分账</div></a>
+        </div>
+    </section>
+</body>
+</html>

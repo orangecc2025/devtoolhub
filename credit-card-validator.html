@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="信用卡号验证器 - Luhn算法验证，识别Visa/MasterCard/Amex等卡类型">
+    <meta name="keywords" content="信用卡验证,信用卡号验证,Luhn算法,卡类型识别,Visa,MasterCard,Amex">
+    <title>信用卡号验证器 - Luhn算法校验 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/credit-card-validator.html">
+    <meta property="og:title" content="信用卡号验证器 - Luhn算法校验">
+    <meta property="og:description" content="Luhn算法验证，识别Visa/MasterCard/Amex等卡类型">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/credit-card-validator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "信用卡号验证器",
+        "description": "Luhn算法验证，识别Visa/MasterCard/Amex等卡类型",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 20px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .result-box {
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-valid {
+            background: #ECFDF5;
+            border: 2px solid #10B981;
+        }
+        .result-invalid {
+            background: #FEF2F2;
+            border: 2px solid #EF4444;
+        }
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .result-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        .result-valid .result-icon {
+            background: #10B981;
+            color: white;
+        }
+        .result-invalid .result-icon {
+            background: #EF4444;
+            color: white;
+        }
+        .result-title {
+            font-size: 24px;
+            font-weight: 800;
+        }
+        .result-valid .result-title {
+            color: #065F46;
+        }
+        .result-invalid .result-title {
+            color: #991B1B;
+        }
+        .result-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .card-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .detail-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        .detail-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .detail-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .detail-value.success {
+            color: var(--success);
+        }
+        .detail-value.error {
+            color: var(--error);
+        }
+        .card-visual {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 24px;
+            color: white;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .card-visual.show { display: block; }
+        .card-number-display {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            letter-spacing: 4px;
+            margin-bottom: 16px;
+        }
+        .card-type-display {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover { color: var(--primary); }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .card-details { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>💳 信用卡号验证器</h1>
+            <p>使用Luhn算法验证信用卡号有效性，自动识别卡类型</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label for="cardNumber">输入信用卡号</label>
+                <input type="text" id="cardNumber" placeholder="4111 1111 1111 1111" maxlength="19">
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="validateCard()">✅ 验证卡号</button>
+                <button class="btn btn-secondary" onclick="clearInput()">🗑️ 清除</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="card-visual" id="cardVisual">
+                    <div class="card-number-display" id="cardNumberDisplay">**** **** **** ****</div>
+                    <div class="card-type-display" id="cardTypeDisplay">未知卡类型</div>
+                </div>
+                <div class="result-header">
+                    <div class="result-icon" id="resultIcon">✓</div>
+                    <div>
+                        <div class="result-title" id="resultTitle">验证结果</div>
+                        <div class="result-subtitle" id="resultSubtitle"></div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-item">
+                        <div class="detail-label">卡类型</div>
+                        <div class="detail-value" id="cardType">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">卡号长度</div>
+                        <div class="detail-value" id="cardLength">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">校验位</div>
+                        <div class="detail-value" id="checkDigit">-</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Luhn校验</div>
+                        <div class="detail-value" id="luhnResult">-</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">🔐 Luhn算法是什么？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">Luhn算法（也称为模10算法）是一种简单的校验和算法，用于验证各种identification numbers，包括信用卡号、身份证号、IMEI码等。它不能加密数据，但能检测随机输入错误。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">💳 支持哪些卡类型？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">支持Visa（以4开头，16位）、MasterCard（51-55或2221-2720开头，16位）、American Express（34或37开头，15位）、Discover（6011或65开头，16位）、JCB（35开头，16位）、Diners Club（30/36/38开头，14位）等。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">🔒 验证安全吗？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">完全安全。所有验证过程在浏览器本地完成，不会上传任何数据到服务器。我们不会存储或记录任何输入的卡号信息。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">⚠️ 验证通过就说明卡号真实吗？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">不一定。Luhn算法只能检测输入错误（如手抖输错一位数字），无法验证卡号是否真实存在于银行系统中。验证通过仅表示卡号格式符合校验规则。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="json-validator.html" class="related-card"><div class="r-icon">✓</div><div class="r-title">JSON 校验器</div><div class="r-desc">语法检查</div></a>
+        <a href="xml-validator.html" class="related-card"><div class="r-icon">📋</div><div class="r-title">XML 校验器</div><div class="r-desc">格式检查</div></a>
+        <a href="html-validator.html" class="related-card"><div class="r-icon">🔍</div><div class="r-title">HTML 校验器</div><div class="r-desc">标签检查</div></a>
+        <a href="css-validator.html" class="related-card"><div class="r-icon">🎯</div><div class="r-title">CSS 校验器</div><div class="r-desc">语法验证</div></a>
+        <a href="regex-tester.html" class="related-card"><div class="r-icon">📝</div><div class="r-title">正则表达式测试器</div><div class="r-desc">实时匹配</div></a>
+        <a href="email-validator.html" class="related-card"><div class="r-icon">✉</div><div class="r-title">邮箱格式验证</div><div class="r-desc">格式验证</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        const cardPatterns = [
+            { type: 'Visa', patterns: [/^4/], lengths: [16], color: '#1A1F71' },
+            { type: 'MasterCard', patterns: [/^5[1-5]/, /^2[2-7]/], lengths: [16], color: '#EB001B' },
+            { type: 'American Express', patterns: [/^3[47]/], lengths: [15], color: '#006FCF' },
+            { type: 'Discover', patterns: [/^6011/, /^65/, /^64[4-9]/], lengths: [16, 19], color: '#FF6000' },
+            { type: 'JCB', patterns: [/^35/], lengths: [16], color: '#0066B3' },
+            { type: 'Diners Club', patterns: [/^3[068]/, /^30[0-5]/, /^36/, /^38/], lengths: [14], color: '#004A97' },
+            { type: 'UnionPay', patterns: [/^62/, /^81/], lengths: [16, 17, 18, 19], color: '#E21836' },
+            { type: 'Maestro', patterns: [/^50/, /^5[6-8]/, /^6[0-9]/], lengths: [12, 13, 14, 15, 16, 17, 18, 19], color: '#0061A6' }
+        ];
+
+        function detectCardType(cardNumber) {
+            const cleanNumber = cardNumber.replace(/\s/g, '');
+            for (const card of cardPatterns) {
+                for (const pattern of card.patterns) {
+                    if (pattern.test(cleanNumber)) {
+                        if (card.lengths.includes(cleanNumber.length)) {
+                            return { type: card.type, color: card.color };
+                        }
+                    }
+                }
+            }
+            return { type: '未知', color: '#6B7280' };
+        }
+
+        function luhnCheck(cardNumber) {
+            const cleanNumber = cardNumber.replace(/\s/g, '');
+            let sum = 0;
+            let isEven = false;
+
+            for (let i = cleanNumber.length - 1; i >= 0; i--) {
+                let digit = parseInt(cleanNumber[i], 10);
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) {
+                        digit -= 9;
+                    }
+                }
+                sum += digit;
+                isEven = !isEven;
+            }
+
+            return sum % 10 === 0;
+        }
+
+        function formatCardNumber(value) {
+            const v = value.replace(/\s/g, '').replace(/\D/g, '');
+            const parts = [];
+            for (let i = 0; i < v.length; i += 4) {
+                parts.push(v.slice(i, i + 4));
+            }
+            return parts.join(' ');
+        }
+
+        function validateCard() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const cleanNumber = cardNumber.replace(/\s/g, '');
+
+            if (!cleanNumber || cleanNumber.length < 13) {
+                showResult(false, '卡号太短', '请输入完整的卡号（至少13位）');
+                return;
+            }
+
+            if (!/^\d+$/.test(cleanNumber)) {
+                showResult(false, '格式错误', '卡号只能包含数字');
+                return;
+            }
+
+            const cardInfo = detectCardType(cardNumber);
+            const isValid = luhnCheck(cardNumber);
+
+            if (isValid && cardInfo.type !== '未知') {
+                showResult(true, '卡号有效', `这是一张有效的 ${cardInfo.type} 卡`, cardNumber, cardInfo);
+            } else if (isValid && cardInfo.type === '未知') {
+                showResult(true, '校验通过', '卡号通过Luhn校验，但卡类型未知', cardNumber, cardInfo);
+            } else {
+                showResult(false, '卡号无效', '卡号未通过Luhn校验', cardNumber, cardInfo);
+            }
+
+            document.getElementById('cardType').textContent = cardInfo.type;
+            document.getElementById('cardLength').textContent = cleanNumber.length + ' 位';
+            document.getElementById('checkDigit').textContent = cleanNumber.slice(-1);
+            document.getElementById('luhnResult').textContent = isValid ? '通过 ✓' : '失败 ✗';
+            document.getElementById('luhnResult').className = 'detail-value ' + (isValid ? 'success' : 'error');
+        }
+
+        function showResult(isValid, title, subtitle, cardNumber = '', cardInfo = null) {
+            const resultBox = document.getElementById('resultBox');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultSubtitle = document.getElementById('resultSubtitle');
+            const cardVisual = document.getElementById('cardVisual');
+            const cardNumberDisplay = document.getElementById('cardNumberDisplay');
+            const cardTypeDisplay = document.getElementById('cardTypeDisplay');
+
+            resultBox.className = 'result-box show ' + (isValid ? 'result-valid' : 'result-invalid');
+            resultIcon.textContent = isValid ? '✓' : '✗';
+            resultTitle.textContent = title;
+            resultSubtitle.textContent = subtitle;
+
+            if (cardNumber && cardInfo) {
+                cardVisual.classList.add('show');
+                cardVisual.style.background = `linear-gradient(135deg, ${cardInfo.color} 0%, ${adjustColor(cardInfo.color, -30)} 100%)`;
+                const formatted = formatCardNumber(cardNumber);
+                const lastGroup = formatted.split(' ').pop();
+                const masked = '**** **** **** ' + lastGroup;
+                cardNumberDisplay.textContent = masked;
+                cardTypeDisplay.textContent = cardInfo.type;
+            } else {
+                cardVisual.classList.remove('show');
+            }
+        }
+
+        function adjustColor(color, amount) {
+            const hex = color.replace('#', '');
+            const r = Math.max(0, Math.min(255, parseInt(hex.slice(0, 2), 16) + amount));
+            const g = Math.max(0, Math.min(255, parseInt(hex.slice(2, 4), 16) + amount));
+            const b = Math.max(0, Math.min(255, parseInt(hex.slice(4, 6), 16) + amount));
+            return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        }
+
+        function clearInput() {
+            document.getElementById('cardNumber').value = '';
+            document.getElementById('resultBox').classList.remove('show');
+        }
+
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            e.target.value = formatCardNumber(e.target.value);
+        });
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="免费在线Base64编码解码工具，支持文本和图片的Base64互转，本地处理保障隐私安全。开发者必备编码工具。">
+    <meta name="keywords" content="Base64编码,Base64解码,Base64 converter,图片转Base64,Base64转图片">
+    <title>Base64编码解码工具 - 免费在线转换 | Base64 Encoder/Decoder</title>
+    <meta property="og:title" content="Base64编码解码工具 - 免费在线工具">
+    <meta property="og:description" content="免费在线Base64编码解码工具，支持文本和图片互转，本地处理保障安全。">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebApplication","name":"Base64编码解码工具","description":"免费在线Base64编码解码工具","applicationCategory":"DeveloperApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+    </script>
+    <style>
+        :root{--primary:#4F46E5;--primary-hover:#4338CA;--primary-light:#EEF2FF;--bg:#F9FAFB;--card-bg:#FFF;--text:#111827;--text-secondary:#6B7280;--border:#E5E7EB;--success:#059669;--success-bg:#ECFDF5;--radius:12px;--shadow:0 1px 3px rgba(0,0,0,.1)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+        .header{background:var(--card-bg);border-bottom:1px solid var(--border);padding:14px 0;position:sticky;top:0;z-index:100}
+        .header-inner{max-width:900px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center}
+        .logo{font-size:18px;font-weight:700;color:var(--primary);text-decoration:none}
+        .nav-links{display:flex;gap:16px}
+        .nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px}
+        .nav-links a:hover{color:var(--primary)}
+        .container{max-width:900px;margin:0 auto;padding:28px 20px}
+        .hero{text-align:center;margin-bottom:28px}
+        .hero h1{font-size:28px;font-weight:800;margin-bottom:8px}
+        .hero p{font-size:16px;color:var(--text-secondary)}
+        .tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid var(--border)}
+        .tab{padding:10px 20px;cursor:pointer;font-weight:600;font-size:14px;color:var(--text-secondary);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+        .tab:hover{color:var(--primary)}
+        .tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+        .tab-content{display:none}
+        .tab-content.active{display:block}
+        .tool-card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px;margin-bottom:24px}
+        .editor-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .editor-panel{background:var(--card-bg);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+        .editor-label{padding:10px 14px;border-bottom:1px solid var(--border);background:#FAFAFA;font-weight:600;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+        textarea{width:100%;height:280px;border:none;padding:14px;font-family:'SF Mono','Fira Code','Courier New',monospace;font-size:13px;line-height:1.6;resize:vertical;outline:none;background:var(--card-bg)}
+        .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+        .btn-primary{background:var(--primary);color:#fff}
+        .btn-primary:hover{background:var(--primary-hover)}
+        .btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+        .btn-secondary:hover{background:#F3F4F6}
+        .btn-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+        .drop-zone{border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg)}
+        .drop-zone:hover,.drop-zone.dragover{border-color:var(--primary);background:var(--primary-light)}
+        .drop-zone p{color:var(--text-secondary);margin-top:8px;font-size:14px}
+        .drop-zone .icon{font-size:40px}
+        .image-preview{max-width:100%;max-height:300px;border-radius:8px;margin-top:16px;display:none}
+        .image-preview.show{display:block}
+        .result-text{background:#F9FAFB;border:1px solid var(--border);border-radius:8px;padding:14px;font-family:'SF Mono',monospace;font-size:13px;max-height:200px;overflow-y:auto;word-break:break-all;margin-top:16px;display:none}
+        .result-text.show{display:block}
+        .ad-slot{background:#F3F4F6;border:1px dashed var(--border);border-radius:8px;padding:16px;text-align:center;color:var(--text-secondary);font-size:13px;margin:20px 0}
+        .faq-section{margin-top:36px}
+        .faq-section h2{font-size:22px;font-weight:700;margin-bottom:16px}
+        .faq-item{border-bottom:1px solid var(--border);padding:12px 0}
+        .faq-q{font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+        .faq-a{color:var(--text-secondary);margin-top:8px;display:none;line-height:1.8;font-size:14px}
+        .faq-item.open .faq-a{display:block}
+        .faq-toggle{transition:transform .2s;font-size:12px}
+        .faq-item.open .faq-toggle{transform:rotate(180deg)}
+        .footer{background:var(--card-bg);border-top:1px solid var(--border);padding:20px 0;margin-top:36px;text-align:center;color:var(--text-secondary);font-size:13px}
+        .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1F2937;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+        .toast.show{opacity:1}
+        @media(max-width:768px){.editor-grid{grid-template-columns:1fr}.hero h1{font-size:22px}textarea{height:200px}}
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🔄 Base64 Tool</a>
+            <nav class="nav-links">
+                <a href="#tool">工具</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Base64 编码解码工具</h1>
+            <p>免费在线Base64编码解码，支持文本和图片互转，数据本地处理</p>
+        </section>
+
+        <div class="tabs" id="tool">
+            <div class="tab active" onclick="switchTab('text')">📝 文本编码/解码</div>
+            <div class="tab" onclick="switchTab('image')">🖼 图片转Base64</div>
+        </div>
+
+        <!-- 文本编码/解码 -->
+        <div class="tab-content active" id="tab-text">
+            <div class="tool-card">
+                <div class="editor-grid">
+                    <div class="editor-panel">
+                        <div class="editor-label">
+                            <span>原文</span>
+                            <span id="inputCount" style="font-weight:400;color:var(--text-secondary)">0 字符</span>
+                        </div>
+                        <textarea id="textInput" placeholder="在此输入文本..."></textarea>
+                    </div>
+                    <div class="editor-panel">
+                        <div class="editor-label">
+                            <span>Base64</span>
+                            <span id="outputCount" style="font-weight:400;color:var(--text-secondary)">0 字符</span>
+                        </div>
+                        <textarea id="textOutput" placeholder="编码/解码结果..."></textarea>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="encodeText()">编码 →</button>
+                    <button class="btn btn-primary" onclick="decodeText()">← 解码</button>
+                    <button class="btn btn-secondary" onclick="swapText()">⇄ 交换</button>
+                    <button class="btn btn-secondary" onclick="copyText('textOutput')">📋 复制结果</button>
+                    <button class="btn btn-secondary" onclick="clearText()">清空</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图片转Base64 -->
+        <div class="tab-content" id="tab-image">
+            <div class="tool-card">
+                <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                    <div class="icon">📁</div>
+                    <p>点击选择图片或拖拽到此处</p>
+                    <p style="font-size:12px;color:#9CA3AF">支持 PNG、JPG、GIF、SVG、WebP</p>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(this.files[0])">
+                <img class="image-preview" id="imagePreview">
+                <div class="result-text" id="base64Result"></div>
+                <div class="btn-group" id="imageActions" style="display:none">
+                    <button class="btn btn-primary" onclick="copyImageBase64()">📋 复制Base64</button>
+                    <button class="btn btn-secondary" onclick="copyAsCSS()">📋 复制CSS用法</button>
+                    <button class="btn btn-secondary" onclick="copyAsHTML()">📋 复制HTML用法</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">什么是Base64？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">Base64是一种基于64个可打印字符来表示二进制数据的编码方式。它将每3个字节（24位）转换为4个Base64字符。常用于在文本环境中传输二进制数据，如电子邮件附件、API认证令牌、Data URL等。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Base64编码是加密吗？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">不是。Base64是编码，不是加密。它只是改变了数据的表示方式，任何人都可以轻松解码还原。不要用Base64来保护敏感信息，它不能提供任何安全性。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">为什么图片要转Base64？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">图片转Base64后可以内嵌在HTML/CSS/JSON中，减少HTTP请求数。常见场景：小图标内联、邮件中嵌入图片、API传输图片数据。但Base64编码会使数据增大约33%，不适合大图片。</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Base64编码后数据变大了多少？<span class="faq-toggle">▼</span></div>
+                <div class="faq-a">Base64编码后的数据约为原始数据的133%（增大约33%）。因为3个字节的二进制数据会被编码为4个Base64字符。</div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="base32-encoder.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">Base32 编解码</div><div class="r-desc">文本与Base32互转</div></a>
+        <a href="url-encoder.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">URL 编解码器</div><div class="r-desc">URL编码/解码</div></a>
+        <a href="html-entity-encoder.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">HTML 实体编码/解码</div><div class="r-desc">文本与HTML实体互转</div></a>
+        <a href="rot13-tool.html" class="related-card"><div class="r-icon">🔑</div><div class="r-title">ROT13 加密解密</div><div class="r-desc">ROT13/ROT47/ROT5</div></a>
+        <a href="morse-code-tool.html" class="related-card"><div class="r-icon">📡</div><div class="r-title">摩斯电码转换</div><div class="r-desc">文本与摩斯码互转</div></a>
+        <a href="caesar-cipher.html" class="related-card"><div class="r-icon">🏛</div><div class="r-title">凯撒密码</div><div class="r-desc">加密/解密/暴力破解</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Base64 Tool. Free online Base64 encoder and decoder.</p>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach((t,i) => {
+                t.classList.toggle('active', (tab==='text'?i===0:i===1));
+            });
+            document.getElementById('tab-text').classList.toggle('active', tab==='text');
+            document.getElementById('tab-image').classList.toggle('active', tab==='image');
+        }
+
+        // Text encode/decode
+        const textInput = document.getElementById('textInput');
+        const textOutput = document.getElementById('textOutput');
+        textInput.addEventListener('input', () => {
+            document.getElementById('inputCount').textContent = textInput.value.length + ' 字符';
+        });
+
+        function encodeText() {
+            try {
+                const encoded = btoa(unescape(encodeURIComponent(textInput.value)));
+                textOutput.value = encoded;
+                document.getElementById('outputCount').textContent = encoded.length + ' 字符';
+            } catch(e) { showToast('编码失败: ' + e.message); }
+        }
+
+        function decodeText() {
+            try {
+                const decoded = decodeURIComponent(escape(atob(textOutput.value)));
+                textInput.value = decoded;
+                document.getElementById('inputCount').textContent = decoded.length + ' 字符';
+            } catch(e) { showToast('解码失败：输入不是有效的Base64字符串'); }
+        }
+
+        function swapText() {
+            const temp = textInput.value;
+            textInput.value = textOutput.value;
+            textOutput.value = temp;
+            document.getElementById('inputCount').textContent = textInput.value.length + ' 字符';
+            document.getElementById('outputCount').textContent = textOutput.value.length + ' 字符';
+        }
+
+        function clearText() {
+            textInput.value = ''; textOutput.value = '';
+            document.getElementById('inputCount').textContent = '0 字符';
+            document.getElementById('outputCount').textContent = '0 字符';
+        }
+
+        // Image to Base64
+        let currentBase64 = '';
+        const dropZone = document.getElementById('dropZone');
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+
+        function handleFile(file) {
+            if (!file || !file.type.startsWith('image/')) { showToast('请选择图片文件'); return; }
+            const reader = new FileReader();
+            reader.onload = e => {
+                currentBase64 = e.target.result;
+                const preview = document.getElementById('imagePreview');
+                preview.src = currentBase64;
+                preview.classList.add('show');
+                const result = document.getElementById('base64Result');
+                result.textContent = currentBase64;
+                result.classList.add('show');
+                document.getElementById('imageActions').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function copyImageBase64() {
+            navigator.clipboard.writeText(currentBase64).then(() => showToast('Base64已复制'));
+        }
+        function copyAsCSS() {
+            navigator.clipboard.writeText(`background-image: url(${currentBase64});`).then(() => showToast('CSS代码已复制'));
+        }
+        function copyAsHTML() {
+            navigator.clipboard.writeText(`<img src="${currentBase64}" alt="image">`).then(() => showToast('HTML代码已复制'));
+        }
+
+        function copyText(id) {
+            const text = document.getElementById(id).value;
+            if (!text) { showToast('没有可复制的内容'); return; }
+            navigator.clipboard.writeText(text).then(() => showToast('已复制到剪贴板'));
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+        });
+    </script>
+</body>
+</html>

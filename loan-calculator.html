@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="贷款计算器，支持等额本息和等额本金两种还款方式，计算月供和总利息。">
+    <meta name="keywords" content="贷款计算器,房贷计算器,等额本息,等额本金,月供计算">
+    <title>贷款计算器 - 等额本息/等额本金 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/loan-calculator.html">
+    <meta property="og:title" content="贷款计算器 - 等额本息/等额本金 | DevToolBox">
+    <meta property="og:description" content="贷款计算器，支持等额本息和等额本金两种还款方式，计算月供和总利息。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/loan-calculator.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "贷款计算器",
+        "description": "贷款计算器，支持等额本息和等额本金两种还款方式，计算月供和总利息",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .calc-type {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .calc-type-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .calc-type-btn.active {
+            border-color: var(--primary);
+            background: #EEF2FF;
+        }
+        .calc-type-btn h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .calc-type-btn p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .result-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .result-item-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .result-item-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .result-item-value.highlight {
+            font-size: 24px;
+        }
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        .schedule-table th, .schedule-table td {
+            padding: 8px 6px;
+            text-align: center;
+            border: 1px solid #E5E7EB;
+        }
+        .schedule-table th {
+            background: var(--bg);
+            font-weight: 600;
+        }
+        .schedule-table tr:nth-child(even) {
+            background: #F9FAFB;
+        }
+        .compare-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .compare-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .compare-card h4 {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        .compare-card .big-num {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .result-grid, .compare-box { grid-template-columns: 1fr; }
+            .schedule-table { font-size: 11px; }
+            .schedule-table th, .schedule-table td { padding: 4px 2px; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🏠 贷款计算器</h1>
+            <p>支持等额本息和等额本金两种还款方式，生成详细还款计划表</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="calc-type">
+                <div class="calc-type-btn active" onclick="setCalcType('equalPrincipal')">
+                    <h4>等额本金</h4>
+                    <p>月供递减，总利息少</p>
+                </div>
+                <div class="calc-type-btn" onclick="setCalcType('equalInstallment')">
+                    <h4>等额本息</h4>
+                    <p>月供固定，压力均匀</p>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="loanAmount">贷款金额 (万元)</label>
+                    <input type="number" id="loanAmount" placeholder="例如：100" min="1" max="10000" value="100">
+                </div>
+                <div class="form-group">
+                    <label for="loanTerm">贷款期限 (年)</label>
+                    <select id="loanTerm">
+                        <option value="1">1年 (12期)</option>
+                        <option value="5">5年 (60期)</option>
+                        <option value="10">10年 (120期)</option>
+                        <option value="15">15年 (180期)</option>
+                        <option value="20" selected>20年 (240期)</option>
+                        <option value="25">25年 (300期)</option>
+                        <option value="30">30年 (360期)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="interestRate">年利率 (%)</label>
+                <input type="number" id="interestRate" placeholder="例如：4.9" step="0.01" min="0.1" max="24" value="4.9">
+            </div>
+
+            <div class="form-group">
+                <label for="showSchedule">
+                    <input type="checkbox" id="showSchedule"> 显示详细还款计划表
+                </label>
+            </div>
+
+            <button class="btn btn-primary" onclick="calculateLoan()">
+                计算贷款
+            </button>
+
+            <div class="result-box" id="result">
+                <div class="result-title">📊 贷款计算结果</div>
+                
+                <div class="compare-box">
+                    <div class="compare-card">
+                        <h4>等额本金</h4>
+                        <div class="big-num" id="res-principal-monthly">--</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">首月月供</div>
+                    </div>
+                    <div class="compare-card">
+                        <h4>等额本息</h4>
+                        <div class="big-num" id="res-installment-monthly">--</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">每月月供</div>
+                    </div>
+                </div>
+
+                <div class="result-grid" style="margin-top: 16px;">
+                    <div class="result-item">
+                        <div class="result-item-label">贷款总额</div>
+                        <div class="result-item-value" id="res-total">--</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">还款总额</div>
+                        <div class="result-item-value" id="res-repay-total">--</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">利息总额</div>
+                        <div class="result-item-value" id="res-interest">--</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">利息节省</div>
+                        <div class="result-item-value" id="res-savings">--</div>
+                    </div>
+                </div>
+
+                <div id="scheduleContainer" style="display: none;">
+                    <h4 style="margin-top: 20px; font-size: 16px;">📋 还款计划表 (前12期)</h4>
+                    <div style="overflow-x: auto;">
+                        <table class="schedule-table" id="scheduleTable">
+                            <thead>
+                                <tr>
+                                    <th>期数</th>
+                                    <th>月供</th>
+                                    <th>本金</th>
+                                    <th>利息</th>
+                                    <th>剩余本金</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleBody"></tbody>
+                        </table>
+                    </div>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
+                        * 仅显示前12期，完整计划可导出查看
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    等额本金和等额本息有什么区别？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    等额本金：每月偿还同等数额的本金，利息逐月递减，前期月供压力较大，但总利息较少。<br>
+                    等额本息：每月偿还同等数额的月供（包括本金和利息），压力均匀，但总利息较多。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    哪种还款方式更划算？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    从总利息角度：等额本金更划算，总利息更少。<br>
+                    从月供压力角度：等额本息前期压力更小。<br>
+                    选择取决于您的收入状况和提前还款计划。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    提前还款怎么计算？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    提前还款会减少剩余本金，从而减少后续利息支出。建议在贷款前期（本金占比高时）提前还款效果更明显。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    LPR利率会影响计算结果吗？
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    本计算器使用您输入的固定利率计算。如需计算LPR浮动利率，请输入当前的LPR加点后利率。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="percentage-calculator.html" class="related-card"><div class="r-icon">💯</div><div class="r-title">百分比计算器</div><div class="r-desc">百分比计算</div></a>
+        <a href="ratio-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">比例计算器</div><div class="r-desc">比例求解</div></a>
+        <a href="age-calculator.html" class="related-card"><div class="r-icon">🎂</div><div class="r-title">年龄计算器</div><div class="r-desc">精确年龄</div></a>
+        <a href="bmi-calculator.html" class="related-card"><div class="r-icon">⚖</div><div class="r-title">BMI 计算器</div><div class="r-desc">体重指数</div></a>
+        <a href="tip-calculator.html" class="related-card"><div class="r-icon">💰</div><div class="r-title">小费计算器</div><div class="r-desc">AA分账</div></a>
+        <a href="discount-calculator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">折扣计算器</div><div class="r-desc">折扣叠加</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentType = 'equalPrincipal';
+
+        function setCalcType(type) {
+            currentType = type;
+            document.querySelectorAll('.calc-type-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.calc-type-btn').classList.add('active');
+        }
+
+        function formatMoney(num) {
+            return num.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function calculateLoan() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value) * 10000;
+            const years = parseInt(document.getElementById('loanTerm').value);
+            const months = years * 12;
+            const annualRate = parseFloat(document.getElementById('interestRate').value) / 100;
+            const monthlyRate = annualRate / 12;
+
+            if (!loanAmount || !years || !annualRate) {
+                alert('请填写完整的贷款信息');
+                return;
+            }
+
+            // 等额本金计算
+            const monthlyPrincipal = loanAmount / months;
+            let totalInterestPrincipal = 0;
+            let remainingPrincipal = loanAmount;
+            const schedulePrincipal = [];
+
+            for (let i = 1; i <= months; i++) {
+                const interest = remainingPrincipal * monthlyRate;
+                const payment = monthlyPrincipal + interest;
+                totalInterestPrincipal += interest;
+                remainingPrincipal -= monthlyPrincipal;
+                schedulePrincipal.push({
+                    month: i,
+                    payment: payment,
+                    principal: monthlyPrincipal,
+                    interest: interest,
+                    remaining: Math.max(0, remainingPrincipal)
+                });
+            }
+
+            // 等额本息计算
+            const monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+            let totalInterestInstallment = 0;
+            remainingPrincipal = loanAmount;
+            const scheduleInstallment = [];
+
+            for (let i = 1; i <= months; i++) {
+                const interest = remainingPrincipal * monthlyRate;
+                const principal = monthlyPayment - interest;
+                totalInterestInstallment += interest;
+                remainingPrincipal -= principal;
+                scheduleInstallment.push({
+                    month: i,
+                    payment: monthlyPayment,
+                    principal: principal,
+                    interest: interest,
+                    remaining: Math.max(0, remainingPrincipal)
+                });
+            }
+
+            // 显示结果
+            document.getElementById('res-principal-monthly').textContent = formatMoney(schedulePrincipal[0].payment);
+            document.getElementById('res-installment-monthly').textContent = formatMoney(monthlyPayment);
+            document.getElementById('res-total').textContent = formatMoney(loanAmount) + ' 元';
+            document.getElementById('res-repay-total').textContent = formatMoney(loanAmount + totalInterestPrincipal) + ' 元';
+            document.getElementById('res-interest').textContent = formatMoney(totalInterestPrincipal) + ' 元';
+            document.getElementById('res-savings').textContent = formatMoney(Math.abs(totalInterestPrincipal - totalInterestInstallment)) + ' 元';
+
+            // 还款计划表
+            if (document.getElementById('showSchedule').checked) {
+                document.getElementById('scheduleContainer').style.display = 'block';
+                const tbody = document.getElementById('scheduleBody');
+                tbody.innerHTML = '';
+                
+                const schedule = currentType === 'equalPrincipal' ? schedulePrincipal : scheduleInstallment;
+                const displayMonths = Math.min(12, months);
+                
+                for (let i = 0; i < displayMonths; i++) {
+                    const row = schedule[i];
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${row.month}</td>
+                            <td>${formatMoney(row.payment)}</td>
+                            <td>${formatMoney(row.principal)}</td>
+                            <td>${formatMoney(row.interest)}</td>
+                            <td>${formatMoney(row.remaining)}</td>
+                        </tr>
+                    `;
+                }
+            } else {
+                document.getElementById('scheduleContainer').style.display = 'none';
+            }
+
+            document.getElementById('result').classList.add('show');
+        }
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

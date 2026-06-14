@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="免费的在线OG标签生成器，帮助您为网站创建Facebook和LinkedIn分享所需的meta标签代码。">
+    <meta name="keywords" content="OG标签, Open Graph, Facebook分享, LinkedIn分享, meta标签">
+    <title>OG标签生成器 - DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/open-graph-generator.html">
+    <meta property="og:title" content="OG标签生成器 - DevToolBox">
+    <meta property="og:description" content="免费的在线OG标签生成器，帮助您为网站创建Facebook和LinkedIn分享所需的meta标签代码。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/open-graph-generator.html">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "OG标签生成器",
+        "description": "免费的在线OG标签生成器，帮助您为网站创建Facebook和LinkedIn分享所需的meta标签代码。",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .result-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .result-title {
+            font-weight: 700;
+            font-size: 18px;
+            color: #166534;
+            margin-bottom: 12px;
+        }
+        .code-output {
+            background: #1F2937;
+            color: #E5E7EB;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .preview-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 500px;
+            margin: 20px auto 0;
+        }
+        .preview-img {
+            width: 100%;
+            height: 250px;
+            background: #E5E7EB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9CA3AF;
+        }
+        .preview-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .preview-content {
+            padding: 16px;
+        }
+        .preview-site {
+            font-size: 12px;
+            color: #6B7280;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .preview-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .preview-desc {
+            font-size: 14px;
+            color: #6B7280;
+            line-height: 1.4;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 6px;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🌐 OG标签生成器</h1>
+            <p>为Facebook和LinkedIn分享生成完整的Open Graph meta标签代码</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label for="ogTitle">页面标题 (og:title)</label>
+                <input type="text" id="ogTitle" placeholder="输入分享时显示的标题" value="示例标题 - 我的网站">
+            </div>
+            <div class="form-group">
+                <label for="ogDesc">页面描述 (og:description)</label>
+                <textarea id="ogDesc" rows="3" placeholder="输入分享时显示的描述">这是一个示例描述，用于展示OG标签的效果。</textarea>
+            </div>
+            <div class="form-group">
+                <label for="ogUrl">页面URL (og:url)</label>
+                <input type="url" id="ogUrl" placeholder="https://example.com/page" value="https://example.com/page">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="ogType">类型 (og:type)</label>
+                    <select id="ogType">
+                        <option value="website">website (网站)</option>
+                        <option value="article">article (文章)</option>
+                        <option value="product">product (产品)</option>
+                        <option value="music.song">music.song (歌曲)</option>
+                        <option value="video.movie">video.movie (电影)</option>
+                        <option value="book">book (书籍)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ogSiteName">网站名称 (og:site_name)</label>
+                    <input type="text" id="ogSiteName" placeholder="网站名称" value="我的网站">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ogImage">图片URL (og:image)</label>
+                <input type="url" id="ogImage" placeholder="https://example.com/image.jpg" value="https://picsum.photos/1200/630">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="ogImageWidth">图片宽度 (og:image:width)</label>
+                    <input type="number" id="ogImageWidth" placeholder="1200" value="1200">
+                </div>
+                <div class="form-group">
+                    <label for="ogImageHeight">图片高度 (og:image:height)</label>
+                    <input type="number" id="ogImageHeight" placeholder="630" value="630">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="ogLocale">语言区域 (og:locale)</label>
+                    <select id="ogLocale">
+                        <option value="zh_CN">中文 (简体) - zh_CN</option>
+                        <option value="zh_TW">中文 (繁体) - zh_TW</option>
+                        <option value="en_US">English (US) - en_US</option>
+                        <option value="en_GB">English (UK) - en_GB</option>
+                        <option value="ja_JP">日本語 - ja_JP</option>
+                        <option value="ko_KR">한국어 - ko_KR</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ogTwitter">Twitter卡片类型</label>
+                    <select id="ogTwitter">
+                        <option value="summary">Summary Card</option>
+                        <option value="summary_large_image">Summary Large Image</option>
+                        <option value="none">不生成Twitter标签</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="generateOG()">🎯 生成标签代码</button>
+                <button class="btn btn-secondary" onclick="previewOG()">👁 预览效果</button>
+            </div>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title">📋 生成的OG标签代码</div>
+                <pre class="code-output" id="codeOutput"></pre>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="copyCode()">📋 复制代码</button>
+                    <button class="btn btn-secondary" onclick="downloadCode()">💾 下载代码</button>
+                </div>
+            </div>
+
+            <div class="result-box" id="previewBox">
+                <div class="result-title">👁 社交媒体预览效果</div>
+                <div class="preview-card">
+                    <div class="preview-img" id="previewImg">
+                        <span>图片预览</span>
+                    </div>
+                    <div class="preview-content">
+                        <div class="preview-site" id="previewSite">example.com</div>
+                        <div class="preview-title" id="previewTitle">示例标题 - 我的网站</div>
+                        <div class="preview-desc" id="previewDesc">这是一个示例描述，用于展示OG标签的效果。</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>什么是OG标签？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    OG标签（Open Graph Protocol）是Facebook等社交媒体平台使用的meta标签协议。通过在网页中添加OG标签，可以控制分享到社交平台时显示的标题、描述、图片等信息，提升分享效果和用户体验。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>OG图片的最佳尺寸是多少？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    建议使用1200x630像素的图片，这是Facebook和LinkedIn推荐的分享图片尺寸。图片过小可能被放大导致模糊，过大则可能显示不完整。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>生成后如何添加到网站？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    将生成的meta标签代码复制到网页的&lt;head&gt;&lt;/head&gt;标签之间即可。每个页面可以有不同的OG标签，建议动态生成以匹配页面内容。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>如何验证OG标签是否生效？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    可以使用 Facebook Sharing Debugger (https://developers.facebook.com/tools/debug/) 或 LinkedIn Post Inspector (https://www.linkedin.com/post-inspector/) 来检查和刷新缓存的OG标签。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>Twitter和Facebook的标签可以共用吗？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    大部分OG标签可以被Twitter识别使用，但Twitter也有自己的twitter:标签。建议同时包含两种标签以确保在所有平台上都能正确显示。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="meta-tag-generator.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">Meta 标签生成器</div><div class="r-desc">SEO标签</div></a>
+        <a href="twitter-card-generator.html" class="related-card"><div class="r-icon">🐦</div><div class="r-title">Twitter Card 生成器</div><div class="r-desc">卡片标签</div></a>
+        <a href="robots-txt-generator.html" class="related-card"><div class="r-icon">🤖</div><div class="r-title">robots.txt 生成器</div><div class="r-desc">生成规则</div></a>
+        <a href="url-slug-generator.html" class="related-card"><div class="r-icon">🔗</div><div class="r-title">URL Slug 生成器</div><div class="r-desc">SEO友好URL</div></a>
+        <a href="url-parser.html" class="related-card"><div class="r-icon">🔍</div><div class="r-title">URL 解析器</div><div class="r-desc">URL组件解析</div></a>
+        <a href="http-status-codes.html" class="related-card"><div class="r-icon">📡</div><div class="r-title">HTTP 状态码查询</div><div class="r-desc">状态码查询</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        function generateOG() {
+            const title = document.getElementById('ogTitle').value;
+            const desc = document.getElementById('ogDesc').value;
+            const url = document.getElementById('ogUrl').value;
+            const type = document.getElementById('ogType').value;
+            const siteName = document.getElementById('ogSiteName').value;
+            const image = document.getElementById('ogImage').value;
+            const imageWidth = document.getElementById('ogImageWidth').value;
+            const imageHeight = document.getElementById('ogImageHeight').value;
+            const locale = document.getElementById('ogLocale').value;
+            const twitter = document.getElementById('ogTwitter').value;
+
+            let code = `<!-- Open Graph Tags -->
+<meta property="og:title" content="${escapeHtml(title)}" />
+<meta property="og:description" content="${escapeHtml(desc)}" />
+<meta property="og:url" content="${escapeHtml(url)}" />
+<meta property="og:type" content="${type}" />
+<meta property="og:site_name" content="${escapeHtml(siteName)}" />
+<meta property="og:image" content="${escapeHtml(image)}" />
+<meta property="og:image:width" content="${imageWidth}" />
+<meta property="og:image:height" content="${imageHeight}" />
+<meta property="og:locale" content="${locale}" />`;
+
+            if (twitter !== 'none') {
+                code += `
+
+<!-- Twitter Card Tags -->
+<meta name="twitter:card" content="${twitter}" />
+<meta name="twitter:title" content="${escapeHtml(title)}" />
+<meta name="twitter:description" content="${escapeHtml(desc)}" />
+<meta name="twitter:image" content="${escapeHtml(image)}" />`;
+            }
+
+            document.getElementById('codeOutput').textContent = code;
+            document.getElementById('resultBox').classList.add('show');
+            document.getElementById('previewBox').classList.remove('show');
+        }
+
+        function previewOG() {
+            const title = document.getElementById('ogTitle').value || '示例标题';
+            const desc = document.getElementById('ogDesc').value || '示例描述';
+            const url = document.getElementById('ogUrl').value || 'https://example.com';
+            const image = document.getElementById('ogImage').value;
+            const siteName = document.getElementById('ogSiteName').value || 'example.com';
+
+            try {
+                const urlObj = new URL(url);
+                document.getElementById('previewSite').textContent = urlObj.hostname;
+            } catch {
+                document.getElementById('previewSite').textContent = siteName;
+            }
+
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('previewDesc').textContent = desc;
+
+            const previewImg = document.getElementById('previewImg');
+            if (image) {
+                previewImg.innerHTML = `<img src="${escapeHtml(image)}" alt="Preview" onerror="this.parentElement.innerHTML='<span>图片加载失败</span>'">`;
+            } else {
+                previewImg.innerHTML = '<span>图片预览</span>';
+            }
+
+            document.getElementById('previewBox').classList.add('show');
+            document.getElementById('resultBox').classList.remove('show');
+        }
+
+        function copyCode() {
+            const code = document.getElementById('codeOutput').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('代码已复制到剪贴板！');
+            });
+        }
+
+        function downloadCode() {
+            const code = document.getElementById('codeOutput').textContent;
+            const blob = new Blob([code], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'og-tags.html';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+    </script>
+</body>
+</html>

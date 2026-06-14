@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="字符计数器 - 统计文本字符数、中文字符、英文字母、数字、空格、标点，支持UTF-8/UTF-16编码字节数计算。">
+    <meta name="keywords" content="字符计数器,字符统计,字数统计,编码计算,UTF-8,UTF-16,在线工具">
+    <title>字符计数器 - 各类字符统计编码计算 | DevToolBox</title>
+    <link rel="canonical" href="https://devtoolhub.cc/character-counter.html">
+    <meta property="og:title" content="字符计数器 - 各类字符统计编码计算">
+    <meta property="og:description" content="统计文本字符数、中文字符、英文字母、数字、空点，支持UTF-8/UTF-16编码字节数计算。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devtoolhub.cc/character-counter.html">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "字符计数器",
+        "description": "各类字符统计，编码长度计算",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --error: #EF4444;
+            --radius: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--bg);
+            min-height: 150px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: #F3F4F6;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .ad-slot {
+            background: #F3F4F6;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 24px 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .stat-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .stat-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .stat-highlight .stat-value {
+            color: white;
+        }
+        .stat-highlight .stat-label {
+            color: rgba(255,255,255,0.8);
+        }
+        .encoding-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        .encoding-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .encoding-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .encoding-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .encoding-name {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .encoding-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .encoding-unit {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-left: 4px;
+        }
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+        .faq-section { margin-top: 48px; }
+        .faq-section h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.open .faq-a { display: block; }
+        .faq-item.open .faq-toggle { transform: rotate(180deg); }
+        .faq-toggle { transition: transform 0.2s; }
+        .footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 48px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 6px;
+        }
+        .footer a:hover {
+            color: var(--primary);
+        }
+        .live-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 12px 16px;
+            background: #FEF3C7;
+            border: 1px solid #FCD34D;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .live-stats span {
+            white-space: nowrap;
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 24px; }
+            .hero p { font-size: 16px; }
+            .tool-card { padding: 20px; }
+            .btn-group { flex-direction: column; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .encoding-grid { grid-template-columns: 1fr; }
+        }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links">
+                <a href="#tool">Tool</a>
+                <a href="#faq">FAQ</a>
+            
+                <a href="/tools.html">分类浏览</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>🔢 字符计数器</h1>
+            <p>精准统计各类字符数量，支持UTF-8/UTF-16编码计算</p>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="tool-card" id="tool">
+            <div class="form-group">
+                <label for="inputText">输入文本</label>
+                <textarea id="inputText" placeholder="请输入或粘贴要统计的文本..." oninput="countCharacters()"></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="clearText()">
+                    <span>🗑️</span> 清空
+                </button>
+                <button class="btn btn-secondary" onclick="pasteText()">
+                    <span>📋</span> 粘贴
+                </button>
+            </div>
+
+            <div class="live-stats" id="liveStats" style="display: none;">
+                <span>📊 总字符: <strong id="liveTotal">0</strong></span>
+                <span>📝 中文字符: <strong id="liveChinese">0</strong></span>
+                <span>🔤 英文字母: <strong id="liveEnglish">0</strong></span>
+                <span>🔢 数字: <strong id="liveDigits">0</strong></span>
+            </div>
+
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card stat-highlight">
+                    <div class="stat-value" id="totalChars">0</div>
+                    <div class="stat-label">总字符数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="chineseChars">0</div>
+                    <div class="stat-label">中文字符</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="englishChars">0</div>
+                    <div class="stat-label">英文字母</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="digitChars">0</div>
+                    <div class="stat-label">数字</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="spaceChars">0</div>
+                    <div class="stat-label">空格</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="punctuationChars">0</div>
+                    <div class="stat-label">标点符号</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="lineBreaks">0</div>
+                    <div class="stat-label">换行符</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="otherChars">0</div>
+                    <div class="stat-label">其他字符</div>
+                </div>
+            </div>
+
+            <div class="encoding-section">
+                <h3>📦 编码字节数计算</h3>
+                <div class="encoding-grid">
+                    <div class="encoding-card">
+                        <div class="encoding-name">UTF-8 编码</div>
+                        <div class="encoding-value"><span id="utf8Bytes">0</span><span class="encoding-unit">字节</span></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="utf8Progress" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="encoding-card">
+                        <div class="encoding-name">UTF-16 编码</div>
+                        <div class="encoding-value"><span id="utf16Bytes">0</span><span class="encoding-unit">字节</span></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="utf16Progress" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="encoding-card">
+                        <div class="encoding-name">URL 编码</div>
+                        <div class="encoding-value"><span id="urlBytes">0</span><span class="encoding-unit">字符</span></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="urlProgress" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="ad-slot">Ad Space</div>
+
+        <section class="faq-section" id="faq">
+            <h2>常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>UTF-8和UTF-16编码有什么区别？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    UTF-8是一种变长编码，中文通常占用3个字节，英文占用1个字节，是目前网页最通用的编码方式。UTF-16是定长或变长编码，大部分中文占用2个字节（代理对除外），英文也占用2个字节。数据库和一些系统接口可能要求特定的编码格式。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>为什么总字符数和UTF-8字节数不同？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    这是因为不同类型的字符在UTF-8编码下占用的字节数不同。英文字母、数字、标点占用1个字节，而中文、emoji表情等占用2-4个字节。例如"Hello你好"有8个字符，但UTF-8编码后是11个字节。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>标点符号包括哪些？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    本工具统计的标点符号包括：中文标点（如，。！？；：""''等）和英文标点（如 ,.!?:;"'()[]{}等）。不包括空格和换行符，这些会单独统计。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>这个工具可以用于微博/微信等平台字数限制吗？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    可以帮助估算。但需要注意，某些平台（如微博）使用的是Unicode码点计数，而不是可视字符数。emoji和特殊符号在不同平台可能有不同的计数方式，建议以平台实际显示为准。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">
+                    <span>什么是代理对（Surrogate Pair）？</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-a">
+                    一些emoji和特殊Unicode字符（如某些生僻字）需要用两个UTF-16码单元表示，称为代理对。在UTF-8中，这些字符可能占用4个字节。本工具的UTF-16计数会特别标注包含代理对的字符数量。
+                </div>
+            </div>
+        </section>
+    
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="text-diff.html" class="related-card"><div class="r-icon">⚡</div><div class="r-title">文本差异对比</div><div class="r-desc">差异高亮</div></a>
+        <a href="word-counter.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">字数统计器</div><div class="r-desc">中英文统计</div></a>
+        <a href="whitespace-remover.html" class="related-card"><div class="r-icon">🧹</div><div class="r-title">空白字符清理器</div><div class="r-desc">移除空格空行</div></a>
+        <a href="text-reverser.html" class="related-card"><div class="r-icon">🔃</div><div class="r-title">文本反转器</div><div class="r-desc">反转文本</div></a>
+        <a href="remove-duplicate-lines.html" class="related-card"><div class="r-icon">✂</div><div class="r-title">去除重复行</div><div class="r-desc">智能去重</div></a>
+        <a href="sort-lines.html" class="related-card"><div class="r-icon">📊</div><div class="r-title">文本行排序</div><div class="r-desc">多种排序</div></a>
+        </div>
+    </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        function countCharacters() {
+            const text = document.getElementById('inputText').value;
+            const len = text.length;
+            
+            // 基本统计
+            let chineseChars = 0;
+            let englishChars = 0;
+            let digitChars = 0;
+            let spaceChars = 0;
+            let punctuationChars = 0;
+            let lineBreaks = 0;
+            let otherChars = 0;
+            
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const code = char.charCodeAt(0);
+                
+                if (isChineseChar(char)) {
+                    chineseChars++;
+                } else if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
+                    englishChars++;
+                } else if (code >= 48 && code <= 57) {
+                    digitChars++;
+                } else if (char === ' ') {
+                    spaceChars++;
+                } else if (char === '\n' || char === '\r') {
+                    lineBreaks++;
+                } else if (isPunctuation(char)) {
+                    punctuationChars++;
+                } else {
+                    otherChars++;
+                }
+            }
+            
+            // 更新显示
+            document.getElementById('totalChars').textContent = len;
+            document.getElementById('chineseChars').textContent = chineseChars;
+            document.getElementById('englishChars').textContent = englishChars;
+            document.getElementById('digitChars').textContent = digitChars;
+            document.getElementById('spaceChars').textContent = spaceChars;
+            document.getElementById('punctuationChars').textContent = punctuationChars;
+            document.getElementById('lineBreaks').textContent = lineBreaks;
+            document.getElementById('otherChars').textContent = otherChars;
+            
+            // 实时统计
+            document.getElementById('liveTotal').textContent = len;
+            document.getElementById('liveChinese').textContent = chineseChars;
+            document.getElementById('liveEnglish').textContent = englishChars;
+            document.getElementById('liveDigits').textContent = digitChars;
+            
+            if (len > 0) {
+                document.getElementById('liveStats').style.display = 'flex';
+            } else {
+                document.getElementById('liveStats').style.display = 'none';
+            }
+            
+            // 编码计算
+            calculateEncoding(text);
+        }
+        
+        function isChineseChar(char) {
+            const code = char.charCodeAt(0);
+            // 中文范围：4E00-9FFF（常用汉字），3400-4DBF（扩展汉字），2E80-2EFF（扩展部首）等
+            return (code >= 0x4E00 && code <= 0x9FFF) || 
+                   (code >= 0x3400 && code <= 0x4DBF) ||
+                   (code >= 0x2E80 && code <= 0x2EFF) ||
+                   (code >= 0xF900 && code <= 0xFAFF) ||
+                   (code >= 0x3000 && code <= 0x303F); // 中文标点范围
+        }
+        
+        function isPunctuation(char) {
+            // 英文标点和符号范围
+            const code = char.charCodeAt(0);
+            if (code >= 33 && code <= 47) return true;  // ! " # $ % & ' ( ) * + , - . /
+            if (code >= 58 && code <= 64) return true;  // : ; < = > ? @
+            if (code >= 91 && code <= 96) return true;  // [ \ ] ^ _ ` 
+            if (code >= 123 && code <= 126) return true; // { | } ~
+            
+            // 中文标点（已在isChineseChar中处理了一部分，这里补充）
+            const chinesePunct = '，。！？；：""''（）【】《》、·～…—'.split('');
+            return chinesePunct.includes(char);
+        }
+        
+        function calculateEncoding(text) {
+            // UTF-8 字节数
+            let utf8Bytes = 0;
+            let surrogatePairs = 0;
+            
+            for (let i = 0; i < text.length; i++) {
+                const code = text.charCodeAt(i);
+                
+                if (code >= 0xD800 && code <= 0xDBFF) {
+                    // UTF-16 代理对开始
+                    surrogatePairs++;
+                    utf8Bytes += 4; // 代理对在UTF-8中占4字节
+                    i++; // 跳过下一个代理
+                } else if (code <= 0x7F) {
+                    utf8Bytes += 1; // ASCII
+                } else if (code <= 0x7FF) {
+                    utf8Bytes += 2; // 2字节字符
+                } else if (code <= 0xFFFF) {
+                    utf8Bytes += 3; // 3字节字符（大多数汉字）
+                } else {
+                    utf8Bytes += 4; // 4字节字符（emoji等）
+                }
+            }
+            
+            // UTF-16 字节数（2字节每字符，代理对4字节）
+            const utf16Bytes = text.length * 2 + surrogatePairs * 2;
+            
+            // URL编码后长度
+            const urlEncoded = encodeURIComponent(text);
+            const urlBytes = urlEncoded.length;
+            
+            // 更新显示
+            document.getElementById('utf8Bytes').textContent = utf8Bytes;
+            document.getElementById('utf16Bytes').textContent = utf16Bytes;
+            document.getElementById('urlBytes').textContent = urlBytes;
+            
+            // 进度条（以500字节为参考最大值）
+            const maxBytes = 500;
+            document.getElementById('utf8Progress').style.width = Math.min(utf8Bytes / maxBytes * 100, 100) + '%';
+            document.getElementById('utf16Progress').style.width = Math.min(utf16Bytes / maxBytes * 100, 100) + '%';
+            document.getElementById('urlProgress').style.width = Math.min(urlBytes / maxBytes * 100, 100) + '%';
+        }
+        
+        function clearText() {
+            document.getElementById('inputText').value = '';
+            countCharacters();
+        }
+        
+        async function pasteText() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('inputText').value = text;
+                countCharacters();
+            } catch (err) {
+                // Fallback
+                const textarea = document.getElementById('inputText');
+                textarea.focus();
+                document.execCommand('paste');
+            }
+        }
+        
+        // FAQ Toggle
+        document.querySelectorAll('.faq-q').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+        
+        // 初始化
+        countCharacters();
+    </script>
+</body>
+</html>

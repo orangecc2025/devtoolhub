@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="aQ4PQcHEgC8IDRDPx_gL4g2Imco_jnuk2wVbZq_lhFE" />
+    <meta name="msvalidate.01" content="58D6FD59EAEEA9D1ACA896ADA73EFA23" />
+    <meta name="baidu-site-verification" content="codeva-eenyxH2S31" />
+    <meta name="description" content="Parse and analyze any User Agent string to identify browser, version, engine, OS, and device type. Detect mobile, desktop, and crawlers." />
+    <meta name="keywords" content="User Agent parser, UA parser, browser detection, device detection, user agent string" />
+    <title>User Agent Parser - DevToolBox</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8352129303807728" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 14px;
+        }
+        .header {
+            background: #4F46E5;
+            padding: 20px 0;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .logo {
+            color: white;
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .btn {
+            padding: 12px 24px;
+            background: #4F46E5;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #4338ca;
+        }
+        .btn-secondary {
+            background: #6b7280;
+        }
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .result-item {
+            background: #f9f9f9;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        .result-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .result-value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+            word-break: break-all;
+        }
+        .ua-display {
+            background: #1f2937;
+            color: #10b981;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 16px 0;
+            position: relative;
+        }
+        .ua-display .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .device-type {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        .device-mobile {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .device-desktop {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+        .device-bot {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .ua-template {
+            background: #f9f9f9;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ua-template:hover {
+            background: #e5e5e5;
+        }
+        .ua-template-name {
+            font-weight: 500;
+            color: #333;
+        }
+        .ua-template-badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #e0e0e0;
+            color: #666;
+        }
+        .generator-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .generator-item label {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 6px;
+        }
+        .generator-item select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+        .generator-item select:focus {
+            outline: none;
+            border-color: #4F46E5;
+        }
+        .help-text {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #92400e;
+        }
+        .footer {
+            background: #1f2937;
+            color: #9ca3af;
+            padding: 30px 0;
+            text-align: center;
+        }
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        [data-lang="en"] { display: none; }
+        body.en [data-lang="zh"] { display: none; }
+        body.en [data-lang="en"] { display: block; }
+    .related-tools{margin-top:40px;padding-top:32px;border-top:1px solid var(--border)}.related-tools h2{font-size:20px;font-weight:700;margin-bottom:16px}.related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.related-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;text-decoration:none;color:var(--text);transition:all .2s;display:block}.related-card:hover{border-color:var(--primary);background:var(--primary-light)}.related-card .r-icon{font-size:20px;margin-bottom:6px}.related-card .r-title{font-size:14px;font-weight:600}.related-card .r-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}.nav-links{display:flex;gap:16px}.nav-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;font-weight:500}.nav-links a:hover{color:var(--primary)}
+</style>
+</head>
+<body>
+    <button class="lang-toggle" onclick="toggleLang()">
+        <span data-lang="zh">EN</span>
+        <span data-lang="en">中文</span>
+    </button>
+
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">🛠 DevToolBox</a>
+            <nav class="nav-links"><a href="/tools.html">分类浏览</a></nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1 data-lang="zh">🔍 User Agent 解析器</h1>
+        <h1 data-lang="en">🔍 User Agent Parser</h1>
+        
+        <p class="subtitle" data-lang="zh">解析任意User Agent字符串，识别浏览器、操作系统和设备类型</p>
+        <p class="subtitle" data-lang="en">Parse any User Agent string to identify browser, OS, and device type</p>
+
+        <div class="help-text" data-lang="zh">
+            💡 提示：本工具会自动检测您当前的浏览器UA，也支持粘贴任意UA字符串进行解析
+        </div>
+        <div class="help-text" data-lang="en">
+            💡 Tip: This tool auto-detects your current browser UA and supports parsing any UA string
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">🌐 当前浏览器UA</div>
+            <div class="card-title" data-lang="en">🌐 Your Current Browser UA</div>
+            
+            <div id="currentUA" class="ua-display">
+                <span data-lang="zh">检测中...</span>
+                <span data-lang="en">Detecting...</span>
+                <button class="copy-btn" onclick="copyCurrentUA()" data-lang="zh">复制</button>
+                <button class="copy-btn" onclick="copyCurrentUA()" data-lang="en">Copy</button>
+            </div>
+            <div id="currentUAResult"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">📋 解析自定义UA</div>
+            <div class="card-title" data-lang="en">📋 Parse Custom UA</div>
+            
+            <textarea id="uaInput" data-lang-placeholder-zh="粘贴User Agent字符串..." data-lang-placeholder-en="Paste User Agent string..."></textarea>
+            
+            <div class="btn-group">
+                <button class="btn" onclick="parseUA()" data-lang="zh">解析</button>
+                <button class="btn" onclick="parseUA()" data-lang="en">Parse</button>
+                <button class="btn btn-secondary" onclick="clearUA()" data-lang="zh">清空</button>
+                <button class="btn btn-secondary" onclick="clearUA()" data-lang="en">Clear</button>
+            </div>
+            
+            <div id="parseResult"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">📚 常见UA模板库</div>
+            <div class="card-title" data-lang="en">📚 Common UA Templates</div>
+            
+            <div id="uaTemplates"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" data-lang="zh">⚙️ 自定义UA生成器</div>
+            <div class="card-title" data-lang="en">⚙️ Custom UA Generator</div>
+            
+            <div class="generator-row">
+                <div class="generator-item">
+                    <label data-lang="zh">浏览器</label>
+                    <label data-lang="en">Browser</label>
+                    <select id="genBrowser">
+                        <option value="chrome-win">Chrome (Windows)</option>
+                        <option value="chrome-mac">Chrome (Mac)</option>
+                        <option value="chrome-android">Chrome (Android)</option>
+                        <option value="safari-mac">Safari (Mac)</option>
+                        <option value="safari-ios">Safari (iOS)</option>
+                        <option value="firefox-win">Firefox (Windows)</option>
+                        <option value="firefox-mac">Firefox (Mac)</option>
+                        <option value="edge-win">Edge (Windows)</option>
+                        <option value="opera-win">Opera (Windows)</option>
+                    </select>
+                </div>
+                <div class="generator-item">
+                    <label data-lang="zh">设备类型</label>
+                    <label data-lang="en">Device Type</label>
+                    <select id="genDevice">
+                        <option value="desktop" data-lang="zh">桌面端" data-lang-en="Desktop">桌面端</option>
+                        <option value="mobile" data-lang="zh">移动端" data-lang-en="Mobile">移动端</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="result-item" style="margin-top: 16px;">
+                <div class="result-label" data-lang="zh">生成的UA</div>
+                <div class="result-label" data-lang="en">Generated UA</div>
+                <div id="generatedUA" class="result-value" style="font-family: monospace; font-size: 12px; background: #f0f0f0; padding: 12px; border-radius: 6px; margin-top: 8px; word-break: break-all;"></div>
+                <button class="btn" style="margin-top: 12px;" onclick="parseAndDisplayUA(document.getElementById('generatedUA').textContent)" data-lang="zh">解析此UA</button>
+                <button class="btn" style="margin-top: 12px;" onclick="parseAndDisplayUA(document.getElementById('generatedUA').textContent)" data-lang="en">Parse This UA</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 DevToolBox. <a href="/about.html">关于我们</a> | <a href="/privacy.html">隐私政策</a> | <a href="/terms.html">使用条款</a> | <a href="/contact.html">联系我们</a></p>
+    </footer>
+
+    <script>
+        let currentLang = 'zh';
+        let currentUA = '';
+
+        const uaTemplates = [
+            { name: 'Chrome Windows', nameEn: 'Chrome Windows', ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', badge: 'Desktop' },
+            { name: 'Chrome macOS', nameEn: 'Chrome macOS', ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', badge: 'Desktop' },
+            { name: 'Chrome Android', nameEn: 'Chrome Android', ua: 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.144 Mobile Safari/537.36', badge: 'Mobile' },
+            { name: 'Safari macOS', nameEn: 'Safari macOS', ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15', badge: 'Desktop' },
+            { name: 'Safari iPhone', nameEn: 'Safari iPhone', ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1', badge: 'Mobile' },
+            { name: 'Safari iPad', nameEn: 'Safari iPad', ua: 'Mozilla/5.0 (iPad; CPU OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1', badge: 'Tablet' },
+            { name: 'Firefox Windows', nameEn: 'Firefox Windows', ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0', badge: 'Desktop' },
+            { name: 'Firefox macOS', nameEn: 'Firefox macOS', ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0', badge: 'Desktop' },
+            { name: 'Edge Windows', nameEn: 'Edge Windows', ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.2210.91', badge: 'Desktop' },
+            { name: 'Opera Windows', nameEn: 'Opera Windows', ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 OPR/106.0.0.0', badge: 'Desktop' },
+            { name: '微信 iOS', nameEn: 'WeChat iOS', ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.47 NetType/WIFI Language/zh_CN', badge: 'Mobile' },
+            { name: '微信 Android', nameEn: 'WeChat Android', ua: 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/120.0.6099.144 Mobile Safari/537.36 MicroMessenger/8.0.47.2480(0x2602F355) NetType/WIFI Language/zh_CN', badge: 'Mobile' },
+            { name: 'Googlebot', ua: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)', badge: 'Bot' },
+            { name: 'Bingbot', nameEn: 'Bingbot', ua: 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)', badge: 'Bot' },
+            { name: '百度爬虫', nameEn: 'Baidu Bot', ua: 'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)', badge: 'Bot' },
+        ];
+
+        const generatedUAs = {
+            'chrome-win': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'chrome-mac': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'chrome-android': 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.144 Mobile Safari/537.36',
+            'safari-mac': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15',
+            'safari-ios': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1',
+            'firefox-win': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0',
+            'firefox-mac': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0',
+            'edge-win': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.2210.91',
+            'opera-win': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 OPR/106.0.0.0',
+        };
+
+        function toggleLang() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            document.body.classList.toggle('en', currentLang === 'en');
+            updateTemplates();
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(currentLang === 'zh' ? '已复制！' : 'Copied!');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:8px;z-index:1000;';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        function parseUA(ua) {
+            if (!ua) return null;
+
+            const result = {
+                ua: ua,
+                browser: { name: 'Unknown', version: '' },
+                engine: { name: 'Unknown', version: '' },
+                os: { name: 'Unknown', version: '' },
+                device: { type: 'desktop', model: '' },
+                isBot: false,
+                isMobile: false,
+                isTablet: false
+            };
+
+            // Detect Bot
+            const botPatterns = /bot|crawl|spider|slurp|google|yahoo|bing|baidu|duckduck/i;
+            if (botPatterns.test(ua)) {
+                result.isBot = true;
+                result.device.type = 'bot';
+                if (/googlebot/i.test(ua)) result.browser.name = 'Googlebot';
+                else if (/bingbot/i.test(ua)) result.browser.name = 'Bingbot';
+                else if (/baiduspider/i.test(ua)) result.browser.name = 'Baiduspider';
+                else result.browser.name = 'Bot';
+                return result;
+            }
+
+            // Detect Device Type
+            if (/mobile|android|iphone|ipod/i.test(ua)) {
+                if (/tablet|ipad/i.test(ua)) {
+                    result.isTablet = true;
+                    result.device.type = 'tablet';
+                } else {
+                    result.isMobile = true;
+                    result.device.type = 'mobile';
+                }
+            }
+
+            // Detect Browser
+            if (/Edg\//i.test(ua)) {
+                result.browser.name = 'Microsoft Edge';
+                const match = ua.match(/Edg\/(\d+[\.\d]*)/);
+                if (match) result.browser.version = match[1];
+            } else if (/OPR\//i.test(ua) || /Opera/i.test(ua)) {
+                result.browser.name = 'Opera';
+                const match = ua.match(/(?:OPR|Opera)\/(\d+[\.\d]*)/);
+                if (match) result.browser.version = match[1];
+            } else if (/Chrome/i.test(ua) && !/Chromium/i.test(ua)) {
+                result.browser.name = 'Google Chrome';
+                const match = ua.match(/Chrome\/(\d+[\.\d]*)/);
+                if (match) result.browser.version = match[1];
+            } else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) {
+                result.browser.name = 'Safari';
+                const match = ua.match(/Version\/(\d+[\.\d]*)/);
+                if (match) result.browser.version = match[1];
+            } else if (/Firefox/i.test(ua)) {
+                result.browser.name = 'Mozilla Firefox';
+                const match = ua.match(/Firefox\/(\d+[\.\d]*)/);
+                if (match) result.browser.version = match[1];
+            } else if (/MSIE|Trident/i.test(ua)) {
+                result.browser.name = 'Internet Explorer';
+                const match = ua.match(/(?:MSIE |rv:)(\d+[\.\d]*)/);
+                if (match) result.browser.version = match[1];
+            }
+
+            // Detect Engine
+            if (/AppleWebKit/i.test(ua)) {
+                result.engine.name = 'Apple WebKit';
+                const match = ua.match(/AppleWebKit\/(\d+[\.\d]*)/);
+                if (match) result.engine.version = match[1];
+            } else if (/Gecko/i.test(ua)) {
+                result.engine.name = 'Gecko';
+                const match = ua.match(/Gecko\/(\d+)/);
+                if (match) result.engine.version = match[1];
+            } else if (/Trident/i.test(ua)) {
+                result.engine.name = 'Trident';
+            }
+
+            // Detect OS
+            if (/Windows NT 10/i.test(ua)) {
+                result.os.name = 'Windows';
+                result.os.version = '10/11';
+            } else if (/Windows NT 6\.3/i.test(ua)) {
+                result.os.name = 'Windows';
+                result.os.version = '8.1';
+            } else if (/Windows NT 6\.2/i.test(ua)) {
+                result.os.name = 'Windows';
+                result.os.version = '8';
+            } else if (/Windows NT 6\.1/i.test(ua)) {
+                result.os.name = 'Windows';
+                result.os.version = '7';
+            } else if (/Mac OS X/i.test(ua)) {
+                result.os.name = 'macOS';
+                const match = ua.match(/Mac OS X (\d+[_\d]*)/i);
+                if (match) {
+                    result.os.version = match[1].replace(/_/g, '.');
+                }
+            } else if (/Android/i.test(ua)) {
+                result.os.name = 'Android';
+                const match = ua.match(/Android (\d+[\.\d]*)/);
+                if (match) result.os.version = match[1];
+            } else if (/iPhone|iPad|iPod/i.test(ua)) {
+                result.os.name = 'iOS';
+                const match = ua.match(/OS (\d+[_\d]*)/i);
+                if (match) {
+                    result.os.version = match[1].replace(/_/g, '.');
+                }
+            } else if (/Linux/i.test(ua)) {
+                result.os.name = 'Linux';
+            } else if (/CrOS/i.test(ua)) {
+                result.os.name = 'Chrome OS';
+            }
+
+            // Detect Device Model
+            if (/iPhone/i.test(ua)) {
+                const match = ua.match(/iPhone OS (\d+[_\d]*)/i);
+                if (match) result.device.model = 'iPhone';
+            } else if (/iPad/i.test(ua)) {
+                result.device.model = 'iPad';
+            } else if (/Pixel/i.test(ua)) {
+                result.device.model = 'Google Pixel';
+            } else if (/Samsung/i.test(ua)) {
+                result.device.model = 'Samsung';
+            }
+
+            // WeChat detection
+            if (/MicroMessenger/i.test(ua)) {
+                result.browser.name = 'WeChat';
+                const match = ua.match(/MicroMessenger\/(\d+[\.\d]*)/);
+                if (match) result.browser.version = match[1];
+            }
+
+            return result;
+        }
+
+        function displayResult(parsed, container) {
+            const isMobile = parsed.isMobile;
+            const isTablet = parsed.isTablet;
+            const isBot = parsed.isBot;
+
+            let deviceClass = 'device-desktop';
+            let deviceText = currentLang === 'zh' ? '🖥️ 桌面端' : '🖥️ Desktop';
+            
+            if (isMobile) {
+                deviceClass = 'device-mobile';
+                deviceText = currentLang === 'zh' ? '📱 移动端' : '📱 Mobile';
+            } else if (isTablet) {
+                deviceClass = 'device-mobile';
+                deviceText = currentLang === 'zh' ? '📲 平板' : '📲 Tablet';
+            } else if (isBot) {
+                deviceClass = 'device-bot';
+                deviceText = currentLang === '🤖 爬虫/Bot';
+            }
+
+            container.innerHTML = `
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-label" data-lang="zh">浏览器</div>
+                        <div class="result-label" data-lang="en">Browser</div>
+                        <div class="result-value">${parsed.browser.name} ${parsed.browser.version}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label" data-lang="zh">渲染引擎</div>
+                        <div class="result-label" data-lang="en">Engine</div>
+                        <div class="result-value">${parsed.engine.name} ${parsed.engine.version}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">${currentLang === 'zh' ? '操作系统' : 'Operating System'}</div>
+                        <div class="result-value">${parsed.os.name} ${parsed.os.version}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label" data-lang="zh">设备类型</div>
+                        <div class="result-label" data-lang="en">Device Type</div>
+                        <div class="result-value">${parsed.device.model || '-'}</div>
+                    </div>
+                </div>
+                <span class="device-type ${deviceClass}">${deviceText}</span>
+            `;
+        }
+
+        function displayUA(ua, containerId) {
+            const displayEl = document.getElementById(containerId);
+            displayEl.innerHTML = ua + `
+                <button class="copy-btn" onclick="copyToClipboard('${ua.replace(/'/g, "\\'")}')">${currentLang === 'zh' ? '复制' : 'Copy'}</button>
+            `;
+        }
+
+        function detectCurrentUA() {
+            currentUA = navigator.userAgent;
+            displayUA(currentUA, 'currentUA');
+            const parsed = parseUA(currentUA);
+            if (parsed) {
+                displayResult(parsed, document.getElementById('currentUAResult'));
+            }
+        }
+
+        function parseUAInput() {
+            const input = document.getElementById('uaInput').value.trim();
+            if (!input) {
+                document.getElementById('parseResult').innerHTML = '';
+                return;
+            }
+            const parsed = parseUA(input);
+            const container = document.createElement('div');
+            displayResult(parsed, container);
+            displayUA(input, 'uaInput');
+            document.getElementById('parseResult').innerHTML = '';
+            document.getElementById('parseResult').appendChild(container);
+        }
+
+        function parseUA() {
+            const input = document.getElementById('uaInput').value.trim();
+            if (!input) {
+                document.getElementById('parseResult').innerHTML = '<div style="color:#dc2626;padding:12px;">' + (currentLang === 'zh' ? '请输入UA字符串' : 'Please enter a UA string') + '</div>';
+                return;
+            }
+            const parsed = parseUA(input);
+            const container = document.createElement('div');
+            displayResult(parsed, container);
+            document.getElementById('parseResult').innerHTML = '';
+            document.getElementById('parseResult').appendChild(container);
+        }
+
+        function parseAndDisplayUA(ua) {
+            if (!ua) return;
+            document.getElementById('uaInput').value = ua;
+            parseUA();
+        }
+
+        function clearUA() {
+            document.getElementById('uaInput').value = '';
+            document.getElementById('parseResult').innerHTML = '';
+        }
+
+        function copyCurrentUA() {
+            copyToClipboard(currentUA);
+        }
+
+        function updateTemplates() {
+            const container = document.getElementById('uaTemplates');
+            container.innerHTML = uaTemplates.map((t, i) => `
+                <div class="ua-template" onclick="useTemplate(${i})">
+                    <span class="ua-template-name">${currentLang === 'zh' ? t.name : (t.nameEn || t.name)}</span>
+                    <span class="ua-template-badge">${t.badge}</span>
+                </div>
+            `).join('');
+        }
+
+        function useTemplate(index) {
+            const template = uaTemplates[index];
+            document.getElementById('uaInput').value = template.ua;
+            parseUA();
+        }
+
+        function updateGeneratedUA() {
+            const browser = document.getElementById('genBrowser').value;
+            const ua = generatedUAs[browser] || '';
+            document.getElementById('generatedUA').textContent = ua;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            detectCurrentUA();
+            updateTemplates();
+            updateGeneratedUA();
+
+            document.getElementById('genBrowser').addEventListener('change', updateGeneratedUA);
+        });
+    </script>
+
+    <section class="related-tools">
+        <h2>相关工具</h2>
+        <div class="related-grid">
+        <a href="ip-lookup.html" class="related-card"><div class="r-icon">🖥</div><div class="r-title">IP 地址查询</div><div class="r-desc">IP查询</div></a>
+        <a href="screen-resolution.html" class="related-card"><div class="r-icon">📺</div><div class="r-title">屏幕分辨率检测</div><div class="r-desc">分辨率检测</div></a>
+        <a href="base64-tool.html" class="related-card"><div class="r-icon">🔄</div><div class="r-title">Base64 编码解码</div><div class="r-desc">文本和图片的Base64互转</div></a>
+        <a href="base32-encoder.html" class="related-card"><div class="r-icon">🔐</div><div class="r-title">Base32 编解码</div><div class="r-desc">文本与Base32互转</div></a>
+        <a href="url-encoder.html" class="related-card"><div class="r-icon">🌐</div><div class="r-title">URL 编解码器</div><div class="r-desc">URL编码/解码</div></a>
+        <a href="html-entity-encoder.html" class="related-card"><div class="r-icon">🏷</div><div class="r-title">HTML 实体编码/解码</div><div class="r-desc">文本与HTML实体互转</div></a>
+        </div>
+    </section>
+</body>
+</html>
